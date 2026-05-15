@@ -678,6 +678,7 @@
     setTimeout(() => showDetail('pinjam', key), 10);
   }
 
+  
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('open');
     document.body.style.overflow = '';
@@ -688,7 +689,7 @@
     if (e.target === document.getElementById('modalOverlay')) closeModal();
   }
 
-  
+
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
   });
