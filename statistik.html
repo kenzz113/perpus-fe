@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Libra Tech — Statistik</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #faf7f2; --bg2: #f3ede3; --surface: #ffffff;
+      --ink: #1a1408; --ink2: #3d3320; --muted: #8c7d65;
+      --border: #e2d9c8; --accent: #b5550a; --accent2: #2d6a4f;
+      --gold: #c9922a; --cream: #f9f3e8; --shadow: rgba(26,20,8,.10);
+      --sidebar-w: 240px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg2); color: var(--ink); display: flex; }
+
+    /* SIDEBAR */
+    .sidebar { width: var(--sidebar-w); height: 100vh; background: var(--ink2); display: flex; flex-direction: column; flex-shrink: 0; position: relative; overflow: hidden; }
+    .sidebar::before { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E"); }
+    .sidebar-glow { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
+    .sg1 { width:300px; height:300px; top:-80px; left:-60px; background: radial-gradient(circle, rgba(201,146,42,.14), transparent 70%); }
+    .sg2 { width:220px; height:220px; bottom:40px; right:-60px; background: radial-gradient(circle, rgba(45,106,79,.16), transparent 70%); }
+    .sb-inner { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }
+    .sb-logo { padding: 1.4rem 1.25rem 1.2rem; border-bottom: 1px solid rgba(255,255,255,.07); display: flex; align-items: center; gap: .65rem; }
+    .sb-logo-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--accent); display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; }
+    .sb-logo-text strong { display: block; font-family: 'Playfair Display', serif; font-size: .95rem; font-weight: 700; color: #fff; line-height: 1.1; }
+    .sb-logo-text span { font-size: .6rem; color: rgba(255,255,255,.35); letter-spacing: .06em; }
+    .sb-section { font-size: .62rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.28); padding: 1.1rem 1.25rem .4rem; }
+    .sb-item { display: flex; align-items: center; gap: .7rem; padding: .65rem 1.25rem; cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; transition: background .15s; position: relative; text-decoration: none; }
+    .sb-item:hover { background: rgba(255,255,255,.06); }
+    .sb-item.active { background: rgba(255,255,255,.08); }
+    .sb-item.active::before { content: ''; position: absolute; left: 0; top: 20%; bottom: 20%; width: 3px; background: var(--accent); border-radius: 0 2px 2px 0; }
+    .sb-item-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: .9rem; flex-shrink: 0; background: rgba(255,255,255,.06); transition: transform .15s; }
+    .sb-item:hover .sb-item-icon { transform: scale(1.08); }
+    .sb-item.active .sb-item-icon { background: rgba(181,85,10,.25); }
+    .sb-item-label { font-size: .82rem; font-weight: 500; color: rgba(255,255,255,.55); flex: 1; }
+    .sb-item.active .sb-item-label { color: #fff; }
+    .sb-item:hover .sb-item-label { color: rgba(255,255,255,.85); }
+    .sb-badge { font-size: .62rem; font-weight: 700; padding: .15rem .5rem; border-radius: 20px; background: rgba(181,85,10,.3); color: #ffbb85; }
+    .sb-mgmt-item { display: flex; align-items: center; gap: .7rem; padding: .7rem 1.25rem; cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; transition: background .15s; }
+    .sb-mgmt-item:hover { background: rgba(255,255,255,.06); }
+    .mgmt-icon-wrap { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: .85rem; flex-shrink: 0; }
+    .ic-orange { background: rgba(181,85,10,.25); } .ic-gold { background: rgba(201,146,42,.2); } .ic-green { background: rgba(45,106,79,.25); }
+    .sb-mgmt-body { flex: 1; }
+    .sb-mgmt-body strong { display: block; font-size: .8rem; font-weight: 600; color: rgba(255,255,255,.7); line-height: 1.2; }
+    .sb-mgmt-body small { font-size: .67rem; color: rgba(255,255,255,.3); }
+    .sb-mgmt-badge { font-size: .62rem; font-weight: 700; padding: .15rem .5rem; border-radius: 20px; }
+    .sb-mgmt-badge.orange { background: rgba(181,85,10,.3); color: #ffbb85; }
+    .sb-mgmt-badge.gold { background: rgba(201,146,42,.25); color: #f5cc72; }
+    .sb-mgmt-badge.green { background: rgba(45,106,79,.35); color: #7dd9a8; }
+    .sb-divider { height: 1px; background: rgba(255,255,255,.07); margin: .5rem 1.25rem; }
+    .sb-user { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,.07); display: flex; align-items: center; gap: .65rem; }
+    .sb-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; font-size: .8rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .sb-user-info strong { display: block; font-size: .8rem; font-weight: 600; color: #fff; line-height: 1.2; }
+    .sb-user-info small { font-size: .67rem; color: rgba(255,255,255,.35); }
+    .sb-logout { margin-left: auto; background: none; border: none; color: rgba(255,255,255,.3); cursor: pointer; font-size: .9rem; transition: color .2s; padding: .25rem; }
+    .sb-logout:hover { color: rgba(255,255,255,.7); }
+
+    /* MAIN */
+    .main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: .85rem 2rem; display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+    .topbar-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); }
+    .topbar-sub { font-size: .78rem; color: var(--muted); margin-top: 1px; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .75rem; }
+    .topbar-notif { width: 34px; height: 34px; border-radius: 8px; background: var(--bg2); border: 1px solid var(--border); display: grid; place-items: center; cursor: pointer; font-size: .85rem; position: relative; }
+    .notif-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); border: 1.5px solid var(--surface); }
+    .period-select { padding: .4rem .8rem; border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface); font-family: 'DM Sans', sans-serif; font-size: .78rem; color: var(--ink); outline: none; cursor: pointer; }
+
+    .content { flex: 1; overflow-y: auto; padding: 1.75rem 2rem; background: var(--bg2); }
+    .content::-webkit-scrollbar { width: 5px; }
+    .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+    /* PAGE HEADER */
+    .page-header { margin-bottom: 1.5rem; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--ink); margin-bottom: .25rem; }
+    .page-header h1 em { font-style: italic; color: var(--accent); }
+    .page-header p { font-size: .82rem; color: var(--muted); }
+
+    /* KPI ROW */
+    .kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.25rem; position: relative; overflow: hidden; transition: transform .2s, box-shadow .2s; }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px var(--shadow); }
+    .kpi-card::after { content:''; position: absolute; top:0; left:0; right:0; height:3px; background: var(--kc, var(--accent)); border-radius: 14px 14px 0 0; }
+    .kpi-icon { font-size: 1.2rem; margin-bottom: .5rem; }
+    .kpi-num { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: var(--ink); line-height: 1; }
+    .kpi-label { font-size: .72rem; color: var(--muted); margin-top: .25rem; }
+    .kpi-trend { font-size: .68rem; font-weight: 600; margin-top: .4rem; display: inline-flex; align-items: center; gap: .25rem; padding: .15rem .5rem; border-radius: 20px; }
+    .t-up   { background: rgba(45,106,79,.1);  color: #1a5c38; }
+    .t-down { background: rgba(181,85,10,.1);  color: #7f3a07; }
+    .t-warn { background: rgba(201,146,42,.12); color: #7a4e06; }
+
+    /* CHARTS GRID */
+    .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .card-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .6rem; }
+    .card-head h3 { font-size: .9rem; font-weight: 700; color: var(--ink); flex: 1; }
+    .card-head-badge { font-size: .65rem; font-weight: 700; padding: .2rem .6rem; border-radius: 20px; background: rgba(45,106,79,.1); color: #1a5c38; }
+    .card-body { padding: 1.25rem; }
+
+    /* BAR CHART */
+    .bar-chart { display: flex; align-items: flex-end; gap: .5rem; height: 160px; padding-bottom: 1.5rem; position: relative; }
+    .bar-chart::after { content:''; position: absolute; bottom: 1.5rem; left:0; right:0; height:1px; background: var(--border); }
+    .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: .3rem; height: 100%; justify-content: flex-end; }
+    .bar { width: 100%; border-radius: 5px 5px 0 0; transition: all .4s cubic-bezier(.34,1.56,.64,1); cursor: pointer; position: relative; min-height: 4px; }
+    .bar:hover { filter: brightness(1.1); }
+    .bar-val { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: .62rem; font-weight: 700; color: var(--ink2); white-space: nowrap; opacity: 0; transition: opacity .2s; }
+    .bar:hover .bar-val { opacity: 1; }
+    .bar-label { font-size: .65rem; color: var(--muted); margin-top: .3rem; }
+
+    /* DONUT / PIE */
+    .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .donut-svg { width: 140px; height: 140px; }
+    .donut-legend { width: 100%; display: flex; flex-direction: column; gap: .4rem; }
+    .legend-item { display: flex; align-items: center; gap: .5rem; font-size: .75rem; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-label { flex: 1; color: var(--ink2); }
+    .legend-val { font-weight: 700; color: var(--ink); }
+    .legend-pct { color: var(--muted); font-size: .68rem; }
+
+    /* TREND LINE CHART */
+    .line-chart-wrap { padding-top: .5rem; }
+    .line-svg { width: 100%; height: 140px; overflow: visible; }
+
+    /* TABLE RANKINGS */
+    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    .rank-item { display: flex; align-items: center; gap: .75rem; padding: .75rem 1.25rem; border-bottom: 1px solid var(--border); transition: background .15s; }
+    .rank-item:last-child { border-bottom: none; }
+    .rank-item:hover { background: var(--bg2); }
+    .rank-num { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: .7rem; font-weight: 800; flex-shrink: 0; }
+    .rank-1 { background: linear-gradient(135deg,#c9922a,#7a500e); color: #fff; }
+    .rank-2 { background: rgba(140,125,101,.2); color: var(--ink2); }
+    .rank-3 { background: rgba(181,85,10,.15); color: #8a4e00; }
+    .rank-n { background: var(--cream); color: var(--muted); }
+    .rank-info { flex: 1; }
+    .rank-title { font-size: .8rem; font-weight: 700; color: var(--ink2); }
+    .rank-sub { font-size: .68rem; color: var(--muted); }
+    .rank-count { font-size: .82rem; font-weight: 700; color: var(--ink); }
+
+    /* MEMBER ACTIVITY */
+    .activity-row { display: flex; align-items: center; gap: .6rem; padding: .7rem 1.25rem; border-bottom: 1px solid var(--border); font-size: .8rem; }
+    .activity-row:last-child { border-bottom: none; }
+    .activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .activity-text { flex: 1; color: var(--ink2); }
+    .activity-time { font-size: .68rem; color: var(--muted); }
+
+    /* HEATMAP */
+    .heatmap-wrap { padding: .75rem 1.25rem 1.25rem; }
+    .heatmap-labels { display: flex; gap: 4px; margin-bottom: 4px; padding-left: 28px; }
+    .hm-month { font-size: .6rem; color: var(--muted); flex: 1; text-align: center; }
+    .heatmap-grid { display: flex; gap: 3px; }
+    .hm-day-col { display: flex; flex-direction: column; gap: 3px; }
+    .hm-day-label { font-size: .55rem; color: var(--muted); height: 11px; display: flex; align-items: center; width: 22px; }
+    .hm-cell { width: 11px; height: 11px; border-radius: 2px; cursor: pointer; transition: transform .15s; }
+    .hm-cell:hover { transform: scale(1.4); }
+    .hm-0 { background: var(--cream); border: 1px solid var(--border); }
+    .hm-1 { background: rgba(45,106,79,.2); }
+    .hm-2 { background: rgba(45,106,79,.45); }
+    .hm-3 { background: rgba(45,106,79,.7); }
+    .hm-4 { background: #2d6a4f; }
+
+    @media (max-width: 1200px) { .charts-grid { grid-template-columns: 1fr; } .bottom-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 860px) {
+      :root { --sidebar-w: 60px; }
+      .sb-logo-text, .sb-section, .sb-item-label, .sb-mgmt-body, .sb-user-info { display: none; }
+      .sb-logo { justify-content: center; padding: 1rem; }
+      .sb-item, .sb-mgmt-item { justify-content: center; padding: .7rem; }
+      .sb-badge, .sb-mgmt-badge { display: none; }
+      .sb-user { justify-content: center; padding: .75rem; }
+      .sb-logout { display: none; }
+      .kpi-row { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-glow sg1"></div>
+    <div class="sidebar-glow sg2"></div>
+    <div class="sb-inner">
+      <div class="sb-logo">
+        <div class="sb-logo-icon">📚</div>
+        <div class="sb-logo-text"><strong>Libra Tech</strong><span>PERPUSTAKAAN ONLINE</span></div>
+      </div>
+      <div class="sb-section">Menu Utama</div>
+      <a href="index.html" class="sb-item">
+        <div class="sb-item-icon">🏠</div><span class="sb-item-label">Beranda</span>
+      </a>
+      <a href="koleksi.html" class="sb-item">
+        <div class="sb-item-icon">📖</div><span class="sb-item-label">Koleksi Buku</span><span class="sb-badge">50rb+</span>
+      </a>
+      <a href="statistik.html" class="sb-item active">
+        <div class="sb-item-icon">📊</div><span class="sb-item-label">Statistik</span>
+      </a>
+      <div class="sb-divider"></div>
+      <div class="sb-section">Manajemen</div>
+      <button class="sb-mgmt-item"><div class="mgmt-icon-wrap ic-orange">📤</div><div class="sb-mgmt-body"><strong>Buku Dipinjam</strong><small>Data peminjaman client</small></div><span class="sb-mgmt-badge orange">24</span></button>
+      <button class="sb-mgmt-item"><div class="mgmt-icon-wrap ic-gold">⚠️</div><div class="sb-mgmt-body"><strong>Buku Rusak</strong><small>Laporan kondisi buku</small></div><span class="sb-mgmt-badge gold">7</span></button>
+      <button class="sb-mgmt-item"><div class="mgmt-icon-wrap ic-green">👑</div><div class="sb-mgmt-body"><strong>Buku Langka — VIP</strong><small>Reward member premium</small></div><span class="sb-mgmt-badge green">Baru</span></button>
+      <div class="sb-divider"></div>
+      <a href="#" class="sb-item"><div class="sb-item-icon">⚙️</div><span class="sb-item-label">Pengaturan</span></a>
+      <div class="sb-user">
+        <div class="sb-avatar">A</div>
+        <div class="sb-user-info"><strong>Admin Pustaka</strong><small>admin@pustaka.id</small></div>
+        <button class="sb-logout" title="Keluar">↩</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Statistik</div>
+        <div class="topbar-sub">Analitik & laporan perpustakaan</div>
+      </div>
+      <div class="topbar-right">
+        <select class="period-select" onchange="updatePeriod(this.value)">
+          <option value="bulan">Bulan Ini</option>
+          <option value="quarter">Kuartal Ini</option>
+          <option value="tahun">Tahun Ini</option>
+        </select>
+        <div class="topbar-notif">🔔<div class="notif-dot"></div></div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page-header">
+        <h1>Laporan <em>Statistik</em> 📊</h1>
+        <p>Ringkasan performa perpustakaan — periode Mei 2026</p>
+      </div>
+
+      <!-- KPI -->
+      <div class="kpi-row">
+        <div class="kpi-card" style="--kc:#b5550a;">
+          <div class="kpi-icon">📚</div>
+          <div class="kpi-num" id="kpiKoleksi">50.240</div>
+          <div class="kpi-label">Total Koleksi</div>
+          <span class="kpi-trend t-up">↑ +120 buku baru</span>
+        </div>
+        <div class="kpi-card" style="--kc:#2d6a4f;">
+          <div class="kpi-icon">📋</div>
+          <div class="kpi-num" id="kpiPinjam">342</div>
+          <div class="kpi-label">Peminjaman Bulan Ini</div>
+          <span class="kpi-trend t-up">↑ +18% vs bulan lalu</span>
+        </div>
+        <div class="kpi-card" style="--kc:#c9922a;">
+          <div class="kpi-icon">👥</div>
+          <div class="kpi-num" id="kpiAnggota">1.842</div>
+          <div class="kpi-label">Anggota Aktif</div>
+          <span class="kpi-trend t-up">↑ +38 anggota baru</span>
+        </div>
+        <div class="kpi-card" style="--kc:#8a4e00;">
+          <div class="kpi-icon">⏱️</div>
+          <div class="kpi-num" id="kpiRata">4.2</div>
+          <div class="kpi-label">Rata-rata Hari Pinjam</div>
+          <span class="kpi-trend t-warn">⚠ target 5 hari</span>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW -->
+      <div class="charts-grid">
+        <!-- Bar Chart Peminjaman -->
+        <div class="card">
+          <div class="card-head">
+            <span>📈</span>
+            <h3>Tren Peminjaman — 8 Bulan Terakhir</h3>
+            <span class="card-head-badge">2026</span>
+          </div>
+          <div class="card-body">
+            <div class="bar-chart" id="barChart"></div>
+          </div>
+        </div>
+
+        <!-- Donut Kategori -->
+        <div class="card">
+          <div class="card-head">
+            <span>🍩</span>
+            <h3>Distribusi Koleksi</h3>
+          </div>
+          <div class="card-body">
+            <div class="donut-wrap">
+              <svg class="donut-svg" viewBox="0 0 140 140" id="donutSvg"></svg>
+              <div class="donut-legend" id="donutLegend"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM ROW -->
+      <div class="bottom-grid">
+        <!-- Top Buku -->
+        <div class="card">
+          <div class="card-head">
+            <span>🏆</span>
+            <h3>Top Buku Paling Diminati</h3>
+          </div>
+          <div class="rank-list" id="rankList"></div>
+        </div>
+
+        <!-- Aktivitas Terkini -->
+        <div class="card">
+          <div class="card-head">
+            <span>⚡</span>
+            <h3>Aktivitas Terbaru</h3>
+          </div>
+          <div id="activityList"></div>
+        </div>
+      </div>
+
+      <!-- Heatmap -->
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-head">
+          <span>📅</span>
+          <h3>Peta Aktivitas Peminjaman (2026)</h3>
+        </div>
+        <div class="heatmap-wrap" id="heatmapWrap"></div>
+      </div>
+
+      <!-- Anggota baru per bulan -->
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-head">
+          <span>👤</span>
+          <h3>Pertumbuhan Anggota Baru</h3>
+          <span class="card-head-badge">+38 bulan ini</span>
+        </div>
+        <div class="card-body">
+          <svg class="line-svg" id="lineSvg" viewBox="0 0 700 140"></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ── DATA ──
+    const barData = [
+      { month:'Okt', val:210 },
+      { month:'Nov', val:188 },
+      { month:'Des', val:145 },
+      { month:'Jan', val:224 },
+      { month:'Feb', val:267 },
+      { month:'Mar', val:291 },
+      { month:'Apr', val:315 },
+      { month:'Mei', val:342, highlight: true },
+    ];
+
+    const donutData = [
+      { label:'Fiksi & Sastra', val:12400, color:'#b5550a' },
+      { label:'Akademik',       val:9100,  color:'#2d6a4f' },
+      { label:'Sains & Tek.',   val:8700,  color:'#2c5f8a' },
+      { label:'Bisnis',         val:6200,  color:'#c9922a' },
+      { label:'Lainnya',        val:13840, color:'#8c7d65' },
+    ];
+
+    const rankData = [
+      { title:'Laskar Pelangi', sub:'Andrea Hirata', count:'142x' },
+      { title:'Bumi Manusia',   sub:'Pramoedya A.T.', count:'98x' },
+      { title:'Atomic Habits',  sub:'James Clear',   count:'87x' },
+      { title:'Filosofi Teras', sub:'H. Manampiring', count:'75x' },
+      { title:'Homo Deus',      sub:'Y.N. Harari',   count:'62x' },
+    ];
+
+    const activityData = [
+      { dot:'#2d6a4f', text:'Rizky Pratama meminjam <strong>Laskar Pelangi</strong>', time:'5 menit lalu' },
+      { dot:'#b5550a', text:'Sari Dewi mengembalikan <strong>Filosofi Teras</strong> (terlambat)', time:'22 menit lalu' },
+      { dot:'#2d6a4f', text:'Anggota baru: <strong>Budi Santoso</strong> terdaftar', time:'1 jam lalu' },
+      { dot:'#c9922a', text:'Buku <strong>Dilan 1990</strong> dilaporkan rusak', time:'2 jam lalu' },
+      { dot:'#2d6a4f', text:'Agus Santoso meminjam <strong>Homo Deus</strong>', time:'3 jam lalu' },
+      { dot:'#8a2020', text:'3 peminjaman jatuh tempo hari ini', time:'Hari ini' },
+    ];
+
+    const memberGrowth = [22, 31, 18, 29, 35, 28, 41, 38];
+    const memberMonths = ['Okt','Nov','Des','Jan','Feb','Mar','Apr','Mei'];
+
+    // ── RENDER BAR CHART ──
+    function renderBar() {
+      const max = Math.max(...barData.map(d => d.val));
+      const el = document.getElementById('barChart');
+      el.innerHTML = barData.map(d => {
+        const h = Math.round((d.val / max) * 130);
+        const color = d.highlight ? 'var(--accent)' : 'var(--border)';
+        const bgColor = d.highlight ? '#b5550a' : '#d4c9b5';
+        return `
+          <div class="bar-wrap">
+            <div class="bar" style="height:${h}px;background:${bgColor};" title="${d.val} peminjaman">
+              <span class="bar-val">${d.val}</span>
+            </div>
+            <span class="bar-label">${d.month}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── RENDER DONUT ──
+    function renderDonut() {
+      const total = donutData.reduce((s,d) => s+d.val, 0);
+      const cx = 70, cy = 70, r = 50, iR = 32;
+      let angle = -Math.PI/2;
+      let paths = '';
+
+      donutData.forEach(d => {
+        const sweep = (d.val/total) * Math.PI * 2;
+        const x1 = cx + r * Math.cos(angle);
+        const y1 = cy + r * Math.sin(angle);
+        const x2 = cx + r * Math.cos(angle + sweep);
+        const y2 = cy + r * Math.sin(angle + sweep);
+        const xi1 = cx + iR * Math.cos(angle);
+        const yi1 = cy + iR * Math.sin(angle);
+        const xi2 = cx + iR * Math.cos(angle + sweep);
+        const yi2 = cy + iR * Math.sin(angle + sweep);
+        const large = sweep > Math.PI ? 1 : 0;
+        paths += `<path d="M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${xi2},${yi2} A${iR},${iR} 0 ${large},0 ${xi1},${yi1} Z" fill="${d.color}" opacity=".85" stroke="white" stroke-width="1.5"/>`;
+        angle += sweep;
+      });
+
+      paths += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-family="Playfair Display,serif" font-size="12" font-weight="700" fill="#1a1408">${(total/1000).toFixed(0)}rb</text>`;
+      paths += `<text x="${cx}" y="${cy+14}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="7" fill="#8c7d65">buku</text>`;
+      document.getElementById('donutSvg').innerHTML = paths;
+
+      document.getElementById('donutLegend').innerHTML = donutData.map(d => {
+        const pct = Math.round(d.val/total*100);
+        return `<div class="legend-item">
+          <div class="legend-dot" style="background:${d.color}"></div>
+          <span class="legend-label">${d.label}</span>
+          <span class="legend-val">${(d.val/1000).toFixed(1)}rb</span>
+          <span class="legend-pct">${pct}%</span>
+        </div>`;
+      }).join('');
+    }
+
+    // ── RENDER RANKINGS ──
+    function renderRank() {
+      document.getElementById('rankList').innerHTML = rankData.map((d,i) => {
+        const cls = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-n';
+        return `<div class="rank-item">
+          <div class="rank-num ${cls}">${i+1}</div>
+          <div class="rank-info"><div class="rank-title">${d.title}</div><div class="rank-sub">${d.sub}</div></div>
+          <div class="rank-count">${d.count}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // ── RENDER ACTIVITY ──
+    function renderActivity() {
+      document.getElementById('activityList').innerHTML = activityData.map(d => `
+        <div class="activity-row">
+          <div class="activity-dot" style="background:${d.dot}"></div>
+          <div class="activity-text">${d.text}</div>
+          <div class="activity-time">${d.time}</div>
+        </div>
+      `).join('');
+    }
+
+    // ── RENDER HEATMAP ──
+    function renderHeatmap() {
+      const weeks = 22;
+      const days = ['','Sen','','Rab','','Jum',''];
+      let html = '<div class="heatmap-grid">';
+
+      // day labels column
+      html += '<div class="hm-day-col">';
+      days.forEach(d => { html += `<div class="hm-day-label">${d}</div>`; });
+      html += '</div>';
+
+      for (let w=0; w<weeks; w++) {
+        html += '<div class="hm-day-col">';
+        for (let d=0; d<7; d++) {
+          const v = Math.random() < .3 ? 0 : Math.floor(Math.random()*5);
+          html += `<div class="hm-cell hm-${v}" title="${v} peminjaman"></div>`;
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+      document.getElementById('heatmapWrap').innerHTML = html;
+    }
+
+    // ── RENDER LINE CHART ──
+    function renderLine() {
+      const W=700, H=130, pad=30;
+      const max = Math.max(...memberGrowth);
+      const pts = memberGrowth.map((v,i) => {
+        const x = pad + (i/(memberGrowth.length-1))*(W-pad*2);
+        const y = H - pad - (v/max)*(H-pad*2);
+        return {x,y,v,m:memberMonths[i]};
+      });
+
+      const pathD = pts.map((p,i) => `${i===0?'M':'L'}${p.x},${p.y}`).join(' ');
+      const areaD = `M${pts[0].x},${H-pad} ` + pts.map(p=>`L${p.x},${p.y}`).join(' ') + ` L${pts[pts.length-1].x},${H-pad} Z`;
+
+      const circles = pts.map(p => `
+        <circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--accent)" stroke="white" stroke-width="2"/>
+        <text x="${p.x}" y="${p.y-10}" text-anchor="middle" font-size="9" fill="#3d3320" font-weight="700">${p.v}</text>
+        <text x="${p.x}" y="${H-10}" text-anchor="middle" font-size="9" fill="#8c7d65">${p.m}</text>
+      `).join('');
+
+      // grid lines
+      let grid = '';
+      for (let i=0;i<=4;i++) {
+        const y = (H-pad) - (i/4)*(H-pad*2);
+        const val = Math.round((i/4)*max);
+        grid += `<line x1="${pad}" y1="${y}" x2="${W-pad}" y2="${y}" stroke="#e2d9c8" stroke-width="1"/>
+                 <text x="${pad-5}" y="${y+4}" text-anchor="end" font-size="8" fill="#8c7d65">${val}</text>`;
+      }
+
+      document.getElementById('lineSvg').innerHTML = `
+        <defs>
+          <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#b5550a" stop-opacity=".15"/>
+            <stop offset="100%" stop-color="#b5550a" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        ${grid}
+        <path d="${areaD}" fill="url(#lg)"/>
+        <path d="${pathD}" fill="none" stroke="#b5550a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        ${circles}
+      `;
+    }
+
+    function updatePeriod(v) {
+      // Simulasi perubahan data sesuai periode
+      const multiplier = v==='bulan'?1 : v==='quarter'?3 : 12;
+      document.getElementById('kpiPinjam').textContent = (342 * multiplier).toLocaleString('id');
+      document.getElementById('kpiAnggota').textContent = (1842 + (multiplier-1)*50).toLocaleString('id');
+    }
+
+    // Init
+    renderBar();
+    renderDonut();
+    renderRank();
+    renderActivity();
+    renderHeatmap();
+    renderLine();
+  </script>
+</body>
+</html>
