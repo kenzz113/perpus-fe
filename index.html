@@ -290,6 +290,7 @@
         <div class="topbar-search">
           <span style="color:var(--muted);font-size:.85rem;">🔍</span>
           <input type="text" placeholder="Cari buku, anggota…"/>
+           <div id="hasil"></div>
         </div>
         <div class="topbar-notif">🔔<div class="notif-dot"></div></div>
       </div>
@@ -692,6 +693,23 @@
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
+  });
+
+   const search = document.getElementById("search");
+    
+    search.addEventListener("input", async () => {
+      const response = await fetch( `/search?q=${keyword}`);
+      const data = await response.json();
+
+      let hasil = "";
+      data.forEach(buku => {
+        hasil += `
+        <div onclick="lihat Buku(${buu.id})">
+          ${buku.judul}
+          </div>
+          `;
+    });
+    document.getElementById("hasil").innerHTML = hasil;
   });
   </script>
 </body>
