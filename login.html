@@ -443,14 +443,14 @@
       </div>
 
       <!-- Form -->
-      <div class="form">
+      <form id="loginForm" class="form">
 
         <!-- Email -->
         <div class="field">
-          <label for="email">Alamat Email</label>
+          <label for="username">username</label>
           <div class="input-wrap">
             <span class="input-icon">✉️</span>
-            <input type="email" id="email" placeholder="nama@email.com" autocomplete="email"/>
+            <input type="text" id="username" placeholder="masukkan username"/>
           </div>
         </div>
 
@@ -477,7 +477,7 @@
         </div>
 
         <!-- Submit -->
-        <button class="btn-submit" type="button">
+        <button class="btn-submit" type="submit">
           📖 Masuk & Baca Sekarang
         </button>
 
@@ -492,6 +492,7 @@
         <div class="trust-item"><span>🔒</span> SSL Aman</div>
         <div class="trust-item"><span>🛡️</span> Data Terlindungi</div>
         <div class="trust-item"><span>✅</span> Tanpa Iklan</div>
+      </form>
       </div>
 
     </div>
@@ -509,5 +510,44 @@
       }
     }
   </script>
+  
+  <script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault()
+
+  const username = document.getElementById('username').value
+  const password = document.getElementById('password').value
+
+  try {
+    const response = await fetch('http://localhost:3000/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username,
+        password
+      })
+    })
+
+    const data = await response.json()
+
+    if (response.ok) {
+      localStorage.setItem('token', data.token)
+
+      alert('Login berhasil')
+
+      window.location.href = 'index.html'
+    } else {
+      alert(data.message)
+    }
+  } catch (err) {
+    console.error(err)
+    alert('Gagal terhubung ke server')
+  }
+})
+
+
+</script>
 </body>
 </html>

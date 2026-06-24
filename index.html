@@ -93,6 +93,10 @@
     .topbar-search { display: flex; align-items: center; gap: .5rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: .45rem .85rem; }
     .topbar-search input { border: none; background: transparent; outline: none; font-family: 'DM Sans', sans-serif; font-size: .83rem; color: var(--ink); width: 180px; }
     .topbar-search input::placeholder { color: var(--muted); }
+    .search-btn { border: none; background: var(--accent); color: #fff; font-family: 'DM Sans', sans-serif; font-size: .75rem; font-weight: 600; padding: .4rem .85rem; border-radius: 6px; cursor: pointer; flex-shrink: 0; transition: background .15s; }
+    .search-btn:hover { background: #8f4308; }
+    .search-empty-msg { padding: 1.5rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
+    .search-loading-msg { padding: 1.5rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; }
     .topbar-notif { width: 34px; height: 34px; border-radius: 8px; background: var(--bg2); border: 1px solid var(--border); display: grid; place-items: center; cursor: pointer; font-size: .85rem; position: relative; }
     .notif-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); border: 1.5px solid var(--surface); }
 
@@ -289,8 +293,8 @@
       <div class="topbar-right">
         <div class="topbar-search">
           <span style="color:var(--muted);font-size:.85rem;">🔍</span>
-          <input type="text" placeholder="Cari buku, anggota…"/>
-           <div id="hasil"></div>
+          <input type="text" id="search-anggota" placeholder="Cari nama anggota/peminjam…" autocomplete="off"/>
+          <button type="button" id="btn-search-anggota" class="search-btn" title="Cari">Cari</button>
         </div>
         <div class="topbar-notif">🔔<div class="notif-dot"></div></div>
       </div>
@@ -511,6 +515,35 @@
         </div>
       </div>
 
+      <!-- ===== HASIL PENCARIAN ANGGOTA / PEMINJAM ===== -->
+      <div id="m-pencarian" style="display:none;">
+        <div class="modal-head">
+          <div class="modal-head-icon" style="background:rgba(181,85,10,.1);">🔍</div>
+          <div class="modal-head-text">
+            <h3>Hasil Pencarian Anggota</h3>
+            <p id="search-result-sub">Riwayat peminjaman berdasarkan nama anggota</p>
+          </div>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div id="search-loading" class="search-loading-msg" style="display:none;">⏳ Mencari data anggota…</div>
+          <div id="search-empty" class="search-empty-msg" style="display:none;"></div>
+          <table class="modal-table" id="search-result-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>Nama Anggota</th>
+                <th>Judul Buku</th>
+                <th>Penulis</th>
+                <th>Tgl Pinjam</th>
+                <th>Tgl Kembali</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="search-result-body"></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -570,7 +603,7 @@
   let currentModal = null;
 
   function openModal(type) {
-    ['pinjam','rusak','langka'].forEach(t => {
+    ['pinjam','rusak','langka','pencarian'].forEach(t => {
       document.getElementById('m-'+t).style.display = 'none';
     });
     document.getElementById('m-'+type).style.display = 'block';
@@ -695,21 +728,114 @@
     if (e.key === 'Escape') closeModal();
   });
 
-   const search = document.getElementById("search");
-    
-    search.addEventListener("input", async () => {
-      const response = await fetch( `/search?q=${keyword}`);
-      const data = await response.json();
+  // ========== PENCARIAN ANGGOTA / PEMINJAM (AJAX / Fetch API) ==========
+  const searchInput = document.getElementById('search-anggota');
+  const searchBtn   = document.getElementById('btn-search-anggota');
 
-      let hasil = "";
-      data.forEach(buku => {
-        hasil += `
-        <div onclick="lihat Buku(${buu.id})">
-          ${buku.judul}
-          </div>
-          `;
+  // Endpoint backend PHP. Sesuaikan path jika struktur folder berbeda.
+  const SEARCH_ENDPOINT = 'api/search_anggota.php';
+
+  async function cariAnggota() {
+    const keyword = searchInput.value.trim();
+
+    if (keyword === '') {
+      searchInput.focus();
+      return;
+    }
+
+    openSearchModal();
+    setSearchState('loading');
+
+    try {
+      const response = await fetch(`${SEARCH_ENDPOINT}?nama=${encodeURIComponent(keyword)}`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+      }
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        renderSearchResult(keyword, result.data);
+      } else if (result.status === 'empty') {
+        setSearchState('empty', result.message);
+      } else {
+        setSearchState('error', result.message || 'Terjadi kesalahan saat memproses pencarian.');
+      }
+    } catch (err) {
+      setSearchState('error', 'Tidak dapat terhubung ke server. Silakan coba lagi.');
+    }
+  }
+
+  function renderSearchResult(keyword, rows) {
+    document.getElementById('search-result-sub').textContent =
+      `Ditemukan ${rows.length} data peminjaman untuk anggota "${keyword}"`;
+
+    const tbody = document.getElementById('search-result-body');
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${escapeHtml(r.nama_anggota)}</td>
+        <td>${escapeHtml(r.judul_buku)}</td>
+        <td>${escapeHtml(r.penulis)}</td>
+        <td>${formatTanggal(r.tanggal_pinjam)}</td>
+        <td>${r.tanggal_kembali ? formatTanggal(r.tanggal_kembali) : '—'}</td>
+        <td><span class="pill ${r.status_peminjaman === 'Dipinjam' ? 'pill-warn' : 'pill-ok'}">${escapeHtml(r.status_peminjaman)}</span></td>
+      </tr>
+    `).join('');
+
+    setSearchState('result');
+  }
+
+  function setSearchState(state, message = '') {
+    document.getElementById('search-loading').style.display      = state === 'loading' ? 'block' : 'none';
+    document.getElementById('search-result-table').style.display = state === 'result'  ? 'table' : 'none';
+
+    const emptyEl = document.getElementById('search-empty');
+    if (state === 'empty' || state === 'error') {
+      emptyEl.style.display = 'block';
+      emptyEl.textContent = state === 'empty'
+        ? (message || 'Data anggota tidak ditemukan.')
+        : (message || 'Terjadi kesalahan. Silakan coba lagi.');
+    } else {
+      emptyEl.style.display = 'none';
+    }
+  }
+
+  function openSearchModal() {
+    ['pinjam','rusak','langka','pencarian'].forEach(t => {
+      document.getElementById('m-'+t).style.display = 'none';
     });
-    document.getElementById("hasil").innerHTML = hasil;
+    document.getElementById('m-pencarian').style.display = 'block';
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    currentModal = 'pencarian';
+  }
+
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function formatTanggal(tgl) {
+    if (!tgl) return '—';
+    const d = new Date(tgl);
+    if (isNaN(d.getTime())) return tgl;
+    return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  searchBtn.addEventListener('click', cariAnggota);
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      cariAnggota();
+    }
   });
   </script>
 </body>
