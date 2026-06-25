@@ -733,7 +733,7 @@
   const searchBtn   = document.getElementById('btn-search-anggota');
 
   // Endpoint backend PHP. Sesuaikan path jika struktur folder berbeda.
-  const SEARCH_ENDPOINT = 'api/search_anggota.php';
+  const SEARCH_ENDPOINT = 'http://localhost:3000/peminjaman/search';
 
   async function cariAnggota() {
     const keyword = searchInput.value.trim();
@@ -747,24 +747,27 @@
     setSearchState('loading');
 
     try {
-      const response = await fetch(`${SEARCH_ENDPOINT}?nama=${encodeURIComponent(keyword)}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
+      const token = localStorage.getItem('token')
+
+const response = await fetch(`${SEARCH_ENDPOINT}?username=${encodeURIComponent(keyword)}`, {
+  method: 'GET',
+  headers: {
+    'Accept': 'application/json',
+    'Authorization': `Bearer ${token}`
+  }
+});
 
       if (!response.ok) {
         throw new Error('HTTP ' + response.status);
       }
 
-      const result = await response.json();
+const result = await response.json();
 
-      if (result.status === 'success') {
-        renderSearchResult(keyword, result.data);
-      } else if (result.status === 'empty') {
-        setSearchState('empty', result.message);
-      } else {
-        setSearchState('error', result.message || 'Terjadi kesalahan saat memproses pencarian.');
-      }
+if (result.length > 0) {
+  renderSearchResult(keyword, result);
+} else {
+  setSearchState('empty', 'Data tidak ditemukan');
+}
     } catch (err) {
       setSearchState('error', 'Tidak dapat terhubung ke server. Silakan coba lagi.');
     }
@@ -777,12 +780,12 @@
     const tbody = document.getElementById('search-result-body');
     tbody.innerHTML = rows.map(r => `
       <tr>
-        <td>${escapeHtml(r.nama_anggota)}</td>
-        <td>${escapeHtml(r.judul_buku)}</td>
-        <td>${escapeHtml(r.penulis)}</td>
-        <td>${formatTanggal(r.tanggal_pinjam)}</td>
-        <td>${r.tanggal_kembali ? formatTanggal(r.tanggal_kembali) : '—'}</td>
-        <td><span class="pill ${r.status_peminjaman === 'Dipinjam' ? 'pill-warn' : 'pill-ok'}">${escapeHtml(r.status_peminjaman)}</span></td>
+       <td>${escapeHtml(r.username)}</td>
+<td>${escapeHtml(r.judul_buku)}</td>
+<td>-</td>
+<td>${formatTanggal(r.tanggal_pinjam)}</td>
+<td>${formatTanggal(r.tanggal_kembali)}</td>
+<td>${escapeHtml(r.status)}</td></span></td>
       </tr>
     `).join('');
 
@@ -837,37 +840,7 @@
       cariAnggota();
     }
   });
-  async function cariUser() {
-  const username = document.getElementById('searchUser').value
-  const token = localStorage.getItem('token')
-
-  const response = await fetch(
-    `http://localhost:3000/peminjaman/search?username=${username}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-  )
-
-  const data = await response.json()
-
-  let html = ''
-
-  data.forEach(item => {
-    html += `
-      <div>
-        <h3>${item.username}</h3>
-        <p>Buku: ${item.judul_buku}</p>
-        <p>Status: ${item.status}</p>
-        <p>Kembali: ${item.tanggal_kembali}</p>
-      </div>
-      <hr>
-    `
-  })
-
-  document.getElementById('hasil').innerHTML = html
-}
+  
   </script>
 </body>
 </html>
