@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Libra Tech — Beranda</title>
+  <title>Libra Tech — Perpustakaan</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -17,7 +17,7 @@
     html, body { height: 100%; overflow: hidden; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg2); color: var(--ink); display: flex; }
 
-    /* SIDEBAR */
+    /* ===== SIDEBAR ===== */
     .sidebar {
       width: var(--sidebar-w); height: 100vh; background: var(--ink2);
       display: flex; flex-direction: column; flex-shrink: 0;
@@ -84,26 +84,27 @@
     .sb-logout { margin-left: auto; background: none; border: none; color: rgba(255,255,255,.3); cursor: pointer; font-size: .9rem; transition: color .2s; padding: .25rem; }
     .sb-logout:hover { color: rgba(255,255,255,.7); }
 
-    /* MAIN */
+    /* ===== MAIN ===== */
     .main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: .85rem 2rem; display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
     .topbar-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); }
     .topbar-sub { font-size: .78rem; color: var(--muted); margin-top: 1px; }
     .topbar-right { margin-left: auto; display: flex; align-items: center; gap: .75rem; }
     .topbar-search { display: flex; align-items: center; gap: .5rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: .45rem .85rem; }
-    .topbar-search input { border: none; background: transparent; outline: none; font-family: 'DM Sans', sans-serif; font-size: .83rem; color: var(--ink); width: 180px; }
+    .topbar-search input { border: none; background: transparent; outline: none; font-family: 'DM Sans', sans-serif; font-size: .83rem; color: var(--ink); }
     .topbar-search input::placeholder { color: var(--muted); }
     .search-btn { border: none; background: var(--accent); color: #fff; font-family: 'DM Sans', sans-serif; font-size: .75rem; font-weight: 600; padding: .4rem .85rem; border-radius: 6px; cursor: pointer; flex-shrink: 0; transition: background .15s; }
     .search-btn:hover { background: #8f4308; }
-    .search-empty-msg { padding: 1.5rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
-    .search-loading-msg { padding: 1.5rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; }
-    .topbar-notif { width: 34px; height: 34px; border-radius: 8px; background: var(--bg2); border: 1px solid var(--border); display: grid; place-items: center; cursor: pointer; font-size: .85rem; position: relative; }
-    .notif-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); border: 1.5px solid var(--surface); }
 
     .content { flex: 1; overflow-y: auto; padding: 1.75rem 2rem; background: var(--bg2); }
     .content::-webkit-scrollbar { width: 5px; }
     .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
+    /* ===== VIEW SWITCHING ===== */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ===== BERANDA ===== */
     .greeting { margin-bottom: 1.75rem; }
     .greeting h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--ink); margin-bottom: .25rem; }
     .greeting h1 em { font-style: italic; color: var(--accent); }
@@ -122,7 +123,6 @@
     .change-warn { background: rgba(201,146,42,.12); color: #7a4e06; }
 
     .content-grid { display: grid; grid-template-columns: 1fr 300px; gap: 1.25rem; }
-
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
     .card-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .6rem; }
     .card-head h3 { font-size: .9rem; font-weight: 700; color: var(--ink); flex: 1; }
@@ -145,6 +145,7 @@
     .pill-crit { background: rgba(160,40,40,.12);  color: #6b1a1a; }
     .pill-vip  { background: rgba(201,146,42,.14); color: #7a4e06; }
     .pill-rare { background: rgba(45,106,79,.12);  color: #1a5c38; }
+    .pill-gray { background: rgba(140,125,101,.12); color: #5a4e3a; }
 
     .right-col { display: flex; flex-direction: column; gap: 1.25rem; }
     .mini-book-list { display: flex; flex-direction: column; }
@@ -161,18 +162,71 @@
     .qs-label { font-size: .8rem; color: var(--ink2); display: flex; align-items: center; gap: .5rem; }
     .qs-num { font-size: .9rem; font-weight: 700; color: var(--ink); }
 
-    /* MODAL */
+    /* ===== KOLEKSI ===== */
+    .filter-bar { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filter-bar h2 { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 900; color: var(--ink); flex: 1; }
+    .filter-bar h2 span { font-style: italic; color: var(--accent); }
+    .filter-tabs { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .ftab { padding: .4rem .9rem; border-radius: 20px; font-size: .75rem; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface); color: var(--muted); transition: all .18s; }
+    .ftab:hover { border-color: var(--accent); color: var(--accent); }
+    .ftab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .add-btn { display: flex; align-items: center; gap: .4rem; padding: .45rem 1rem; border-radius: 8px; background: var(--accent); color: #fff; font-size: .78rem; font-weight: 600; border: none; cursor: pointer; transition: background .18s; }
+    .add-btn:hover { background: #8a3a05; }
+
+    .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem; margin-bottom: 1.75rem; }
+    .book-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform .2s, box-shadow .2s; }
+    .book-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px var(--shadow); }
+    .book-cover { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 2rem; position: relative; }
+    .book-cover-badge { position: absolute; top: 8px; right: 8px; font-size: .6rem; font-weight: 700; padding: .15rem .45rem; border-radius: 20px; }
+    .book-body { padding: .85rem; }
+    .book-title { font-size: .82rem; font-weight: 700; color: var(--ink); margin-bottom: .2rem; line-height: 1.3; }
+    .book-author { font-size: .7rem; color: var(--muted); margin-bottom: .5rem; }
+    .book-meta { display: flex; align-items: center; justify-content: space-between; }
+    .book-cat { font-size: .62rem; font-weight: 600; padding: .15rem .5rem; border-radius: 10px; background: var(--cream); color: var(--muted); border: 1px solid var(--border); }
+    .book-stok { font-size: .68rem; font-weight: 700; }
+    .stok-ada { color: #1a5c38; }
+    .stok-habis { color: #7f3a07; }
+
+    .view-toggle { display: flex; gap: .35rem; }
+    .vtbtn { width: 32px; height: 32px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--surface); cursor: pointer; display: grid; place-items: center; font-size: .8rem; transition: all .18s; }
+    .vtbtn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .book-table-wrap { display: none; }
+    .book-table-wrap.show { display: block; }
+    .book-grid.hide { display: none; }
+
+    .pagination { display: flex; align-items: center; justify-content: center; gap: .4rem; margin-top: 1.5rem; }
+    .pg-btn { width: 32px; height: 32px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--surface); cursor: pointer; font-size: .8rem; font-weight: 600; color: var(--ink2); transition: all .15s; display: grid; place-items: center; }
+    .pg-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .pg-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .pg-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* ===== MODAL BERANDA ===== */
     .modal-overlay { display: none; position: fixed; inset: 0; z-index: 300; background: rgba(26,20,8,.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; padding: 1.5rem; }
     .modal-overlay.open { display: flex; }
-    .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; width: 100%; max-width: 660px; max-height: 88vh; overflow-y: auto; box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease; }
+    @keyframes mIn { from { opacity:0; transform: translateY(14px) scale(.98); } to { opacity:1; transform: none; } }
+
+    /* modal beranda (lebar 660) */
+    #modalBeranda .modal-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      width: 100%; max-width: 660px; max-height: 88vh; overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
+    }
+    /* modal koleksi (lebar 520) */
+    #modalKoleksi .modal-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
+    }
     .modal-box::-webkit-scrollbar { width: 4px; }
     .modal-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-    @keyframes mIn { from { opacity:0; transform: translateY(14px) scale(.98); } to { opacity:1; transform: none; } }
-    .modal-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .85rem; position: sticky; top: 0; background: var(--surface); z-index: 1; border-radius: 18px 18px 0 0; }
+
+    .modal-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: .85rem; position: sticky; top: 0; background: var(--surface); z-index: 1; border-radius: 18px 18px 0 0; }
     .modal-head-icon { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; font-size: 1.15rem; flex-shrink: 0; }
+    .modal-cover { width: 56px; height: 78px; border-radius: 6px; flex-shrink: 0; box-shadow: 3px 3px 10px rgba(0,0,0,.2); display: grid; place-items: center; font-size: 1.5rem; }
     .modal-head-text { flex: 1; }
-    .modal-head-text h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); }
-    .modal-head-text p { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+    .modal-head-text h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); line-height: 1.3; }
+    .modal-head-text p { font-size: .75rem; color: var(--muted); margin-top: 3px; }
+    .modal-head-text .pill { margin-top: 6px; }
     .modal-close { width: 32px; height: 32px; border-radius: 8px; background: var(--bg2); border: 1px solid var(--border); cursor: pointer; font-size: .85rem; color: var(--muted); display: grid; place-items: center; transition: all .18s; flex-shrink: 0; }
     .modal-close:hover { background: var(--border); color: var(--ink); }
     .modal-body { padding: 1.5rem; }
@@ -188,7 +242,7 @@
     .modal-table tbody tr:hover td { background: var(--bg2); }
     .row-click-hint { font-size: .68rem; color: var(--muted); margin-top: .85rem; text-align: right; font-style: italic; }
 
-    /* DETAIL PANEL (slide-in inside modal) */
+    /* detail panel beranda */
     .detail-panel { display: none; animation: mIn .2s ease; }
     .detail-panel.visible { display: block; }
     .detail-back { display: inline-flex; align-items: center; gap: .4rem; font-size: .8rem; color: var(--accent); font-weight: 600; cursor: pointer; border: none; background: none; padding: 0; margin-bottom: 1.25rem; transition: opacity .15s; }
@@ -206,6 +260,23 @@
     .detail-note { background: rgba(201,146,42,.07); border: 1px solid rgba(201,146,42,.2); border-radius: 10px; padding: .85rem 1rem; font-size: .8rem; color: #7a4e06; line-height: 1.55; }
     .detail-note strong { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .3rem; color: var(--gold); }
 
+    /* modal koleksi detail */
+    .detail-row { display: flex; justify-content: space-between; align-items: center; padding: .6rem 0; border-bottom: 1px solid var(--border); font-size: .82rem; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: var(--muted); }
+    .detail-value { font-weight: 600; color: var(--ink2); text-align: right; }
+    .modal-desc { background: var(--cream); border-radius: 10px; padding: .85rem 1rem; font-size: .8rem; color: var(--ink2); line-height: 1.6; margin-top: 1rem; border: 1px solid var(--border); }
+    .modal-desc strong { display: block; font-size: .7rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+    .modal-actions { display: flex; gap: .6rem; margin-top: 1.25rem; }
+    .btn-pinjam { flex: 1; padding: .65rem; border-radius: 9px; background: var(--accent); color: #fff; font-size: .82rem; font-weight: 600; border: none; cursor: pointer; transition: background .18s; }
+    .btn-pinjam:hover { background: #8a3a05; }
+    .btn-pinjam:disabled { background: var(--muted); cursor: not-allowed; }
+    .btn-secondary { padding: .65rem 1rem; border-radius: 9px; background: var(--bg2); color: var(--ink2); font-size: .82rem; font-weight: 600; border: 1px solid var(--border); cursor: pointer; }
+
+    /* pencarian */
+    .search-empty-msg { padding: 1.5rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
+    .search-loading-msg { padding: 1.5rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; }
+
     @media (max-width: 1100px) { .content-grid { grid-template-columns: 1fr; } .right-col { display: none; } }
     @media (max-width: 860px) {
       :root { --sidebar-w: 60px; }
@@ -217,10 +288,13 @@
       .sb-logout { display: none; }
       .stats-row { grid-template-columns: repeat(2, 1fr); }
       .detail-fields { grid-template-columns: 1fr; }
+      .book-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     }
   </style>
 </head>
 <body>
+
+  <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar">
     <div class="sidebar-glow sg1"></div>
     <div class="sidebar-glow sg2"></div>
@@ -234,44 +308,38 @@
       </div>
 
       <div class="sb-section">Menu Utama</div>
-      <a href="index.html" class="sb-item active">
+      <button class="sb-item active" id="nav-beranda" onclick="switchView('beranda')">
         <div class="sb-item-icon">🏠</div>
         <span class="sb-item-label">Beranda</span>
-      </a>
-      <a href="koleksi.html" class="sb-item">
+      </button>
+      <button class="sb-item" id="nav-koleksi" onclick="switchView('koleksi')">
         <div class="sb-item-icon">📖</div>
         <span class="sb-item-label">Koleksi Buku</span>
-        <span class="sb-badge">50rb+</span>
-      </a>
-      <a href="statistik.html" class="sb-item">
+        <span class="sb-badge">10+</span>
+      </button>
+      <button class="sb-item" id="nav-statistik" onclick="switchView('statistik')">
         <div class="sb-item-icon">📊</div>
         <span class="sb-item-label">Statistik</span>
-      </a>
+      </button>
 
       <div class="sb-divider"></div>
       <div class="sb-section">Manajemen</div>
 
-      <button class="sb-mgmt-item" onclick="openModal('pinjam')">
+      <button class="sb-mgmt-item" onclick="openModalBeranda('pinjam')">
         <div class="mgmt-icon-wrap ic-orange">📤</div>
         <div class="sb-mgmt-body"><strong>Buku Dipinjam</strong><small>Data peminjaman client</small></div>
         <span class="sb-mgmt-badge orange">24</span>
       </button>
-      <button class="sb-mgmt-item" onclick="openModal('rusak')">
+      <button class="sb-mgmt-item" onclick="openModalBeranda('rusak')">
         <div class="mgmt-icon-wrap ic-gold">⚠️</div>
         <div class="sb-mgmt-body"><strong>Buku Rusak</strong><small>Laporan kondisi buku</small></div>
-        <span class="sb-mgmt-badge gold">7</span>
+        <span class="sb-mgmt-badge gold">5</span>
       </button>
-      <button class="sb-mgmt-item" onclick="openModal('langka')">
+      <button class="sb-mgmt-item" onclick="openModalBeranda('langka')">
         <div class="mgmt-icon-wrap ic-green">👑</div>
         <div class="sb-mgmt-body"><strong>Buku Langka — VIP</strong><small>Reward member premium</small></div>
         <span class="sb-mgmt-badge green">Baru</span>
       </button>
-
-      <div class="sb-divider"></div>
-      <a href="#" class="sb-item">
-        <div class="sb-item-icon">⚙️</div>
-        <span class="sb-item-label">Pengaturan</span>
-      </a>
 
       <div class="sb-user">
         <div class="sb-avatar">A</div>
@@ -284,8 +352,11 @@
     </div>
   </aside>
 
+  <!-- ===== MAIN ===== -->
   <div class="main">
-    <div class="topbar">
+
+    <!-- TOPBAR BERANDA -->
+    <div class="topbar" id="topbar-beranda">
       <div>
         <div class="topbar-title">Beranda</div>
         <div class="topbar-sub">Jumat, 15 Mei 2026</div>
@@ -293,117 +364,174 @@
       <div class="topbar-right">
         <div class="topbar-search">
           <span style="color:var(--muted);font-size:.85rem;">🔍</span>
-          <input type="text" id="search-anggota" placeholder="Cari nama anggota/peminjam…" autocomplete="off"/> 
-          <button type="button" id="btn-search-anggota" class="search-btn" title="Cari">Cari</button>
+          <input type="text" id="search-anggota" placeholder="Cari nama anggota/peminjam…" autocomplete="off" style="width:180px;"/>
+          <button type="button" id="btn-search-anggota" class="search-btn">Cari</button>
         </div>
-        <div class="topbar-notif">🔔<div class="notif-dot"></div></div>
       </div>
     </div>
 
+    <!-- TOPBAR KOLEKSI -->
+    <div class="topbar" id="topbar-koleksi" style="display:none;">
+      <div>
+        <div class="topbar-title">Koleksi Buku</div>
+        <div class="topbar-sub">50.240 buku tersedia di sistem</div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <span style="color:var(--muted);font-size:.85rem;">🔍</span>
+          <input type="text" placeholder="Cari judul, penulis, genre…" id="searchInput" oninput="filterBooks()" style="width:200px;"/>
+        </div>
+        <div class="view-toggle">
+          <button class="vtbtn active" id="gridBtn" onclick="setView('grid')" title="Grid">⊞</button>
+          <button class="vtbtn" id="listBtn" onclick="setView('list')" title="List">☰</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPBAR STATISTIK -->
+    <div class="topbar" id="topbar-statistik" style="display:none;">
+      <div>
+        <div class="topbar-title">Statistik</div>
+        <div class="topbar-sub">Ringkasan data perpustakaan</div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
     <div class="content">
-      <div class="greeting">
-        <h1>Selamat datang, <em>Admin</em> 👋</h1>
-        <p>Berikut ringkasan aktivitas perpustakaan hari ini.</p>
-      </div>
 
-      <div class="stats-row">
-        <div class="stat-card" style="--sc-color:#b5550a;">
-          <div class="stat-card-icon">📚</div>
-          <div class="stat-card-num">50.240</div>
-          <div class="stat-card-label">Total Koleksi Buku</div>
-          <span class="stat-card-change change-up">↑ +120 bulan ini</span>
+      <!-- ===== VIEW: BERANDA ===== -->
+      <div class="view active" id="view-beranda">
+        <div class="greeting">
+          <h1>Selamat datang, <em>Admin</em> 👋</h1>
+          <p>Berikut ringkasan aktivitas perpustakaan hari ini.</p>
         </div>
-        <div class="stat-card" style="--sc-color:#2d6a4f;">
-          <div class="stat-card-icon">👥</div>
-          <div class="stat-card-num">1.842</div>
-          <div class="stat-card-label">Anggota Aktif</div>
-          <span class="stat-card-change change-up">↑ +38 minggu ini</span>
-        </div>
-        <div class="stat-card" style="--sc-color:#c9922a;">
-          <div class="stat-card-icon">📤</div>
-          <div class="stat-card-num">24</div>
-          <div class="stat-card-label">Buku Dipinjam</div>
-          <span class="stat-card-change change-warn">⚠ 3 terlambat</span>
-        </div>
-        <div class="stat-card" style="--sc-color:#8a4e00;">
-          <div class="stat-card-icon">⚠️</div>
-          <div class="stat-card-num">7</div>
-          <div class="stat-card-label">Buku Rusak</div>
-          <span class="stat-card-change change-down">↑ +2 baru dilaporkan</span>
-        </div>
-      </div>
-
-      <div class="content-grid">
-        <div class="card">
-          <div class="card-head">
-            <span class="card-icon">🕐</span>
-            <h3>Aktivitas Peminjaman Terbaru</h3>
-            <button class="card-head-action" onclick="openModal('pinjam')">Lihat Semua →</button>
+        <div class="stats-row">
+          <div class="stat-card" style="--sc-color:#b5550a;">
+            <div class="stat-card-icon">📚</div>
+            <div class="stat-card-num"></div>
+            <div class="stat-card-label">Total Koleksi Buku</div>
+            <span class="stat-card-change change-up">↑ </span>
           </div>
-          <table class="data-table">
-            <thead>
-              <tr><th>Judul Buku</th><th>Peminjam</th><th>Tgl Pinjam</th><th>Tgl Kembali</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              <tr onclick="openDetailFromDashboard('laskar')"><td><strong>Laskar Pelangi</strong></td><td>Rizky Pratama</td><td>5 Mei 2026</td><td>18 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
-              <tr onclick="openDetailFromDashboard('filosofi')"><td><strong>Filosofi Teras</strong></td><td>Sari Dewi</td><td>1 Mei 2026</td><td>12 Mei 2026</td><td><span class="pill pill-late">Terlambat 3 hr</span></td></tr>
-              <tr onclick="openDetailFromDashboard('homo')"><td><strong>Homo Deus</strong></td><td>Agus Santoso</td><td>8 Mei 2026</td><td>22 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
-              <tr onclick="openDetailFromDashboard('bumi')"><td><strong>Bumi Manusia</strong></td><td>Dewi Rahayu</td><td>30 Apr 2026</td><td>10 Mei 2026</td><td><span class="pill pill-late">Terlambat 5 hr</span></td></tr>
-              <tr onclick="openDetailFromDashboard('atomic')"><td><strong>Atomic Habits</strong></td><td>Budi Santoso</td><td>10 Mei 2026</td><td>20 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
-              <tr onclick="openDetailFromDashboard('negeri')"><td><strong>Negeri 5 Menara</strong></td><td>Lina Marlina</td><td>9 Mei 2026</td><td>19 Mei 2026</td><td><span class="pill pill-warn">Jatuh Tempo</span></td></tr>
-            </tbody>
-          </table>
+          <div class="stat-card" style="--sc-color:#2d6a4f;">
+            <div class="stat-card-icon">👥</div>
+            <div class="stat-card-num"></div>
+            <div class="stat-card-label">Anggota Aktif</div>
+            <span class="stat-card-change change-up">↑ </span>
+          </div>
+          <div class="stat-card" style="--sc-color:#c9922a;">
+            <div class="stat-card-icon">📤</div>
+            <div class="stat-card-num"></div>
+            <div class="stat-card-label">Buku Dipinjam</div>
+            <span class="stat-card-change change-warn">⚠</span>
+          </div>
+          <div class="stat-card" style="--sc-color:#8a4e00;">
+            <div class="stat-card-icon">⚠️</div>
+            <div class="stat-card-num"></div>
+            <div class="stat-card-label">Buku Rusak</div>
+            <span class="stat-card-change change-down">↑ </span>
+          </div>
         </div>
-
-        <div class="right-col">
+        <div class="content-grid">
           <div class="card">
-            <div class="card-head"><span class="card-icon">🔥</span><h3>Paling Banyak Dipinjam</h3></div>
-            <div class="mini-book-list">
-              <div class="mini-book-item">
-                <div class="mini-book-cover" style="background:linear-gradient(135deg,#b5550a,#7f3a07)"></div>
-                <div class="mini-book-info"><strong>Laskar Pelangi</strong><small>Andrea Hirata · 142x dipinjam</small></div>
-              </div>
-              <div class="mini-book-item">
-                <div class="mini-book-cover" style="background:linear-gradient(135deg,#2d6a4f,#1a4731)"></div>
-                <div class="mini-book-info"><strong>Bumi Manusia</strong><small>Pramoedya · 98x dipinjam</small></div>
-              </div>
-              <div class="mini-book-item">
-                <div class="mini-book-cover" style="background:linear-gradient(135deg,#c9922a,#7a500e)"></div>
-                <div class="mini-book-info"><strong>Atomic Habits</strong><small>James Clear · 87x dipinjam</small></div>
-              </div>
-              <div class="mini-book-item">
-                <div class="mini-book-cover" style="background:linear-gradient(135deg,#5a3d7a,#351f4a)"></div>
-                <div class="mini-book-info"><strong>Filosofi Teras</strong><small>H. Manampiring · 75x dipinjam</small></div>
+            <div class="card-head">
+              <span class="card-icon">🕐</span>
+              <h3>Aktivitas Peminjaman Terbaru</h3>
+              <button class="card-head-action" onclick="openModalBeranda('pinjam')">Lihat Semua →</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr><th>Judul Buku</th><th>Peminjam</th><th>Tgl Pinjam</th><th>Tgl Kembali</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr onclick="openDetailFromDashboard('laskar')"><td><strong>Laskar Pelangi</strong></td><td>Rizky Pratama</td><td>5 Mei 2026</td><td>18 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
+                <tr onclick="openDetailFromDashboard('filosofi')"><td><strong>Filosofi Teras</strong></td><td>Sari Dewi</td><td>1 Mei 2026</td><td>12 Mei 2026</td><td><span class="pill pill-late">Terlambat 3 hr</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="right-col">
+            <div class="card">
+              <div class="card-head"><span class="card-icon">🔥</span><h3>Paling Banyak Dipinjam</h3></div>
+              <div class="mini-book-list">
+                <div class="mini-book-item">
+                  <div class="mini-book-cover" style="background:linear-gradient(135deg,#b5550a,#7f3a07)"></div>
+                  <div class="mini-book-info"><strong>Laskar Pelangi</strong><small></small></div>
+                </div>
+                <div class="mini-book-item">
+                  <div class="mini-book-cover" style="background:linear-gradient(135deg,#2d6a4f,#1a4731)"></div>
+                  <div class="mini-book-info"><strong>Bumi Manusia</strong><small></small></div>
+                </div>
+                <div class="mini-book-item">
+                  <div class="mini-book-cover" style="background:linear-gradient(135deg,#c9922a,#7a500e)"></div>
+                  <div class="mini-book-info"><strong>Atomic Habits</strong><small></small></div>
+                </div>
+                <div class="mini-book-item">
+                  <div class="mini-book-cover" style="background:linear-gradient(135deg,#5a3d7a,#351f4a)"></div>
+                  <div class="mini-book-info"><strong>Filosofi Teras</strong><small></small></div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="card">
-            <div class="card-head"><span class="card-icon">📋</span><h3>Ringkasan Koleksi</h3></div>
-            <div class="quick-stat-list">
-              <div class="qs-item"><span class="qs-label">📖 Fiksi & Sastra</span><span class="qs-num">12.400</span></div>
-              <div class="qs-item"><span class="qs-label">🔬 Sains & Teknologi</span><span class="qs-num">8.700</span></div>
-              <div class="qs-item"><span class="qs-label">💼 Bisnis & Ekonomi</span><span class="qs-num">6.200</span></div>
-              <div class="qs-item"><span class="qs-label">🎓 Akademik</span><span class="qs-num">9.100</span></div>
-              <div class="qs-item"><span class="qs-label">👑 Koleksi Langka</span><span class="qs-num">12</span></div>
+            <div class="card">
+              <div class="card-head"><span class="card-icon">📋</span><h3>Ringkasan Koleksi</h3></div>
+              <div class="quick-stat-list">
+                <div class="qs-item"><span class="qs-label">📖 Fiksi & Sastra</span><span class="qs-num">12.400</span></div>
+                <div class="qs-item"><span class="qs-label">🔬 Sains & Teknologi</span><span class="qs-num">8.700</span></div>
+                <div class="qs-item"><span class="qs-label">💼 Bisnis & Ekonomi</span><span class="qs-num">6.200</span></div>
+                <div class="qs-item"><span class="qs-label">🎓 Akademik</span><span class="qs-num">9.100</span></div>
+                <div class="qs-item"><span class="qs-label">👑 Koleksi Langka</span><span class="qs-num">12</span></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- MODALS -->
-  <div class="modal-overlay" id="modalOverlay" onclick="handleBgClick(event)">
-    <div class="modal-box" id="modalBox">
+      <!-- ===== VIEW: KOLEKSI ===== -->
+      <div class="view" id="view-koleksi">
+        <div class="filter-bar">
+          <h2>Semua <span>Koleksi</span></h2>
+          <div class="filter-tabs">
+            <button class="ftab active" onclick="setFilter(this,'semua')">Semua</button>
+            <button class="ftab" onclick="setFilter(this,'fiksi')">Fiksi & Sastra</button>
+            <button class="ftab" onclick="setFilter(this,'sains')">Sains & Teknologi</button>
+            <button class="ftab" onclick="setFilter(this,'bisnis')">Bisnis</button>
+            <button class="ftab" onclick="setFilter(this,'akademik')">Akademik</button>
+            <button class="ftab" onclick="setFilter(this,'langka')">Langka</button>
+          </div>
+          <button class="add-btn">＋ Tambah Buku</button>
+        </div>
+        <div class="book-grid" id="bookGrid"></div>
+        <div class="book-table-wrap" id="bookTableWrap">
+          <div class="card">
+            <div class="card-head"><span>📖</span><h3>Daftar Koleksi Buku</h3></div>
+            <table class="data-table">
+              <thead><tr><th>Judul</th><th>Penulis</th><th>Kategori</th><th>Tahun</th><th>Stok</th><th>Status</th></tr></thead>
+              <tbody id="bookTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="pagination" id="pagination"></div>
+      </div>
 
-      <!-- ===== BUKU DIPINJAM ===== -->
+      <!-- ===== VIEW: STATISTIK (placeholder) ===== -->
+      <div class="view" id="view-statistik">
+        <div class="greeting">
+          <h1>📊 <em>Statistik</em></h1>
+          <p>Halaman statistik akan segera hadir.</p>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+  <!-- ===== MODAL BERANDA ===== -->
+  <div class="modal-overlay" id="modalBeranda" onclick="handleBgClickBeranda(event)">
+    <div class="modal-box">
+      <!-- BUKU DIPINJAM -->
       <div id="m-pinjam" style="display:none;">
-        <!-- LIST VIEW -->
         <div id="pinjam-list">
           <div class="modal-head">
             <div class="modal-head-icon" style="background:rgba(181,85,10,.1);">📤</div>
             <div class="modal-head-text"><h3>Data Buku Dipinjam</h3><p>Seluruh peminjaman aktif oleh client</p></div>
-            <button class="modal-close" onclick="closeModal()">✕</button>
+            <button class="modal-close" onclick="closeModalBeranda()">✕</button>
           </div>
           <div class="modal-body">
             <div class="modal-stats">
@@ -414,54 +542,46 @@
             <table class="modal-table">
               <thead><tr><th>Judul Buku</th><th>Peminjam</th><th>Tgl Kembali</th><th>Status</th></tr></thead>
               <tbody>
-                <tr onclick="showDetail('pinjam','laskar')"><td>Laskar Pelangi</td><td>Rizky Pratama</td><td>18 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
-                <tr onclick="showDetail('pinjam','filosofi')"><td>Filosofi Teras</td><td>Sari Dewi</td><td>12 Mei 2026</td><td><span class="pill pill-late">Terlambat 3 hr</span></td></tr>
-                <tr onclick="showDetail('pinjam','homo')"><td>Homo Deus</td><td>Agus Santoso</td><td>22 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
-                <tr onclick="showDetail('pinjam','bumi')"><td>Bumi Manusia</td><td>Dewi Rahayu</td><td>10 Mei 2026</td><td><span class="pill pill-late">Terlambat 5 hr</span></td></tr>
-                <tr onclick="showDetail('pinjam','atomic')"><td>Atomic Habits</td><td>Budi Santoso</td><td>20 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
-                <tr onclick="showDetail('pinjam','dilan')"><td>Dilan 1990</td><td>Mega Putri</td><td>8 Mei 2026</td><td><span class="pill pill-late">Terlambat 7 hr</span></td></tr>
-                <tr onclick="showDetail('pinjam','perahu')"><td>Perahu Kertas</td><td>Hendra Wijaya</td><td>25 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
-                <tr onclick="showDetail('pinjam','negeri')"><td>Negeri 5 Menara</td><td>Lina Marlina</td><td>19 Mei 2026</td><td><span class="pill pill-warn">Jatuh Tempo</span></td></tr>
+                <tr onclick="showDetailBeranda('pinjam','laskar')"><td>Laskar Pelangi</td><td>Rizky Pratama</td><td>18 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
+                <tr onclick="showDetailBeranda('pinjam','filosofi')"><td>Filosofi Teras</td><td>Sari Dewi</td><td>12 Mei 2026</td><td><span class="pill pill-late">Terlambat 3 hr</span></td></tr>
               </tbody>
             </table>
             <p class="row-click-hint">💡 Klik baris untuk melihat detail peminjaman</p>
           </div>
         </div>
-        <!-- DETAIL VIEW -->
         <div id="pinjam-detail" style="display:none;">
           <div class="modal-head">
             <div class="modal-head-icon" style="background:rgba(181,85,10,.1);">📤</div>
             <div class="modal-head-text"><h3 id="pd-title">Detail Peminjaman</h3><p>Informasi lengkap peminjaman buku</p></div>
-            <button class="modal-close" onclick="closeModal()">✕</button>
+            <button class="modal-close" onclick="closeModalBeranda()">✕</button>
           </div>
           <div class="modal-body" id="pd-body"></div>
         </div>
       </div>
-
-      <!-- ===== BUKU RUSAK ===== -->
+      <!-- BUKU RUSAK -->
       <div id="m-rusak" style="display:none;">
         <div id="rusak-list">
           <div class="modal-head">
             <div class="modal-head-icon" style="background:rgba(201,146,42,.14);">⚠️</div>
             <div class="modal-head-text"><h3>Data Buku Rusak</h3><p>Laporan kondisi & status perbaikan koleksi</p></div>
-            <button class="modal-close" onclick="closeModal()">✕</button>
+            <button class="modal-close" onclick="closeModalBeranda()">✕</button>
           </div>
           <div class="modal-body">
             <div class="modal-stats">
-              <div class="modal-stat"><span class="modal-stat-num" style="color:#8a4e00;">7</span><div class="modal-stat-lbl">Total Rusak</div></div>
+              <div class="modal-stat"><span class="modal-stat-num" style="color:#8a4e00;">5</span><div class="modal-stat-lbl">Total Rusak</div></div>
               <div class="modal-stat"><span class="modal-stat-num" style="color:#8a2020;">2</span><div class="modal-stat-lbl">Kritis / Ganti</div></div>
               <div class="modal-stat"><span class="modal-stat-num" style="color:#c9922a;">5</span><div class="modal-stat-lbl">Perlu Perbaikan</div></div>
             </div>
             <table class="modal-table">
               <thead><tr><th>Judul Buku</th><th>Jenis Kerusakan</th><th>Dilaporkan</th><th>Tingkat</th></tr></thead>
               <tbody>
-                <tr onclick="showDetail('rusak','dilan')"><td>Dilan 1990</td><td>Cover rusak parah, sobek</td><td>10 Mei 2026</td><td><span class="pill pill-crit">Kritis</span></td></tr>
-                <tr onclick="showDetail('rusak','ronggeng')"><td>Ronggeng Dukuh Paruk</td><td>Halaman 40–55 hilang</td><td>8 Mei 2026</td><td><span class="pill pill-crit">Kritis</span></td></tr>
-                <tr onclick="showDetail('rusak','bumi')"><td>Bumi Manusia</td><td>Beberapa halaman robek</td><td>12 Mei 2026</td><td><span class="pill pill-warn">Sedang</span></td></tr>
-                <tr onclick="showDetail('rusak','negeri')"><td>Negeri 5 Menara</td><td>Noda air, tulisan kabur</td><td>11 Mei 2026</td><td><span class="pill pill-warn">Sedang</span></td></tr>
-                <tr onclick="showDetail('rusak','saman')"><td>Saman</td><td>Jilid longgar</td><td>13 Mei 2026</td><td><span class="pill pill-warn">Sedang</span></td></tr>
-                <tr onclick="showDetail('rusak','supernova')"><td>Supernova</td><td>Halaman 12 robek</td><td>9 Mei 2026</td><td><span class="pill pill-ok">Ringan</span></td></tr>
-                <tr onclick="showDetail('rusak','hujan')"><td>Hujan</td><td>Goresan pada cover</td><td>14 Mei 2026</td><td><span class="pill pill-ok">Ringan</span></td></tr>
+                <tr onclick="showDetailBeranda('rusak','dilan')"><td>Dilan 1990</td><td>Cover rusak parah, sobek</td><td>10 Mei 2026</td><td><span class="pill pill-crit">Kritis</span></td></tr>
+                <tr onclick="showDetailBeranda('rusak','ronggeng')"><td>Ronggeng Dukuh Paruk</td><td>Halaman 40–55 hilang</td><td>8 Mei 2026</td><td><span class="pill pill-crit">Kritis</span></td></tr>
+                <tr onclick="showDetailBeranda('rusak','bumi')"><td>Bumi Manusia</td><td>Beberapa halaman robek</td><td>12 Mei 2026</td><td><span class="pill pill-warn">Sedang</span></td></tr>
+                <tr onclick="showDetailBeranda('rusak','negeri')"><td>Negeri 5 Menara</td><td>Noda air, tulisan kabur</td><td>11 Mei 2026</td><td><span class="pill pill-warn">Sedang</span></td></tr>
+                <tr onclick="showDetailBeranda('rusak','saman')"><td>Saman</td><td>Jilid longgar</td><td>13 Mei 2026</td><td><span class="pill pill-warn">Sedang</span></td></tr>
+                <tr onclick="showDetailBeranda('rusak','supernova')"><td>Supernova</td><td>Halaman 12 robek</td><td>9 Mei 2026</td><td><span class="pill pill-ok">Ringan</span></td></tr>
+                <tr onclick="showDetailBeranda('rusak','hujan')"><td>Hujan</td><td>Goresan pada cover</td><td>14 Mei 2026</td><td><span class="pill pill-ok">Ringan</span></td></tr>
               </tbody>
             </table>
             <p class="row-click-hint">💡 Klik baris untuk melihat detail laporan kerusakan</p>
@@ -471,19 +591,18 @@
           <div class="modal-head">
             <div class="modal-head-icon" style="background:rgba(201,146,42,.14);">⚠️</div>
             <div class="modal-head-text"><h3 id="rd-title">Detail Buku Rusak</h3><p>Laporan kondisi & tindak lanjut</p></div>
-            <button class="modal-close" onclick="closeModal()">✕</button>
+            <button class="modal-close" onclick="closeModalBeranda()">✕</button>
           </div>
           <div class="modal-body" id="rd-body"></div>
         </div>
       </div>
-
-      <!-- ===== BUKU LANGKA ===== -->
+      <!-- BUKU LANGKA -->
       <div id="m-langka" style="display:none;">
         <div id="langka-list">
           <div class="modal-head">
             <div class="modal-head-icon" style="background:rgba(45,106,79,.12);">👑</div>
             <div class="modal-head-text"><h3>Buku Langka — Reward VIP</h3><p>Koleksi eksklusif untuk member premium</p></div>
-            <button class="modal-close" onclick="closeModal()">✕</button>
+            <button class="modal-close" onclick="closeModalBeranda()">✕</button>
           </div>
           <div class="modal-body">
             <div class="modal-stats">
@@ -494,12 +613,12 @@
             <table class="modal-table">
               <thead><tr><th>Judul Buku</th><th>Tahun / Edisi</th><th>Tier VIP</th><th>Status</th></tr></thead>
               <tbody>
-                <tr onclick="showDetail('langka','ronggeng')"><td>Ronggeng Dukuh Paruk</td><td>Edisi Pertama 1982</td><td><span class="pill pill-rare">Tier 1</span></td><td><span class="pill pill-ok">Siap</span></td></tr>
-                <tr onclick="showDetail('langka','centhini')"><td>Serat Centhini</td><td>Edisi Asli Kraton</td><td><span class="pill pill-vip">Tier 2</span></td><td><span class="pill pill-ok">Siap</span></td></tr>
-                <tr onclick="showDetail('langka','kabah')"><td>Di Bawah Lindungan Ka'bah</td><td>Cetakan 1938</td><td><span class="pill pill-rare">Tier 1</span></td><td><span class="pill pill-ok">Siap</span></td></tr>
-                <tr onclick="showDetail('langka','layar')"><td>Layar Terkembang</td><td>Druk Pertama 1936</td><td><span class="pill pill-vip">Tier 2</span></td><td><span class="pill pill-ok">Siap</span></td></tr>
-                <tr onclick="showDetail('langka','salah')"><td>Salah Asuhan</td><td>Edisi 1928</td><td><span class="pill pill-vip">Tier 2</span></td><td><span class="pill pill-warn">Antrian</span></td></tr>
-                <tr onclick="showDetail('langka','belenggu')"><td>Belenggu</td><td>Druk Pertama 1940</td><td><span class="pill pill-rare">Tier 1</span></td><td><span class="pill pill-warn">Antrian</span></td></tr>
+                <tr onclick="showDetailBeranda('langka','ronggeng')"><td>Ronggeng Dukuh Paruk</td><td>Edisi Pertama 1982</td><td><span class="pill pill-rare">Tier 1</span></td><td><span class="pill pill-ok">Siap</span></td></tr>
+                <tr onclick="showDetailBeranda('langka','centhini')"><td>Serat Centhini</td><td>Edisi Asli Kraton</td><td><span class="pill pill-vip">Tier 2</span></td><td><span class="pill pill-ok">Siap</span></td></tr>
+                <tr onclick="showDetailBeranda('langka','kabah')"><td>Di Bawah Lindungan Ka'bah</td><td>Cetakan 1938</td><td><span class="pill pill-rare">Tier 1</span></td><td><span class="pill pill-ok">Siap</span></td></tr>
+                <tr onclick="showDetailBeranda('langka','layar')"><td>Layar Terkembang</td><td>Druk Pertama 1936</td><td><span class="pill pill-vip">Tier 2</span></td><td><span class="pill pill-ok">Siap</span></td></tr>
+                <tr onclick="showDetailBeranda('langka','salah')"><td>Salah Asuhan</td><td>Edisi 1928</td><td><span class="pill pill-vip">Tier 2</span></td><td><span class="pill pill-warn">Antrian</span></td></tr>
+                <tr onclick="showDetailBeranda('langka','belenggu')"><td>Belenggu</td><td>Druk Pertama 1940</td><td><span class="pill pill-rare">Tier 1</span></td><td><span class="pill pill-warn">Antrian</span></td></tr>
               </tbody>
             </table>
             <p class="row-click-hint">💡 Klik baris untuk melihat detail koleksi langka</p>
@@ -509,13 +628,12 @@
           <div class="modal-head">
             <div class="modal-head-icon" style="background:rgba(45,106,79,.12);">👑</div>
             <div class="modal-head-text"><h3 id="ld-title">Detail Buku Langka</h3><p>Informasi koleksi eksklusif VIP</p></div>
-            <button class="modal-close" onclick="closeModal()">✕</button>
+            <button class="modal-close" onclick="closeModalBeranda()">✕</button>
           </div>
           <div class="modal-body" id="ld-body"></div>
         </div>
       </div>
-
-      <!-- ===== HASIL PENCARIAN ANGGOTA / PEMINJAM ===== -->
+      <!-- PENCARIAN -->
       <div id="m-pencarian" style="display:none;">
         <div class="modal-head">
           <div class="modal-head-icon" style="background:rgba(181,85,10,.1);">🔍</div>
@@ -523,50 +641,76 @@
             <h3>Hasil Pencarian Anggota</h3>
             <p id="search-result-sub">Riwayat peminjaman berdasarkan nama anggota</p>
           </div>
-          <button class="modal-close" onclick="closeModal()">✕</button>
+          <button class="modal-close" onclick="closeModalBeranda()">✕</button>
         </div>
         <div class="modal-body">
           <div id="search-loading" class="search-loading-msg" style="display:none;">⏳ Mencari data anggota…</div>
           <div id="search-empty" class="search-empty-msg" style="display:none;"></div>
           <table class="modal-table" id="search-result-table" style="display:none;">
             <thead>
-              <tr>
-                <th>Nama Anggota</th>
-                <th>Judul Buku</th>
-                <th>Penulis</th>
-                <th>Tgl Pinjam</th>
-                <th>Tgl Kembali</th>
-                <th>Status</th>
-              </tr>
+              <tr><th>Nama Anggota</th><th>Judul Buku</th><th>Penulis</th><th>Tgl Pinjam</th><th>Tgl Kembali</th><th>Status</th></tr>
             </thead>
             <tbody id="search-result-body"></tbody>
           </table>
         </div>
       </div>
+    </div>
+  </div>
 
+  <!-- ===== MODAL KOLEKSI ===== -->
+  <div class="modal-overlay" id="modalKoleksi" onclick="handleBgClickKoleksi(event)">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div class="modal-cover" id="mCover"></div>
+        <div class="modal-head-text">
+          <h3 id="mTitle"></h3>
+          <p id="mAuthor"></p>
+          <span class="pill" id="mCatPill"></span>
+        </div>
+        <button class="modal-close" onclick="closeModalKoleksi()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-row"><span class="detail-label">Tahun Terbit</span><span class="detail-value" id="mYear"></span></div>
+        <div class="detail-row"><span class="detail-label">ISBN</span><span class="detail-value" id="mIsbn"></span></div>
+        <div class="detail-row"><span class="detail-label">Penerbit</span><span class="detail-value" id="mPublisher"></span></div>
+        <div class="detail-row"><span class="detail-label">Jumlah Halaman</span><span class="detail-value" id="mPages"></span></div>
+        <div class="detail-row"><span class="detail-label">Stok Tersedia</span><span class="detail-value" id="mStok"></span></div>
+        <div class="detail-row"><span class="detail-label">Total Dipinjam</span><span class="detail-value" id="mBorrow"></span></div>
+        <div class="modal-desc"><strong>Sinopsis</strong><span id="mDesc"></span></div>
+        <div class="modal-actions">
+          <button class="btn-pinjam" id="mBtnPinjam">📤 Pinjamkan Buku</button>
+          <button class="btn-secondary" onclick="closeModalKoleksi()">Tutup</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-  // ========== DATA ==========
+  // ============================================================
+  // NAVIGATION
+  // ============================================================
+  function switchView(view) {
+    ['beranda','koleksi','statistik'].forEach(v => {
+      document.getElementById('view-'+v).classList.toggle('active', v === view);
+      document.getElementById('topbar-'+v).style.display = v === view ? 'flex' : 'none';
+      document.getElementById('nav-'+v).classList.toggle('active', v === view);
+    });
+    if (view === 'koleksi') render();
+  }
+
+  // ============================================================
+  // DATA BERANDA
+  // ============================================================
   const COVER_COLORS = {
-    laskar:   'linear-gradient(135deg,#b5550a,#7f3a07)',
-    filosofi: 'linear-gradient(135deg,#5a3d7a,#351f4a)',
-    homo:     'linear-gradient(135deg,#1a3a5c,#0d1e30)',
-    bumi:     'linear-gradient(135deg,#2d6a4f,#1a4731)',
-    atomic:   'linear-gradient(135deg,#c9922a,#7a500e)',
-    negeri:   'linear-gradient(135deg,#4a6fa5,#2a3f6b)',
-    dilan:    'linear-gradient(135deg,#c94a6a,#7a1f3a)',
-    perahu:   'linear-gradient(135deg,#3a7a8a,#1a4a56)',
-    ronggeng: 'linear-gradient(135deg,#8a4e1a,#4a2408)',
-    saman:    'linear-gradient(135deg,#6a3a8a,#3a1a5a)',
-    supernova:'linear-gradient(135deg,#1a6a8a,#0a3a4a)',
-    hujan:    'linear-gradient(135deg,#3a5a8a,#1a2a5a)',
-    centhini: 'linear-gradient(135deg,#c9922a,#6a4a0a)',
-    kabah:    'linear-gradient(135deg,#2d6a4f,#0d3a20)',
-    layar:    'linear-gradient(135deg,#1a5a8a,#0a2a4a)',
-    salah:    'linear-gradient(135deg,#8a3a2a,#4a1a10)',
-    belenggu: 'linear-gradient(135deg,#4a4a1a,#2a2a08)',
+    laskar:'linear-gradient(135deg,#b5550a,#7f3a07)', filosofi:'linear-gradient(135deg,#5a3d7a,#351f4a)',
+    homo:'linear-gradient(135deg,#1a3a5c,#0d1e30)', bumi:'linear-gradient(135deg,#2d6a4f,#1a4731)',
+    atomic:'linear-gradient(135deg,#c9922a,#7a500e)', negeri:'linear-gradient(135deg,#4a6fa5,#2a3f6b)',
+    dilan:'linear-gradient(135deg,#c94a6a,#7a1f3a)', perahu:'linear-gradient(135deg,#3a7a8a,#1a4a56)',
+    ronggeng:'linear-gradient(135deg,#8a4e1a,#4a2408)', saman:'linear-gradient(135deg,#6a3a8a,#3a1a5a)',
+    supernova:'linear-gradient(135deg,#1a6a8a,#0a3a4a)', hujan:'linear-gradient(135deg,#3a5a8a,#1a2a5a)',
+    centhini:'linear-gradient(135deg,#c9922a,#6a4a0a)', kabah:'linear-gradient(135deg,#2d6a4f,#0d3a20)',
+    layar:'linear-gradient(135deg,#1a5a8a,#0a2a4a)', salah:'linear-gradient(135deg,#8a3a2a,#4a1a10)',
+    belenggu:'linear-gradient(135deg,#4a4a1a,#2a2a08)',
   };
 
   const DATA = {
@@ -599,49 +743,44 @@
     }
   };
 
-  // ========== MODAL LOGIC ==========
-  let currentModal = null;
-
-  function openModal(type) {
+  // ============================================================
+  // MODAL BERANDA
+  // ============================================================
+  function openModalBeranda(type) {
     ['pinjam','rusak','langka','pencarian'].forEach(t => {
       document.getElementById('m-'+t).style.display = 'none';
     });
     document.getElementById('m-'+type).style.display = 'block';
-    showList(type);
-    document.getElementById('modalOverlay').classList.add('open');
+    if (type !== 'pencarian') showListBeranda(type);
+    document.getElementById('modalBeranda').classList.add('open');
     document.body.style.overflow = 'hidden';
-    currentModal = type;
   }
 
-  function showList(type) {
+  function showListBeranda(type) {
     document.getElementById(type+'-list').style.display = 'block';
     document.getElementById(type+'-detail').style.display = 'none';
   }
 
-  function showDetail(type, key) {
+  function showDetailBeranda(type, key) {
     document.getElementById(type+'-list').style.display = 'none';
-    const detailEl = document.getElementById(type+'-detail');
-    detailEl.style.display = 'block';
-    renderDetail(type, key);
+    document.getElementById(type+'-detail').style.display = 'block';
+    renderDetailBeranda(type, key);
   }
 
-  function renderDetail(type, key) {
+  function renderDetailBeranda(type, key) {
     const d = DATA[type][key];
     if (!d) return;
     const cover = COVER_COLORS[key] || 'linear-gradient(135deg,#888,#444)';
-
     if (type === 'pinjam') {
       document.getElementById('pd-title').textContent = d.judul;
       document.getElementById('pd-body').innerHTML = `
-        <button class="detail-back" onclick="showList('pinjam')">← Kembali ke Daftar</button>
+        <button class="detail-back" onclick="showListBeranda('pinjam')">← Kembali ke Daftar</button>
         <div class="detail-hero">
           <div class="detail-cover" style="background:${cover}"></div>
           <div class="detail-meta">
             <h2>${d.judul}</h2>
             <div class="detail-sub">${d.penulis}</div>
-            <div class="detail-pills">
-              <span class="pill ${d.statusPill}">${d.status}</span>
-            </div>
+            <div class="detail-pills"><span class="pill ${d.statusPill}">${d.status}</span></div>
           </div>
         </div>
         <div class="detail-fields">
@@ -653,19 +792,16 @@
           <div class="detail-field"><div class="detail-field-lbl">Status</div><div class="detail-field-val"><span class="pill ${d.statusPill}">${d.status}</span></div></div>
         </div>
         <div class="detail-note"><strong>📝 Catatan Admin</strong>${d.catatan}</div>`;
-
     } else if (type === 'rusak') {
       document.getElementById('rd-title').textContent = d.judul;
       document.getElementById('rd-body').innerHTML = `
-        <button class="detail-back" onclick="showList('rusak')">← Kembali ke Daftar</button>
+        <button class="detail-back" onclick="showListBeranda('rusak')">← Kembali ke Daftar</button>
         <div class="detail-hero">
           <div class="detail-cover" style="background:${cover}"></div>
           <div class="detail-meta">
             <h2>${d.judul}</h2>
             <div class="detail-sub">${d.penulis} · ${d.kategori}</div>
-            <div class="detail-pills">
-              <span class="pill ${d.tingkatPill}">Kerusakan ${d.tingkat}</span>
-            </div>
+            <div class="detail-pills"><span class="pill ${d.tingkatPill}">Kerusakan ${d.tingkat}</span></div>
           </div>
         </div>
         <div class="detail-fields">
@@ -676,11 +812,10 @@
           <div class="detail-field"><div class="detail-field-lbl">Estimasi Selesai</div><div class="detail-field-val">🔧 ${d.estimasi}</div></div>
         </div>
         <div class="detail-note"><strong>🔧 Tindak Lanjut</strong>${d.tindakan}</div>`;
-
     } else if (type === 'langka') {
       document.getElementById('ld-title').textContent = d.judul;
       document.getElementById('ld-body').innerHTML = `
-        <button class="detail-back" onclick="showList('langka')">← Kembali ke Daftar</button>
+        <button class="detail-back" onclick="showListBeranda('langka')">← Kembali ke Daftar</button>
         <div class="detail-hero">
           <div class="detail-cover" style="background:${cover}"></div>
           <div class="detail-meta">
@@ -700,7 +835,7 @@
           <div class="detail-field" style="grid-column:1/-1"><div class="detail-field-lbl">Lokasi Penyimpanan</div><div class="detail-field-val">📍 ${d.lokasi}</div></div>
         </div>
         <div class="detail-note"><strong>👑 Syarat Akses VIP</strong>${d.syarat}</div>
-        <div style="margin-top:.85rem; padding:.85rem 1rem; background:var(--cream); border:1px solid var(--border); border-radius:10px; font-size:.8rem; color:var(--ink2); line-height:1.6;">
+        <div style="margin-top:.85rem;padding:.85rem 1rem;background:var(--cream);border:1px solid var(--border);border-radius:10px;font-size:.8rem;color:var(--ink2);line-height:1.6;">
           <strong style="display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem;">📖 Tentang Buku</strong>
           ${d.deskripsi}
         </div>`;
@@ -708,139 +843,246 @@
   }
 
   function openDetailFromDashboard(key) {
-    openModal('pinjam');
-    setTimeout(() => showDetail('pinjam', key), 10);
+    openModalBeranda('pinjam');
+    setTimeout(() => showDetailBeranda('pinjam', key), 10);
   }
 
-  
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
+  function closeModalBeranda() {
+    document.getElementById('modalBeranda').classList.remove('open');
     document.body.style.overflow = '';
-    currentModal = null;
   }
 
-  function handleBgClick(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  function handleBgClickBeranda(e) {
+    if (e.target === document.getElementById('modalBeranda')) closeModalBeranda();
   }
 
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-  });
-
-  // ========== PENCARIAN ANGGOTA / PEMINJAM (AJAX / Fetch API) ==========
-  const searchInput = document.getElementById('search-anggota');
-  const searchBtn   = document.getElementById('btn-search-anggota');
-
-  // Endpoint backend PHP. Sesuaikan path jika struktur folder berbeda.
+  // ============================================================
+  // PENCARIAN ANGGOTA
+  // ============================================================
   const SEARCH_ENDPOINT = 'http://localhost:3000/peminjaman/search';
 
   async function cariAnggota() {
-    const keyword = searchInput.value.trim();
+    const keyword = document.getElementById('search-anggota').value.trim();
+    if (keyword === '') { document.getElementById('search-anggota').focus(); return; }
 
-    if (keyword === '') {
-      searchInput.focus();
-      return;
-    }
-
-    openSearchModal();
-    setSearchState('loading');
-
-    try {
-      const token = localStorage.getItem('token')
-
-const response = await fetch(`${SEARCH_ENDPOINT}?username=${encodeURIComponent(keyword)}`, {
-  method: 'GET',
-  headers: {
-    'Accept': 'application/json',
-    'Authorization': `Bearer ${token}`
-  }
-});
-
-      if (!response.ok) {
-        throw new Error('HTTP ' + response.status);
-      }
-
-const result = await response.json();
-
-if (result.length > 0) {
-  renderSearchResult(keyword, result);
-} else {
-  setSearchState('empty', 'Data tidak ditemukan');
-}
-    } catch (err) {
-      setSearchState('error', 'Tidak dapat terhubung ke server. Silakan coba lagi.');
-    }
-  }
-
-  function renderSearchResult(keyword, rows) {
-    document.getElementById('search-result-sub').textContent =
-      `Ditemukan ${rows.length} data peminjaman untuk anggota "${keyword}"`;
-
-    const tbody = document.getElementById('search-result-body');
-    tbody.innerHTML = rows.map(r => `
-      <tr>
-       <td>${escapeHtml(r.username)}</td>
-<td>${escapeHtml(r.judul_buku)}</td>
-<td>-</td>
-<td>${formatTanggal(r.tanggal_pinjam)}</td>
-<td>${formatTanggal(r.tanggal_kembali)}</td>
-<td>${escapeHtml(r.status)}</td></span></td>
-      </tr>
-    `).join('');
-
-    setSearchState('result');
-  }
-
-  function setSearchState(state, message = '') {
-    document.getElementById('search-loading').style.display      = state === 'loading' ? 'block' : 'none';
-    document.getElementById('search-result-table').style.display = state === 'result'  ? 'table' : 'none';
-
-    const emptyEl = document.getElementById('search-empty');
-    if (state === 'empty' || state === 'error') {
-      emptyEl.style.display = 'block';
-      emptyEl.textContent = state === 'empty'
-        ? (message || 'Data anggota tidak ditemukan.')
-        : (message || 'Terjadi kesalahan. Silakan coba lagi.');
-    } else {
-      emptyEl.style.display = 'none';
-    }
-  }
-
-  function openSearchModal() {
     ['pinjam','rusak','langka','pencarian'].forEach(t => {
       document.getElementById('m-'+t).style.display = 'none';
     });
     document.getElementById('m-pencarian').style.display = 'block';
-    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('modalBeranda').classList.add('open');
     document.body.style.overflow = 'hidden';
-    currentModal = 'pencarian';
+
+    document.getElementById('search-loading').style.display = 'block';
+    document.getElementById('search-result-table').style.display = 'none';
+    document.getElementById('search-empty').style.display = 'none';
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${SEARCH_ENDPOINT}?username=${encodeURIComponent(keyword)}`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const result = await response.json();
+      if (result.length > 0) {
+        document.getElementById('search-result-sub').textContent =
+          `Ditemukan ${result.length} data peminjaman untuk anggota "${keyword}"`;
+        document.getElementById('search-result-body').innerHTML = result.map(r => `
+          <tr>
+            <td>${escapeHtml(r.username)}</td>
+            <td>${escapeHtml(r.judul_buku)}</td>
+            <td>-</td>
+            <td>${formatTanggal(r.tanggal_pinjam)}</td>
+            <td>${formatTanggal(r.tanggal_kembali)}</td>
+            <td>${escapeHtml(r.status)}</td>
+          </tr>`).join('');
+        document.getElementById('search-loading').style.display = 'none';
+        document.getElementById('search-result-table').style.display = 'table';
+      } else {
+        document.getElementById('search-loading').style.display = 'none';
+        document.getElementById('search-empty').style.display = 'block';
+        document.getElementById('search-empty').textContent = 'Data tidak ditemukan';
+      }
+    } catch (err) {
+      document.getElementById('search-loading').style.display = 'none';
+      document.getElementById('search-empty').style.display = 'block';
+      document.getElementById('search-empty').textContent = 'Tidak dapat terhubung ke server. Silakan coba lagi.';
+    }
   }
 
   function escapeHtml(str) {
-    if (str === null || str === undefined) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    if (str == null) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
-
   function formatTanggal(tgl) {
     if (!tgl) return '—';
     const d = new Date(tgl);
     if (isNaN(d.getTime())) return tgl;
-    return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
   }
 
-  searchBtn.addEventListener('click', cariAnggota);
-  searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      cariAnggota();
-    }
+  document.getElementById('btn-search-anggota').addEventListener('click', cariAnggota);
+  document.getElementById('search-anggota').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); cariAnggota(); }
   });
-  
+
+  // ============================================================
+  // DATA & LOGIC KOLEKSI
+  // ============================================================
+  const BOOKS = [
+    { id:1,  title:'Laskar Pelangi',       author:'Andrea Hirata',            cat:'fiksi',    year:2005, isbn:'978-979-1234-01-1',   publisher:'Bentang Pustaka',   pages:529,  stok:3, borrow:142, color:'linear-gradient(135deg,#b5550a,#7f3a07)', emoji:'🌈', desc:'Kisah perjuangan 10 anak di Belitung dalam menggapai mimpi dengan segala keterbatasan.',          status:'ada',   rare:false },
+    { id:2,  title:'Bumi Manusia',          author:'Pramoedya Ananta Toer',    cat:'fiksi',    year:1980, isbn:'978-979-1234-02-8',   publisher:'Hasta Mitra',       pages:535,  stok:2, borrow:98,  color:'linear-gradient(135deg,#2d6a4f,#1a4731)', emoji:'🌍', desc:'Sebuah roman sejarah tentang Minke, pemuda Jawa di era kolonial Belanda.',                       status:'ada',   rare:false },
+    { id:3,  title:'Atomic Habits',         author:'James Clear',              cat:'bisnis',   year:2018, isbn:'978-0-7352-1129-2',   publisher:'Avery',             pages:320,  stok:5, borrow:87,  color:'linear-gradient(135deg,#c9922a,#7a500e)', emoji:'⚛️', desc:'Panduan ilmiah membangun kebiasaan baik dan menghilangkan kebiasaan buruk.',                       status:'ada',   rare:false },
+    { id:4,  title:'Filosofi Teras',        author:'Henry Manampiring',        cat:'bisnis',   year:2018, isbn:'978-602-0369-27-5',   publisher:'Kompas',            pages:296,  stok:0, borrow:75,  color:'linear-gradient(135deg,#5a3d7a,#351f4a)', emoji:'🏛️', desc:'Pengantar filsafat Stoa yang relevan untuk kehidupan modern masyarakat Indonesia.',               status:'habis', rare:false },
+    { id:5,  title:'Homo Deus',             author:'Yuval Noah Harari',        cat:'sains',    year:2015, isbn:'978-0-0624-8088-6',   publisher:'Harvill Secker',    pages:450,  stok:4, borrow:62,  color:'linear-gradient(135deg,#2c5f8a,#153659)', emoji:'🧬', desc:'Eksplorasi masa depan umat manusia di era teknologi dan kecerdasan buatan.',                      status:'ada',   rare:false },
+    { id:6,  title:'Negeri 5 Menara',       author:'A. Fuadi',                 cat:'fiksi',    year:2009, isbn:'978-979-9929-87-1',   publisher:'Gramedia',          pages:423,  stok:1, borrow:58,  color:'linear-gradient(135deg,#8a3a20,#4a1a0d)', emoji:'🕌', desc:'Kisah enam pemuda yang bersekolah di pesantren dan bermimpi melihat dunia.',                      status:'ada',   rare:false },
+    { id:7,  title:'Sapiens',               author:'Yuval Noah Harari',        cat:'sains',    year:2011, isbn:'978-0-0624-8088-5',   publisher:'Harvill Secker',    pages:498,  stok:3, borrow:54,  color:'linear-gradient(135deg,#3a5a8a,#1c2e4a)', emoji:'🦴', desc:'Sejarah singkat umat manusia dari zaman purba hingga era modern.',                                status:'ada',   rare:false },
+    { id:8,  title:'Rich Dad Poor Dad',     author:'Robert Kiyosaki',          cat:'bisnis',   year:1997, isbn:'978-1-5120-5158-3',   publisher:'Warner Books',      pages:207,  stok:2, borrow:49,  color:'linear-gradient(135deg,#7a5c00,#4a3600)', emoji:'💰', desc:'Pelajaran finansial dari dua sosok ayah berbeda tentang cara memandang uang.',                    status:'ada',   rare:false },
+    { id:9,  title:'Perahu Kertas',         author:'Dee Lestari',              cat:'fiksi',    year:2009, isbn:'978-979-4579-58-3',   publisher:'Bentang',           pages:444,  stok:2, borrow:45,  color:'linear-gradient(135deg,#0a7a7a,#044444)', emoji:'⛵', desc:'Kisah cinta dua jiwa yang bertemu, berpisah, dan kembali lewat karya seni.',                    status:'ada',   rare:false },
+    { id:10, title:'Pemrograman Python',    author:'Dr. Wawan Kurniawan',      cat:'sains',    year:2021, isbn:'978-602-0001-55-1',   publisher:'Informatika',       pages:380,  stok:6, borrow:38,  color:'linear-gradient(135deg,#1a6a2a,#0a3a14)', emoji:'🐍', desc:'Panduan lengkap pemrograman Python dari dasar hingga machine learning.',                          status:'ada',   rare:false },
+    { id:11, title:'Metodologi Penelitian', author:'Prof. Sugiyono',           cat:'akademik', year:2019, isbn:'978-602-4479-28-3',   publisher:'Alfabeta',          pages:334,  stok:8, borrow:33,  color:'linear-gradient(135deg,#5a4a8a,#2a204a)', emoji:'📐', desc:'Panduan metodologi penelitian kuantitatif, kualitatif dan kombinasi.',                            status:'ada',   rare:false },
+    { id:12, title:'Serat Centhini',        author:'Pakubuwana IV',            cat:'langka',   year:1814, isbn:'LANGKA-001',           publisher:'Kraton Surakarta',  pages:4200, stok:1, borrow:5,   color:'linear-gradient(135deg,#8a6a00,#4a3800)', emoji:'📜', desc:'Ensiklopedia budaya Jawa terlengkap, ditulis pada awal abad ke-19 di Keraton Surakarta.',        status:'ada',   rare:true  },
+    { id:13, title:'Azab dan Sengsara',     author:'Merari Siregar',           cat:'langka',   year:1920, isbn:'LANGKA-002',           publisher:'Balai Poestaka',    pages:176,  stok:1, borrow:8,   color:'linear-gradient(135deg,#4a2a00,#2a1500)', emoji:'📚', desc:'Novel Indonesia pertama yang diterbitkan oleh Balai Poestaka pada tahun 1920.',                  status:'ada',   rare:true  },
+    { id:14, title:'Statistik untuk Penelitian', author:'Prof. Sugiyono',     cat:'akademik', year:2020, isbn:'978-602-4479-30-6',   publisher:'Alfabeta',          pages:289,  stok:5, borrow:28,  color:'linear-gradient(135deg,#4a3a7a,#20184a)', emoji:'📊', desc:'Panduan lengkap penggunaan statistik untuk penelitian ilmu sosial dan pendidikan.',               status:'ada',   rare:false },
+    { id:15, title:'Supernova: Kesatria',   author:'Dee Lestari',              cat:'fiksi',    year:2001, isbn:'978-979-9929-00-0',   publisher:'Truedee Books',     pages:328,  stok:0, borrow:41,  color:'linear-gradient(135deg,#0a4a7a,#052840)', emoji:'✨', desc:'Novel pertama seri Supernova yang memperkenalkan dunia fiksi ilmiah berlatar Indonesia.',         status:'habis', rare:false },
+    { id:16, title:'Dilan 1990',            author:'Pidi Baiq',                cat:'fiksi',    year:2014, isbn:'978-979-0617-02-0',   publisher:'Pastel Books',      pages:231,  stok:0, borrow:67,  color:'linear-gradient(135deg,#7a1a2a,#3a0a14)', emoji:'💌', desc:'Kisah romansa remaja di Bandung tahun 1990 yang manis dan penuh nostalgia.',                      status:'habis', rare:false },
+  ];
+
+  let currentFilter = 'semua';
+  let currentView   = 'grid';
+  let currentPage   = 1;
+  const perPage     = 12;
+
+  function getFiltered() {
+    const q = (document.getElementById('searchInput').value || '').toLowerCase();
+    return BOOKS.filter(b => {
+      const matchCat = currentFilter === 'semua' || b.cat === currentFilter;
+      const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+      return matchCat && matchQ;
+    });
+  }
+
+  function catLabel(cat) {
+    return { fiksi:'Fiksi & Sastra', sains:'Sains & Teknologi', bisnis:'Bisnis', akademik:'Akademik', langka:'Langka 👑' }[cat] || cat;
+  }
+  function catPillClass(cat) {
+    return cat === 'langka' ? 'pill-vip' : cat === 'fiksi' ? 'pill-rare' : 'pill-gray';
+  }
+
+  function renderGrid() {
+    const filtered = getFiltered();
+    const totalPages = Math.ceil(filtered.length / perPage) || 1;
+    if (currentPage > totalPages) currentPage = 1;
+    const slice = filtered.slice((currentPage-1)*perPage, currentPage*perPage);
+    document.getElementById('bookGrid').innerHTML = slice.map(b => `
+      <div class="book-card" onclick="openBook(${b.id})">
+        <div class="book-cover" style="background:${b.color}">
+          <span style="font-size:2rem;">${b.emoji}</span>
+          ${b.rare ? '<span class="book-cover-badge pill-vip" style="background:rgba(201,146,42,.3);color:#f5cc72;">VIP</span>' : ''}
+          ${b.stok === 0 ? '<span class="book-cover-badge" style="top:auto;bottom:8px;right:8px;background:rgba(0,0,0,.4);color:#ffaa88;font-size:.6rem;font-weight:700;padding:.15rem .45rem;border-radius:20px;">Habis</span>' : ''}
+        </div>
+        <div class="book-body">
+          <div class="book-title">${b.title}</div>
+          <div class="book-author">${b.author}</div>
+          <div class="book-meta">
+            <span class="book-cat">${catLabel(b.cat)}</span>
+            <span class="book-stok ${b.stok > 0 ? 'stok-ada' : 'stok-habis'}">${b.stok > 0 ? b.stok+' stok' : 'Habis'}</span>
+          </div>
+        </div>
+      </div>`).join('');
+    renderPagination(totalPages);
+  }
+
+  function renderTable() {
+    const filtered = getFiltered();
+    const totalPages = Math.ceil(filtered.length / perPage) || 1;
+    if (currentPage > totalPages) currentPage = 1;
+    const slice = filtered.slice((currentPage-1)*perPage, currentPage*perPage);
+    document.getElementById('bookTableBody').innerHTML = slice.map(b => `
+      <tr onclick="openBook(${b.id})" style="cursor:pointer;">
+        <td><strong>${b.title}</strong> ${b.rare ? '<span class="pill pill-vip" style="font-size:.6rem;">VIP</span>' : ''}</td>
+        <td>${b.author}</td>
+        <td><span class="pill ${catPillClass(b.cat)}">${catLabel(b.cat)}</span></td>
+        <td>${b.year}</td>
+        <td>${b.stok}</td>
+        <td><span class="pill ${b.stok > 0 ? 'pill-ok' : 'pill-late'}">${b.stok > 0 ? 'Tersedia' : 'Habis'}</span></td>
+      </tr>`).join('');
+    renderPagination(totalPages);
+  }
+
+  function renderPagination(totalPages) {
+    const pg = document.getElementById('pagination');
+    if (totalPages <= 1) { pg.innerHTML = ''; return; }
+    let html = `<button class="pg-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+    for (let i=1; i<=totalPages; i++) html += `<button class="pg-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    html += `<button class="pg-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
+    pg.innerHTML = html;
+  }
+
+  function goPage(p) { currentPage = p; render(); }
+
+  function render() {
+    if (currentView === 'grid') {
+      document.getElementById('bookGrid').classList.remove('hide');
+      document.getElementById('bookTableWrap').classList.remove('show');
+      renderGrid();
+    } else {
+      document.getElementById('bookGrid').classList.add('hide');
+      document.getElementById('bookTableWrap').classList.add('show');
+      renderTable();
+    }
+  }
+
+  function setFilter(el, f) {
+    document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    currentFilter = f; currentPage = 1; render();
+  }
+
+  function filterBooks() { currentPage = 1; render(); }
+
+  function setView(v) {
+    currentView = v;
+    document.getElementById('gridBtn').classList.toggle('active', v==='grid');
+    document.getElementById('listBtn').classList.toggle('active', v==='list');
+    render();
+  }
+
+  function openBook(id) {
+    const b = BOOKS.find(x => x.id === id);
+    document.getElementById('mCover').style.background = b.color;
+    document.getElementById('mCover').textContent = b.emoji;
+    document.getElementById('mTitle').textContent = b.title;
+    document.getElementById('mAuthor').textContent = b.author + ' · ' + b.year;
+    const pill = document.getElementById('mCatPill');
+    pill.textContent = catLabel(b.cat); pill.className = 'pill ' + catPillClass(b.cat);
+    document.getElementById('mYear').textContent = b.year;
+    document.getElementById('mIsbn').textContent = b.isbn;
+    document.getElementById('mPublisher').textContent = b.publisher;
+    document.getElementById('mPages').textContent = b.pages + ' halaman';
+    document.getElementById('mStok').textContent = b.stok > 0 ? b.stok + ' tersedia' : 'Habis';
+    document.getElementById('mBorrow').textContent = b.borrow + 'x dipinjam';
+    document.getElementById('mDesc').textContent = b.desc;
+    const btn = document.getElementById('mBtnPinjam');
+    btn.disabled = b.stok === 0;
+    btn.textContent = b.stok > 0 ? '📤 Pinjamkan Buku' : '⛔ Stok Habis';
+    document.getElementById('modalKoleksi').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModalKoleksi() {
+    document.getElementById('modalKoleksi').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleBgClickKoleksi(e) {
+    if (e.target === document.getElementById('modalKoleksi')) closeModalKoleksi();
+  }
+
+  // ESC tutup modal mana pun yang terbuka
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); }
+  });
   </script>
 </body>
 </html>
