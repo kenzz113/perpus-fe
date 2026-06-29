@@ -277,6 +277,58 @@
     .search-empty-msg { padding: 1.5rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
     .search-loading-msg { padding: 1.5rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; }
 
+    /* ===== MODAL TAMBAH BUKU ===== */
+    #modalTambahBuku .modal-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      width: 100%; max-width: 580px; max-height: 92vh; overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+    .form-group { display: flex; flex-direction: column; gap: .35rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+    .form-label span { color: #b5550a; margin-left: 2px; }
+    .form-input, .form-select, .form-textarea {
+      padding: .55rem .85rem; border: 1.5px solid var(--border); border-radius: 9px;
+      font-family: 'DM Sans', sans-serif; font-size: .83rem; color: var(--ink);
+      background: var(--bg2); outline: none; transition: border-color .18s, box-shadow .18s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--accent); box-shadow: 0 0 0 3px rgba(181,85,10,.1);
+      background: var(--surface);
+    }
+    .form-input.error, .form-select.error { border-color: #c02020; box-shadow: 0 0 0 3px rgba(192,32,32,.08); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238c7d65' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right .75rem center; padding-right: 2rem; }
+    .form-error-msg { font-size: .68rem; color: #c02020; margin-top: .15rem; display: none; }
+    .form-error-msg.show { display: block; }
+    .cover-preview {
+      height: 90px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; border: 1.5px dashed var(--border); transition: all .2s;
+      margin-bottom: .5rem; position: relative; overflow: hidden;
+    }
+    .cover-preview.has-color { border-style: solid; }
+    .color-grid { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .color-swatch { width: 28px; height: 28px; border-radius: 7px; cursor: pointer; border: 2.5px solid transparent; transition: transform .15s, border-color .15s; flex-shrink: 0; }
+    .color-swatch:hover { transform: scale(1.15); }
+    .color-swatch.selected { border-color: var(--ink); transform: scale(1.1); }
+    .emoji-grid { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .emoji-opt { width: 32px; height: 32px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--bg2); cursor: pointer; display: grid; place-items: center; font-size: 1rem; transition: all .15s; }
+    .emoji-opt:hover { border-color: var(--accent); background: var(--cream); }
+    .emoji-opt.selected { border-color: var(--accent); background: rgba(181,85,10,.1); }
+    .toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999;
+      background: #1a4731; color: #fff; padding: .8rem 1.2rem; border-radius: 12px;
+      font-size: .83rem; font-weight: 600; display: flex; align-items: center; gap: .6rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2); transform: translateY(80px); opacity: 0;
+      transition: all .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .stok-control { display: flex; align-items: center; gap: .5rem; }
+    .stok-btn { width: 32px; height: 32px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--bg2); cursor: pointer; font-size: 1rem; font-weight: 700; color: var(--ink2); display: grid; place-items: center; transition: all .15s; flex-shrink: 0; }
+    .stok-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .stok-display { flex: 1; text-align: center; font-size: 1rem; font-weight: 700; color: var(--ink); padding: .45rem; border: 1.5px solid var(--border); border-radius: 9px; background: var(--bg2); }
+
     @media (max-width: 1100px) { .content-grid { grid-template-columns: 1fr; } .right-col { display: none; } }
     @media (max-width: 860px) {
       :root { --sidebar-w: 60px; }
@@ -383,7 +435,6 @@
         </div>
         <div class="view-toggle">
           <button class="vtbtn active" id="gridBtn" onclick="setView('grid')" title="Grid">⊞</button>
-          <button class="vtbtn" id="listBtn" onclick="setView('list')" title="List">☰</button>
         </div>
       </div>
     </div>
@@ -473,11 +524,11 @@
             <div class="card">
               <div class="card-head"><span class="card-icon">📋</span><h3>Ringkasan Koleksi</h3></div>
               <div class="quick-stat-list">
-                <div class="qs-item"><span class="qs-label">📖 Fiksi & Sastra</span><span class="qs-num">12.400</span></div>
-                <div class="qs-item"><span class="qs-label">🔬 Sains & Teknologi</span><span class="qs-num">8.700</span></div>
-                <div class="qs-item"><span class="qs-label">💼 Bisnis & Ekonomi</span><span class="qs-num">6.200</span></div>
-                <div class="qs-item"><span class="qs-label">🎓 Akademik</span><span class="qs-num">9.100</span></div>
-                <div class="qs-item"><span class="qs-label">👑 Koleksi Langka</span><span class="qs-num">12</span></div>
+                <div class="qs-item"><span class="qs-label">📖 Fiksi & Sastra</span><span class="qs-num">6</span></div>
+                <div class="qs-item"><span class="qs-label">🔬 Sains & Teknologi</span><span class="qs-num">3</span></div>
+                <div class="qs-item"><span class="qs-label">💼 Bisnis & Ekonomi</span><span class="qs-num">3</span></div>
+                <div class="qs-item"><span class="qs-label">🎓 Akademik</span><span class="qs-num">2</span></div>
+                <div class="qs-item"><span class="qs-label">👑 Koleksi Langka</span><span class="qs-num">2</span></div>
               </div>
             </div>
           </div>
@@ -496,7 +547,7 @@
             <button class="ftab" onclick="setFilter(this,'akademik')">Akademik</button>
             <button class="ftab" onclick="setFilter(this,'langka')">Langka</button>
           </div>
-          <button class="add-btn">＋ Tambah Buku</button>
+          <button class="add-btn" onclick="openTambahBuku()">＋ Tambah Buku</button>
         </div>
         <div class="book-grid" id="bookGrid"></div>
         <div class="book-table-wrap" id="bookTableWrap">
@@ -684,6 +735,120 @@
       </div>
     </div>
   </div>
+
+  <!-- ===== MODAL TAMBAH BUKU ===== -->
+  <div class="modal-overlay" id="modalTambahBuku" onclick="handleBgClickTambah(event)">
+    <div class="modal-box">
+      <div class="modal-head" style="border-radius:18px 18px 0 0;">
+        <div class="modal-head-icon" style="background:rgba(181,85,10,.1);">➕</div>
+        <div class="modal-head-text">
+          <h3>Tambah Buku Baru</h3>
+          <p>Isi data lengkap buku untuk ditambahkan ke koleksi</p>
+        </div>
+        <button class="modal-close" onclick="closeTambahBuku()">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- PREVIEW COVER -->
+        <div class="cover-preview has-color" id="coverPreview" style="background:linear-gradient(135deg,#b5550a,#7f3a07);">
+          <span id="coverEmoji" style="font-size:2.5rem;">📖</span>
+        </div>
+
+        <div class="form-grid">
+
+          <!-- Judul -->
+          <div class="form-group full">
+            <label class="form-label">Judul Buku <span>*</span></label>
+            <input class="form-input" id="tb-judul" type="text" placeholder="Contoh: Laskar Pelangi" oninput="clearErr('tb-judul')"/>
+            <span class="form-error-msg" id="err-judul">Judul wajib diisi</span>
+          </div>
+
+          <!-- Penulis -->
+          <div class="form-group">
+            <label class="form-label">Penulis <span>*</span></label>
+            <input class="form-input" id="tb-penulis" type="text" placeholder="Nama penulis" oninput="clearErr('tb-penulis')"/>
+            <span class="form-error-msg" id="err-penulis">Penulis wajib diisi</span>
+          </div>
+
+          <!-- Tahun -->
+          <div class="form-group">
+            <label class="form-label">Tahun Terbit <span>*</span></label>
+            <input class="form-input" id="tb-tahun" type="number" placeholder="2024" min="1000" max="2099" oninput="clearErr('tb-tahun')"/>
+            <span class="form-error-msg" id="err-tahun">Tahun tidak valid</span>
+          </div>
+
+          <!-- Kategori -->
+          <div class="form-group">
+            <label class="form-label">Kategori <span>*</span></label>
+            <select class="form-select" id="tb-kategori" onchange="clearErr('tb-kategori')">
+              <option value="">— Pilih Kategori —</option>
+              <option value="fiksi">Fiksi & Sastra</option>
+              <option value="sains">Sains & Teknologi</option>
+              <option value="bisnis">Bisnis</option>
+              <option value="akademik">Akademik</option>
+              <option value="langka">Langka 👑</option>
+            </select>
+            <span class="form-error-msg" id="err-kategori">Kategori wajib dipilih</span>
+          </div>
+
+          <!-- ISBN -->
+          <div class="form-group">
+            <label class="form-label">ISBN</label>
+            <input class="form-input" id="tb-isbn" type="text" placeholder="978-xxx-xxx-xxx-x"/>
+          </div>
+
+          <!-- Penerbit -->
+          <div class="form-group">
+            <label class="form-label">Penerbit</label>
+            <input class="form-input" id="tb-penerbit" type="text" placeholder="Nama penerbit"/>
+          </div>
+
+          <!-- Halaman -->
+          <div class="form-group">
+            <label class="form-label">Jumlah Halaman</label>
+            <input class="form-input" id="tb-halaman" type="number" placeholder="300" min="1"/>
+          </div>
+
+          <!-- Stok -->
+          <div class="form-group">
+            <label class="form-label">Stok Awal <span>*</span></label>
+            <div class="stok-control">
+              <button type="button" class="stok-btn" onclick="ubahStok(-1)">−</button>
+              <div class="stok-display" id="stok-display">1</div>
+              <button type="button" class="stok-btn" onclick="ubahStok(1)">＋</button>
+            </div>
+          </div>
+
+          <!-- Sinopsis -->
+          <div class="form-group full">
+            <label class="form-label">Sinopsis</label>
+            <textarea class="form-textarea" id="tb-sinopsis" placeholder="Deskripsi singkat tentang buku ini…"></textarea>
+          </div>
+
+          <!-- Warna Cover -->
+          <div class="form-group full">
+            <label class="form-label">Warna Cover</label>
+            <div class="color-grid" id="colorGrid"></div>
+          </div>
+
+          <!-- Emoji Cover -->
+          <div class="form-group full">
+            <label class="form-label">Ikon Cover</label>
+            <div class="emoji-grid" id="emojiGrid"></div>
+          </div>
+
+        </div><!-- /form-grid -->
+
+        <div class="modal-actions" style="margin-top:1.5rem;">
+          <button class="btn-pinjam" onclick="simpanBuku()">✅ Simpan ke Koleksi</button>
+          <button class="btn-secondary" onclick="closeTambahBuku()">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">✅ <span id="toast-msg">Buku berhasil ditambahkan!</span></div>
 
   <script>
   // ============================================================
@@ -1079,9 +1244,174 @@
     if (e.target === document.getElementById('modalKoleksi')) closeModalKoleksi();
   }
 
+  // ============================================================
+  // MODAL TAMBAH BUKU
+  // ============================================================
+  const COVER_PRESETS = [
+    'linear-gradient(135deg,#b5550a,#7f3a07)',
+    'linear-gradient(135deg,#2d6a4f,#1a4731)',
+    'linear-gradient(135deg,#c9922a,#7a500e)',
+    'linear-gradient(135deg,#5a3d7a,#351f4a)',
+    'linear-gradient(135deg,#2c5f8a,#153659)',
+    'linear-gradient(135deg,#c94a6a,#7a1f3a)',
+    'linear-gradient(135deg,#1a6a2a,#0a3a14)',
+    'linear-gradient(135deg,#3a5a8a,#1c2e4a)',
+    'linear-gradient(135deg,#7a5c00,#4a3600)',
+    'linear-gradient(135deg,#0a7a7a,#044444)',
+    'linear-gradient(135deg,#5a4a8a,#2a204a)',
+    'linear-gradient(135deg,#8a4e1a,#4a2408)',
+    'linear-gradient(135deg,#8a6a00,#4a3800)',
+    'linear-gradient(135deg,#4a2a00,#2a1500)',
+    'linear-gradient(135deg,#6a3a8a,#3a1a5a)',
+    'linear-gradient(135deg,#3a7a8a,#1a4a56)',
+  ];
+  const SWATCH_COLORS = [
+    '#b5550a','#2d6a4f','#c9922a','#5a3d7a','#2c5f8a','#c94a6a',
+    '#1a6a2a','#3a5a8a','#7a5c00','#0a7a7a','#5a4a8a','#8a4e1a',
+    '#8a6a00','#4a2a00','#6a3a8a','#3a7a8a',
+  ];
+  const EMOJI_OPTS = ['📖','📚','🌈','🌍','⚛️','🏛️','🧬','🦴','💰','⛵','🐍','📐','📜','📊','✨','💌','🔬','🎭','🌿','🏔️','⚡','🎵','🌙','🏛','🦋','🔮'];
+
+  let selectedColor = COVER_PRESETS[0];
+  let selectedEmoji = '📖';
+  let stokValue = 1;
+
+  function initTambahBuku() {
+    // warna swatches
+    const cg = document.getElementById('colorGrid');
+    cg.innerHTML = SWATCH_COLORS.map((c, i) => `
+      <div class="color-swatch ${i===0?'selected':''}" style="background:${COVER_PRESETS[i]||c};"
+           onclick="pilihWarna(${i})" title="Warna ${i+1}"></div>`).join('');
+
+    // emoji grid
+    const eg = document.getElementById('emojiGrid');
+    eg.innerHTML = EMOJI_OPTS.map((e, i) => `
+      <div class="emoji-opt ${i===0?'selected':''}" onclick="pilihEmoji('${e}', this)">${e}</div>`).join('');
+
+    // reset form
+    ['tb-judul','tb-penulis','tb-tahun','tb-isbn','tb-penerbit','tb-halaman','tb-sinopsis'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.getElementById('tb-kategori').value = '';
+    stokValue = 1;
+    document.getElementById('stok-display').textContent = '1';
+    selectedColor = COVER_PRESETS[0];
+    selectedEmoji = '📖';
+    updatePreview();
+    ['err-judul','err-penulis','err-tahun','err-kategori'].forEach(id => {
+      document.getElementById(id).classList.remove('show');
+    });
+    ['tb-judul','tb-penulis','tb-tahun','tb-kategori'].forEach(id => {
+      document.getElementById(id).classList.remove('error');
+    });
+  }
+
+  function pilihWarna(i) {
+    selectedColor = COVER_PRESETS[i];
+    document.querySelectorAll('.color-swatch').forEach((s, idx) => s.classList.toggle('selected', idx===i));
+    updatePreview();
+  }
+
+  function pilihEmoji(e, el) {
+    selectedEmoji = e;
+    document.querySelectorAll('.emoji-opt').forEach(x => x.classList.remove('selected'));
+    el.classList.add('selected');
+    updatePreview();
+  }
+
+  function updatePreview() {
+    document.getElementById('coverPreview').style.background = selectedColor;
+    document.getElementById('coverEmoji').textContent = selectedEmoji;
+  }
+
+  function ubahStok(delta) {
+    stokValue = Math.max(0, stokValue + delta);
+    document.getElementById('stok-display').textContent = stokValue;
+  }
+
+  function clearErr(id) {
+    document.getElementById(id).classList.remove('error');
+    const errEl = document.getElementById('err-' + id.replace('tb-',''));
+    if (errEl) errEl.classList.remove('show');
+  }
+
+  function validateTambah() {
+    let ok = true;
+    const checks = [
+      { id:'tb-judul',    errId:'err-judul',    fn: v => v.trim() !== '' },
+      { id:'tb-penulis',  errId:'err-penulis',  fn: v => v.trim() !== '' },
+      { id:'tb-tahun',    errId:'err-tahun',    fn: v => v !== '' && +v >= 1000 && +v <= 2099 },
+      { id:'tb-kategori', errId:'err-kategori', fn: v => v !== '' },
+    ];
+    checks.forEach(c => {
+      const el = document.getElementById(c.id);
+      const valid = c.fn(el.value);
+      el.classList.toggle('error', !valid);
+      document.getElementById(c.errId).classList.toggle('show', !valid);
+      if (!valid) ok = false;
+    });
+    return ok;
+  }
+
+  function simpanBuku() {
+    if (!validateTambah()) return;
+
+    const newId = BOOKS.length > 0 ? Math.max(...BOOKS.map(b => b.id)) + 1 : 1;
+    const baru = {
+      id:        newId,
+      title:     document.getElementById('tb-judul').value.trim(),
+      author:    document.getElementById('tb-penulis').value.trim(),
+      cat:       document.getElementById('tb-kategori').value,
+      year:      parseInt(document.getElementById('tb-tahun').value) || new Date().getFullYear(),
+      isbn:      document.getElementById('tb-isbn').value.trim() || '-',
+      publisher: document.getElementById('tb-penerbit').value.trim() || '-',
+      pages:     parseInt(document.getElementById('tb-halaman').value) || 0,
+      stok:      stokValue,
+      borrow:    0,
+      color:     selectedColor,
+      emoji:     selectedEmoji,
+      desc:      document.getElementById('tb-sinopsis').value.trim() || 'Tidak ada sinopsis.',
+      status:    stokValue > 0 ? 'ada' : 'habis',
+      rare:      document.getElementById('tb-kategori').value === 'langka',
+    };
+
+    BOOKS.push(baru);
+    closeTambahBuku();
+    switchView('koleksi');
+    currentFilter = 'semua';
+    currentPage = 1;
+    document.querySelectorAll('.ftab').forEach((t,i) => t.classList.toggle('active', i===0));
+    render();
+    showToast(`"${baru.title}" berhasil ditambahkan ke koleksi!`);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  function openTambahBuku() {
+    initTambahBuku();
+    document.getElementById('modalTambahBuku').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('tb-judul').focus(), 100);
+  }
+
+  function closeTambahBuku() {
+    document.getElementById('modalTambahBuku').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleBgClickTambah(e) {
+    if (e.target === document.getElementById('modalTambahBuku')) closeTambahBuku();
+  }
+
   // ESC tutup modal mana pun yang terbuka
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); }
+    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); }
   });
   </script>
 </body>
