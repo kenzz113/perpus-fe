@@ -443,7 +443,25 @@
       </div>
 
       <!-- Form -->
-      <form id="loginForm" class="form">
+      <form id="registerForm">
+
+    <input
+        type="text"
+        id="username"
+        placeholder="Username"
+    >
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Password"
+    >
+
+    <button type="submit">
+        Daftar
+    </button>
+
+    </form>
 
         <!-- Email -->
         <div class="field">
@@ -541,6 +559,60 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     console.error(err)
     alert('Gagal terhubung ke server')
   }
+})
+</script>
+<script>
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        
+        e.preventDefault()
+        
+        const username =
+        document.getElementById('username').value
+        
+        const password =
+        document.getElementById('password').value
+        
+        try {
+
+            const response = await fetch(
+                'http://localhost:3000/auth/register',
+                {
+                method: 'POST',
+                
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                
+                body: JSON.stringify({
+                    username,
+                    password
+                })
+            }
+        )
+        
+        const data = await response.json()
+        
+        if (response.ok) {
+            
+            alert('Register berhasil')
+            
+            window.location.href = 'login.html'
+            
+        } else {
+            
+            alert(data.message)
+            
+        }
+        
+    } catch (err) {
+        
+        console.error(err)
+        
+        alert('Gagal terhubung ke server')
+        
+    }
+    
 })
 </script>
 </body>
