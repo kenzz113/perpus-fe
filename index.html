@@ -1412,7 +1412,7 @@
         currentFilter = 'semua';
         currentPage = 1;
         document.querySelectorAll('.ftab').forEach((t, i) => t.classList.toggle('active', i === 0));
-        render();
+        render(); 
         showToast(`"${payload.judul_buku}" berhasil ditambahkan ke koleksi!`);
       } else {
         alert(result.message || 'Gagal menyimpan buku.');
