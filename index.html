@@ -1354,36 +1354,77 @@
     return ok;
   }
 
-  function simpanBuku() {
+  async function simpanBuku() {
     if (!validateTambah()) return;
 
-    const newId = BOOKS.length > 0 ? Math.max(...BOOKS.map(b => b.id)) + 1 : 1;
-    const baru = {
-      id:        newId,
-      title:     document.getElementById('tb-judul').value.trim(),
-      author:    document.getElementById('tb-penulis').value.trim(),
-      cat:       document.getElementById('tb-kategori').value,
-      year:      parseInt(document.getElementById('tb-tahun').value) || new Date().getFullYear(),
-      isbn:      document.getElementById('tb-isbn').value.trim() || '-',
-      publisher: document.getElementById('tb-penerbit').value.trim() || '-',
-      pages:     parseInt(document.getElementById('tb-halaman').value) || 0,
-      stok:      stokValue,
-      borrow:    0,
-      color:     selectedColor,
-      emoji:     selectedEmoji,
-      desc:      document.getElementById('tb-sinopsis').value.trim() || 'Tidak ada sinopsis.',
-      status:    stokValue > 0 ? 'ada' : 'habis',
-      rare:      document.getElementById('tb-kategori').value === 'langka',
+    const btn = document.querySelector('#modalTambahBuku .btn-pinjam');
+    btn.disabled = true;
+    btn.textContent = '⏳ Menyimpan…';
+
+    const payload = {
+      judul_buku:    document.getElementById('tb-judul').value.trim(),
+      penulis:       document.getElementById('tb-penulis').value.trim(),
+      tahun_terbit:  document.getElementById('tb-tahun').value,
+      kategori:      document.getElementById('tb-kategori').value,
+      isbn:          document.getElementById('tb-isbn').value.trim() || null,
+      penerbit:      document.getElementById('tb-penerbit').value.trim() || null,
+      jumlah_halaman: parseInt(document.getElementById('tb-halaman').value) || null,
+      stok_awal:     stokValue,
+      sinopsis:      document.getElementById('tb-sinopsis').value.trim() || null,
     };
 
-    BOOKS.push(baru);
-    closeTambahBuku();
-    switchView('koleksi');
-    currentFilter = 'semua';
-    currentPage = 1;
-    document.querySelectorAll('.ftab').forEach((t,i) => t.classList.toggle('active', i===0));
-    render();
-    showToast(`"${baru.title}" berhasil ditambahkan ke koleksi!`);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/buku', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Tambah juga ke array lokal supaya langsung keliatan di grid
+        const newId = BOOKS.length > 0 ? Math.max(...BOOKS.map(b => b.id)) + 1 : 1;
+        BOOKS.push({
+          id:        result.id || newId,
+          title:     payload.judul_buku,
+          author:    payload.penulis,
+          cat:       payload.kategori,
+          year:      parseInt(payload.tahun_terbit) || new Date().getFullYear(),
+          isbn:      payload.isbn || '-',
+          publisher: payload.penerbit || '-',
+          pages:     payload.jumlah_halaman || 0,
+          stok:      payload.stok_awal,
+          borrow:    0,
+          color:     selectedColor,
+          emoji:     selectedEmoji,
+          desc:      payload.sinopsis || 'Tidak ada sinopsis.',
+          status:    payload.stok_awal > 0 ? 'ada' : 'habis',
+          rare:      payload.kategori === 'langka',
+        });
+
+        closeTambahBuku();
+        switchView('koleksi');
+        currentFilter = 'semua';
+        currentPage = 1;
+        document.querySelectorAll('.ftab').forEach((t, i) => t.classList.toggle('active', i === 0));
+        render();
+        showToast(`"${payload.judul_buku}" berhasil ditambahkan ke koleksi!`);
+      } else {
+        alert(result.message || 'Gagal menyimpan buku.');
+        btn.disabled = false;
+        btn.textContent = '✅ Simpan ke Koleksi';
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Tidak dapat terhubung ke server. Pastikan backend berjalan di localhost:3000.');
+      btn.disabled = false;
+      btn.textContent = '✅ Simpan ke Koleksi';
+    }
   }
 
   function showToast(msg) {
