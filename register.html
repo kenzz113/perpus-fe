@@ -443,14 +443,14 @@
       </div>
 
       <!-- Form -->
-      <form id="registerForm"></form>
+      <form id="registerForm">
 
-        <!-- Email -->
+        <!-- Username -->
         <div class="field">
-          <label for="username">username</label>
+          <label for="username">Username</label>
           <div class="input-wrap">
             <span class="input-icon">✉️</span>
-            <input type="text" id="username" placeholder="masukkan username"/>
+            <input type="text" id="username" placeholder="Masukkan username"/>
           </div>
         </div>
 
@@ -466,21 +466,17 @@
           </div>
         </div>
 
-        <!-- Remember + Forgot -->
-        <div class="form-row">
-          
-          
-        </div>
-
         <!-- Submit -->
         <button class="btn-submit" type="submit">
           📚 Daftar Sekarang
         </button>
 
-      <!-- Register -->
+      </form>
+
+      <!-- Login link -->
       <p class="register-prompt">
         Sudah punya akun?
-        <a href="#">Masuk di sini</a>
+        <a href="login.html">Masuk di sini</a>
       </p>
 
       <!-- Trust -->
@@ -488,7 +484,6 @@
         <div class="trust-item"><span>🔒</span> SSL Aman</div>
         <div class="trust-item"><span>🛡️</span> Data Terlindungi</div>
         <div class="trust-item"><span>✅</span> Tanpa Iklan</div>
-      </form>
       </div>
 
     </div>
@@ -505,97 +500,33 @@
         btn.textContent = '👁️';
       }
     }
-  </script>
-  
-  <script>
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault()
-
-  const username = document.getElementById('username').value
-  const password = document.getElementById('password').value
-
-  try {
-    const response = await fetch('http://localhost:3000/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username,
-        password
-      })
-    })
-
-    const data = await response.json()
-
-    if (response.ok) {
-      localStorage.setItem('token', data.token)
-
-      alert('Registrasi berhasil')
-
-      window.location.href = 'index.html'
-    } else {
-      alert(data.message)
-    }
-  } catch (err) {
-    console.error(err)
-    alert('Gagal terhubung ke server')
-  }
-})
-</script>
-<script>
 
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
-        
-        e.preventDefault()
-        
-        const username =
-        document.getElementById('username').value
-        
-        const password =
-        document.getElementById('password').value
-        
-        try {
+      e.preventDefault();
 
-            const response = await fetch(
-                'http://localhost:3000/auth/register',
-                {
-                method: 'POST',
-                
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                
-                body: JSON.stringify({
-                    username,
-                    password
-                })
-            }
-        )
-        
-        const data = await response.json()
-        
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
         if (response.ok) {
-            
-            alert('Register berhasil')
-            
-            window.location.href = 'login.html'
-            
+          alert('Register berhasil');
+          window.location.href = 'login.html';
         } else {
-            
-            alert(data.message)
-            
+          alert(data.message);
         }
-        
-    } catch (err) {
-        
-        console.error(err)
-        
-        alert('Gagal terhubung ke server')
-        
-    }
-    
-})
-</script>
+      } catch (err) {
+        console.error(err);
+        alert('Gagal terhubung ke server');
+      }
+    });
+  </script>
 </body>
 </html>
