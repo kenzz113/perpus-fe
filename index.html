@@ -329,6 +329,24 @@
     .stok-btn:hover { border-color: var(--accent); color: var(--accent); }
     .stok-display { flex: 1; text-align: center; font-size: 1rem; font-weight: 700; color: var(--ink); padding: .45rem; border: 1.5px solid var(--border); border-radius: 9px; background: var(--bg2); }
 
+    /* ===== VIP LANGKA ===== */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: .75rem; }
+    .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--ink); }
+    .section-header h2 span.green { font-style: italic; color: var(--accent2); }
+    .section-desc { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+    .stat-row-vip { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .85rem; margin-bottom: 1.5rem; }
+    .stat-card-vip { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent2); border-radius: 12px; padding: 1rem 1.1rem; }
+    .stat-card-vip .sc-label { font-size: .68rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+    .stat-card-vip .sc-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--ink); line-height: 1; }
+    .stat-card-vip .sc-sub { font-size: .7rem; color: var(--muted); margin-top: .3rem; }
+    .export-btn { display: flex; align-items: center; gap: .35rem; padding: .35rem .8rem; border-radius: 7px; border: 1.5px solid var(--border); background: var(--bg2); font-size: .75rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .18s; }
+    .export-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .action-btns { display: flex; gap: .35rem; }
+    .act-btn { padding: .28rem .65rem; border-radius: 6px; font-size: .7rem; font-weight: 600; border: 1.5px solid var(--border); background: var(--bg2); color: var(--ink2); cursor: pointer; transition: all .15s; }
+    .act-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .act-btn.danger:hover { border-color: #c62828; color: #c62828; }
+    .pill-red { background: rgba(180,30,30,.12); color: #8a1010; }
+
     @media (max-width: 1100px) { .content-grid { grid-template-columns: 1fr; } .right-col { display: none; } }
     @media (max-width: 860px) {
       :root { --sidebar-w: 60px; }
@@ -387,10 +405,10 @@
         <div class="sb-mgmt-body"><strong>Buku Rusak</strong><small>Laporan kondisi buku</small></div>
         <span class="sb-mgmt-badge gold">5</span>
       </button>
-      <button class="sb-mgmt-item" onclick="openModalBeranda('langka')">
+      <button class="sb-mgmt-item" id="nav-langkavip" onclick="switchView('langkavip')">
         <div class="mgmt-icon-wrap ic-green">👑</div>
         <div class="sb-mgmt-body"><strong>Buku Langka — VIP</strong><small>Reward member premium</small></div>
-        <span class="sb-mgmt-badge green">🕛</span>
+        <span class="sb-mgmt-badge green">Baru</span>
       </button>
 
       <div class="sb-user">
@@ -444,6 +462,20 @@
       <div>
         <div class="topbar-title">Statistik</div>
         <div class="topbar-sub">Ringkasan data perpustakaan</div>
+      </div>
+    </div>
+
+    <!-- TOPBAR LANGKA VIP -->
+    <div class="topbar" id="topbar-langkavip" style="display:none;">
+      <div>
+        <div class="topbar-title">Buku Langka — VIP</div>
+        <div class="topbar-sub">Koleksi eksklusif untuk member premium</div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <span style="color:var(--muted);font-size:.85rem;">🔍</span>
+          <input type="text" placeholder="Cari judul atau penulis…" id="searchVip" oninput="filterVip()" style="width:200px;"/>
+        </div>
       </div>
     </div>
 
@@ -567,6 +599,54 @@
         <div class="greeting">
           <h1>📊 <em>Statistik</em></h1>
           <p>Halaman statistik akan segera hadir.</p>
+        </div>
+      </div>
+
+      <!-- ===== VIEW: BUKU LANGKA VIP ===== -->
+      <div class="view" id="view-langkavip">
+        <div class="section-header">
+          <div>
+            <h2>Buku Langka <span class="green">— VIP</span></h2>
+            <div class="section-desc">Koleksi eksklusif untuk member premium perpustakaan</div>
+          </div>
+          <button class="export-btn"></button>
+        </div>
+        <div class="stat-row-vip">
+          <div class="stat-card-vip">
+            <div class="sc-label">Total Koleksi</div>
+            <div class="sc-val">12</div>
+            <div class="sc-sub">Buku langka tersimpan</div>
+          </div>
+          <div class="stat-card-vip">
+            <div class="sc-label">Tersedia</div>
+            <div class="sc-val">9</div>
+            <div class="sc-sub">Bisa dipinjam VIP</div>
+          </div>
+          <div class="stat-card-vip">
+            <div class="sc-label">Sedang Dipinjam</div>
+            <div class="sc-val">0</div>
+            <div class="sc-sub">Oleh member premium</div>
+          </div>
+          <div class="stat-card-vip">
+            <div class="sc-label">Member VIP Aktif</div>
+            <div class="sc-val">0</div>
+            <div class="sc-sub">Member terdaftar</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <span>👑</span>
+            <h3>Koleksi Buku Langka VIP</h3>
+            <div class="card-head-action" style="display:flex;gap:.5rem;">
+              <button class="export-btn">＋ Tambah Koleksi</button>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr><th>#</th><th>Judul Buku</th><th>Penulis</th><th>Tahun</th><th>Stok</th><th>Akses</th><th>Aksi</th></tr>
+            </thead>
+            <tbody id="tbody-langka"></tbody>
+          </table>
         </div>
       </div>
 
@@ -855,12 +935,14 @@
   // NAVIGATION
   // ============================================================
   function switchView(view) {
-    ['beranda','koleksi','statistik'].forEach(v => {
+    ['beranda','koleksi','statistik','langkavip'].forEach(v => {
       document.getElementById('view-'+v).classList.toggle('active', v === view);
       document.getElementById('topbar-'+v).style.display = v === view ? 'flex' : 'none';
-      document.getElementById('nav-'+v).classList.toggle('active', v === view);
+      const nav = document.getElementById('nav-'+v);
+      if (nav) nav.classList.toggle('active', v === view);
     });
     if (view === 'koleksi') render();
+    if (view === 'langkavip') renderLangka(DATA_LANGKA);
   }
 
   // ============================================================
@@ -1450,7 +1532,56 @@
     if (e.target === document.getElementById('modalTambahBuku')) closeTambahBuku();
   }
 
-  // ESC tutup modal mana pun yang terbuka
+  // ============================================================
+  // DATA & LOGIC BUKU LANGKA VIP
+  // ============================================================
+  const DATA_LANGKA = [
+    { id:1,  judul:'Serat Centhini',                   penulis:'Pakubuwana IV',             tahun:1814, stok:1, akses:'VIP Platinum' },
+    { id:2,  judul:'Azab dan Sengsara',                penulis:'Merari Siregar',             tahun:1920, stok:1, akses:'VIP Gold' },
+    { id:3,  judul:'Salah Asuhan',                     penulis:'Abdoel Moeis',               tahun:1928, stok:2, akses:'VIP Gold' },
+    { id:4,  judul:'Siti Nurbaya',                     penulis:'Marah Rusli',                tahun:1922, stok:1, akses:'VIP Platinum' },
+    { id:5,  judul:'Hikayat Hang Tuah',                penulis:'Anonim',                     tahun:1700, stok:1, akses:'VIP Platinum' },
+    { id:6,  judul:'Di Bawah Lindungan Ka\'bah',      penulis:'HAMKA',                      tahun:1938, stok:2, akses:'VIP Gold' },
+    { id:7,  judul:'Layar Terkembang',                 penulis:'Sutan Takdir Alisjahbana',   tahun:1936, stok:1, akses:'VIP Gold' },
+    { id:8,  judul:'Tenggelamnya Kapal Van der Wijck', penulis:'HAMKA',                      tahun:1939, stok:2, akses:'VIP Silver' },
+    { id:9,  judul:'Atheis',                           penulis:'Achdiat K. Mihardja',        tahun:1949, stok:1, akses:'VIP Gold' },
+    { id:10, judul:'Harimau! Harimau!',                penulis:'Mochtar Lubis',              tahun:1975, stok:2, akses:'VIP Silver' },
+    { id:11, judul:'Ronggeng Dukuh Paruk',             penulis:'Ahmad Tohari',               tahun:1982, stok:1, akses:'VIP Gold' },
+    { id:12, judul:'Keluarga Gerilya',                 penulis:'Pramoedya Ananta Toer',      tahun:1950, stok:1, akses:'VIP Platinum' },
+  ];
+
+  function aksesPill(a) {
+    if (a === 'VIP Platinum') return '<span class="pill pill-vip">👑 Platinum</span>';
+    if (a === 'VIP Gold')     return '<span class="pill pill-warn">⭐ Gold</span>';
+    return '<span class="pill pill-gray">🥈 Silver</span>';
+  }
+
+  function renderLangka(data) {
+    document.getElementById('tbody-langka').innerHTML = data.length
+      ? data.map((r, i) => `
+        <tr>
+          <td style="color:var(--muted);font-size:.75rem;">${i+1}</td>
+          <td><strong>${r.judul}</strong></td>
+          <td>${r.penulis}</td>
+          <td>${r.tahun}</td>
+          <td><span style="font-weight:700;color:${r.stok > 0 ? '#1a5c38' : '#7f3a07'}">${r.stok > 0 ? r.stok+' stok' : 'Habis'}</span></td>
+          <td>${aksesPill(r.akses)}</td>
+          <td>
+            <div class="action-btns">
+              
+              <button class="act-btn danger">✕</button>
+            </div>
+          </td>
+        </tr>`).join('')
+      : '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);">Tidak ada data ditemukan</td></tr>';
+  }
+
+  function filterVip() {
+    const q = document.getElementById('searchVip').value.toLowerCase();
+    renderLangka(DATA_LANGKA.filter(r =>
+      r.judul.toLowerCase().includes(q) || r.penulis.toLowerCase().includes(q)
+    ));
+  }
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); }
   });
