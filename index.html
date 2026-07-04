@@ -201,7 +201,7 @@
     .pg-btn:disabled { opacity: .4; cursor: not-allowed; }
 
     /* ===== MODAL BERANDA ===== */
-    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 300; background: rgba(26,20,8,.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; padding: 1.5rem; }
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 300; background: rgba(20,15,6,.85); backdrop-filter: blur(2px); align-items: center; justify-content: center; padding: 1.5rem; }
     .modal-overlay.open { display: flex; }
     @keyframes mIn { from { opacity:0; transform: translateY(14px) scale(.98); } to { opacity:1; transform: none; } }
 
@@ -634,7 +634,7 @@
             <span>👑</span>
             <h3>Koleksi Buku Langka VIP</h3>
             <div class="card-head-action" style="display:flex;gap:.5rem;">
-              <button class="export-btn">＋ Tambah Koleksi</button>
+              <button class="add-btn" onclick="openTambahKoleksiVip()">＋ Tambah Koleksi</button>
             </div>
           </div>
           <table class="data-table">
@@ -916,6 +916,73 @@
         <div class="modal-actions" style="margin-top:1.5rem;">
           <button class="btn-pinjam" onclick="simpanBuku()">✅ Simpan ke Koleksi</button>
           <button class="btn-secondary" onclick="closeTambahBuku()">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL TAMBAH KOLEKSI VIP ===== -->
+  <div class="modal-overlay" id="modalTambahKoleksiVip" onclick="handleBgClickTambahVip(event)">
+    <div class="modal-box">
+      <div class="modal-head" style="border-radius:18px 18px 0 0;">
+        <div class="modal-head-icon" style="background:rgba(201,146,42,.14);">👑</div>
+        <div class="modal-head-text">
+          <h3>Tambah Koleksi Langka VIP</h3>
+          <p>Isi data buku langka untuk ditambahkan ke koleksi VIP</p>
+        </div>
+        <button class="modal-close" onclick="closeTambahKoleksiVip()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+
+          <!-- Judul -->
+          <div class="form-group full">
+            <label class="form-label">Judul Buku <span>*</span></label>
+            <input class="form-input" id="nk-judul" type="text" placeholder="Contoh: Hikayat Hang Tuah" oninput="clearErrVip('nk-judul')"/>
+            <span class="form-error-msg" id="err-nk-judul">Judul wajib diisi</span>
+          </div>
+
+          <!-- Penulis -->
+          <div class="form-group">
+            <label class="form-label">Penulis <span>*</span></label>
+            <input class="form-input" id="nk-penulis" type="text" placeholder="Nama penulis" oninput="clearErrVip('nk-penulis')"/>
+            <span class="form-error-msg" id="err-nk-penulis">Penulis wajib diisi</span>
+          </div>
+
+          <!-- Tahun -->
+          <div class="form-group">
+            <label class="form-label">Tahun Terbit <span>*</span></label>
+            <input class="form-input" id="nk-tahun" type="number" placeholder="1920" min="1000" max="2099" oninput="clearErrVip('nk-tahun')"/>
+            <span class="form-error-msg" id="err-nk-tahun">Tahun tidak valid</span>
+          </div>
+
+          <!-- Akses VIP -->
+          <div class="form-group">
+            <label class="form-label">Tier Akses VIP <span>*</span></label>
+            <select class="form-select" id="nk-akses" onchange="clearErrVip('nk-akses')">
+              <option value="">— Pilih Tier —</option>
+              <option value="VIP Platinum">👑 VIP Platinum</option>
+              <option value="VIP Gold">⭐ VIP Gold</option>
+              <option value="VIP Silver">🥈 VIP Silver</option>
+            </select>
+            <span class="form-error-msg" id="err-nk-akses">Tier akses wajib dipilih</span>
+          </div>
+
+          <!-- Stok -->
+          <div class="form-group">
+            <label class="form-label">Stok Awal <span>*</span></label>
+            <div class="stok-control">
+              <button type="button" class="stok-btn" onclick="ubahStokVip(-1)">−</button>
+              <div class="stok-display" id="stok-display-vip">1</div>
+              <button type="button" class="stok-btn" onclick="ubahStokVip(1)">＋</button>
+            </div>
+          </div>
+
+        </div><!-- /form-grid -->
+
+        <div class="modal-actions" style="margin-top:1.5rem;">
+          <button class="btn-pinjam" onclick="simpanKoleksiVip()">✅ Simpan ke Koleksi</button>
+          <button class="btn-secondary" onclick="closeTambahKoleksiVip()">Batal</button>
         </div>
       </div>
     </div>
@@ -1576,8 +1643,92 @@
       r.judul.toLowerCase().includes(q) || r.penulis.toLowerCase().includes(q)
     ));
   }
+
+  // ============================================================
+  // MODAL TAMBAH KOLEKSI VIP
+  // ============================================================
+  let stokValueVip = 1;
+
+  function ubahStokVip(delta) {
+    stokValueVip = Math.max(0, stokValueVip + delta);
+    document.getElementById('stok-display-vip').textContent = stokValueVip;
+  }
+
+  function clearErrVip(id) {
+    document.getElementById(id).classList.remove('error');
+    const errEl = document.getElementById('err-' + id);
+    if (errEl) errEl.classList.remove('show');
+  }
+
+  function validateTambahVip() {
+    let ok = true;
+    const checks = [
+      { id:'nk-judul',   fn: v => v.trim() !== '' },
+      { id:'nk-penulis', fn: v => v.trim() !== '' },
+      { id:'nk-tahun',   fn: v => v !== '' && +v >= 1000 && +v <= 2099 },
+      { id:'nk-akses',   fn: v => v !== '' },
+    ];
+    checks.forEach(c => {
+      const el = document.getElementById(c.id);
+      const valid = c.fn(el.value);
+      el.classList.toggle('error', !valid);
+      document.getElementById('err-' + c.id).classList.toggle('show', !valid);
+      if (!valid) ok = false;
+    });
+    return ok;
+  }
+
+  function openTambahKoleksiVip() {
+    stokValueVip = 1;
+    document.getElementById('nk-judul').value = '';
+    document.getElementById('nk-penulis').value = '';
+    document.getElementById('nk-tahun').value = '';
+    document.getElementById('nk-akses').value = '';
+    document.getElementById('stok-display-vip').textContent = stokValueVip;
+    ['nk-judul','nk-penulis','nk-tahun','nk-akses'].forEach(id => clearErrVip(id));
+    document.getElementById('modalTambahKoleksiVip').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('nk-judul').focus(), 100);
+  }
+
+  function closeTambahKoleksiVip() {
+    document.getElementById('modalTambahKoleksiVip').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleBgClickTambahVip(e) {
+    if (e.target === document.getElementById('modalTambahKoleksiVip')) closeTambahKoleksiVip();
+  }
+
+  function simpanKoleksiVip() {
+    if (!validateTambahVip()) return;
+
+    const btn = document.querySelector('#modalTambahKoleksiVip .btn-pinjam');
+    btn.disabled = true;
+    btn.textContent = '⏳ Menyimpan…';
+
+    const judul   = document.getElementById('nk-judul').value.trim();
+    const penulis = document.getElementById('nk-penulis').value.trim();
+    const tahun   = parseInt(document.getElementById('nk-tahun').value);
+    const akses   = document.getElementById('nk-akses').value;
+
+    const newId = DATA_LANGKA.length > 0 ? Math.max(...DATA_LANGKA.map(r => r.id)) + 1 : 1;
+    DATA_LANGKA.push({ id: newId, judul, penulis, tahun, stok: stokValueVip, akses });
+
+    document.getElementById('searchVip').value = '';
+    renderLangka(DATA_LANGKA);
+
+    const totalEl = document.querySelector('#view-langkavip .stat-card-vip .sc-val');
+    if (totalEl) totalEl.textContent = DATA_LANGKA.length;
+
+    closeTambahKoleksiVip();
+    btn.disabled = false;
+    btn.textContent = '✅ Simpan ke Koleksi';
+    showToast(`"${judul}" berhasil ditambahkan ke koleksi langka VIP!`);
+  }
+
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); }
+    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); closeTambahKoleksiVip(); }
   });
   </script>
 </body>
