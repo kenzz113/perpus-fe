@@ -110,6 +110,68 @@
     .greeting h1 em { font-style: italic; color: var(--accent); }
     .greeting p { font-size: .85rem; color: var(--muted); }
 
+    /* ===== HERO BANNER (BERANDA) ===== */
+    .hero-banner {
+      position: relative; overflow: hidden; border-radius: 18px;
+      background: linear-gradient(120deg, #241d0e 0%, #4a3111 55%, #6e4110 100%);
+      padding: 1.9rem 2.1rem; margin-bottom: 1.75rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+      box-shadow: 0 18px 44px rgba(26,20,8,.22);
+    }
+    .hero-banner::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+    }
+    .hero-glow { position: absolute; border-radius: 50%; pointer-events: none; }
+    .hg1 { width: 260px; height: 260px; top: -110px; right: 60px; background: radial-gradient(circle, rgba(201,146,42,.35), transparent 70%); }
+    .hg2 { width: 220px; height: 220px; bottom: -120px; left: 20%; background: radial-gradient(circle, rgba(45,106,79,.3), transparent 70%); }
+    .hero-content { position: relative; z-index: 1; max-width: 560px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: .4rem; font-size: .68rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase; color: #f5cc72;
+      background: rgba(201,146,42,.16); border: 1px solid rgba(201,146,42,.35);
+      padding: .3rem .75rem; border-radius: 20px; margin-bottom: .8rem;
+    }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: .2rem; }
+    .hero-sub { font-size: .82rem; font-style: italic; color: rgba(255,255,255,.65); margin-bottom: .7rem; }
+    .hero-desc { font-size: .83rem; color: rgba(255,255,255,.72); line-height: 1.6; margin-bottom: 1.2rem; }
+    .hero-actions { display: flex; gap: .7rem; flex-wrap: wrap; }
+    .hero-btn-primary, .hero-btn-secondary {
+      font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 600; padding: .6rem 1.1rem;
+      border-radius: 9px; cursor: pointer; transition: all .18s; border: none;
+    }
+    .hero-btn-primary { background: var(--accent); color: #fff; }
+    .hero-btn-primary:hover { background: #d1660c; transform: translateY(-1px); }
+    .hero-btn-secondary { background: rgba(255,255,255,.1); color: #fff; border: 1.5px solid rgba(255,255,255,.28); }
+    .hero-btn-secondary:hover { background: rgba(255,255,255,.18); }
+    .hero-visual { position: relative; z-index: 1; width: 160px; height: 150px; flex-shrink: 0; display: none; }
+    .hero-book {
+      position: absolute; width: 74px; height: 104px; border-radius: 5px 8px 8px 5px;
+      display: grid; place-items: center; font-size: 1.8rem; box-shadow: 4px 8px 22px rgba(0,0,0,.35);
+      transition: transform .3s;
+    }
+    .hb1 { background: linear-gradient(135deg,#2d6a4f,#173d2c); left: 0; top: 30px; transform: rotate(-14deg); z-index: 1; }
+    .hb2 { background: linear-gradient(135deg,#b5550a,#7f3a07); left: 42px; top: 6px; transform: rotate(-2deg); z-index: 2; }
+    .hb3 { background: linear-gradient(135deg,#c9922a,#7a500e); left: 84px; top: 26px; transform: rotate(12deg); z-index: 1; }
+    .hero-banner:hover .hb1 { transform: rotate(-20deg) translateY(-4px); }
+    .hero-banner:hover .hb2 { transform: rotate(-2deg) translateY(-8px); }
+    .hero-banner:hover .hb3 { transform: rotate(18deg) translateY(-4px); }
+    @media (min-width: 980px) { .hero-visual { display: block; } }
+
+    /* ===== AKTIVITAS TERBARU (BERANDA) ===== */
+    .activity-list { padding: .35rem 0; }
+    .activity-item { display: flex; gap: .75rem; padding: .7rem 1.25rem; position: relative; }
+    .activity-item:not(:last-child)::before {
+      content: ''; position: absolute; left: 1.65rem; top: 2.1rem; bottom: -0.7rem; width: 1.5px; background: var(--border);
+    }
+    .activity-dot {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+      font-size: .7rem; background: var(--cream); border: 1px solid var(--border); z-index: 1;
+    }
+    .activity-body { flex: 1; }
+    .activity-body strong { display: block; font-size: .78rem; font-weight: 600; color: var(--ink2); line-height: 1.35; }
+    .activity-body small { font-size: .68rem; color: var(--muted); }
+
     .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.75rem; }
     .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.25rem; position: relative; overflow: hidden; transition: transform .2s, box-shadow .2s; }
     .stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px var(--shadow); }
@@ -148,6 +210,8 @@
     .pill-gray { background: rgba(140,125,101,.12); color: #5a4e3a; }
 
     .right-col { display: flex; flex-direction: column; gap: 1.25rem; }
+    .two-col-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 720px) { .two-col-row { grid-template-columns: 1fr; } }
     .mini-book-list { display: flex; flex-direction: column; }
     .mini-book-item { display: flex; align-items: center; gap: .75rem; padding: .75rem 1.25rem; border-bottom: 1px solid var(--border); cursor: default; transition: background .15s; }
     .mini-book-item:last-child { border-bottom: none; }
@@ -272,6 +336,12 @@
     .btn-pinjam:hover { background: #8a3a05; }
     .btn-pinjam:disabled { background: var(--muted); cursor: not-allowed; }
     .btn-secondary { padding: .65rem 1rem; border-radius: 9px; background: var(--bg2); color: var(--ink2); font-size: .82rem; font-weight: 600; border: 1px solid var(--border); cursor: pointer; }
+    .btn-hapus-buku {
+      width: 100%; margin-top: .6rem; padding: .55rem; border-radius: 9px; background: none;
+      border: 1.5px dashed rgba(192,32,32,.4); color: #c02020; font-size: .78rem; font-weight: 600;
+      cursor: pointer; transition: all .18s;
+    }
+    .btn-hapus-buku:hover { background: rgba(192,32,32,.08); border-color: #c02020; }
 
     /* pencarian */
     .search-empty-msg { padding: 1.5rem 1rem; text-align: center; color: var(--muted); font-size: .85rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; }
@@ -333,6 +403,10 @@
     #modalTambahKoleksi .modal-box {
       background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
       width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
+    }
+    #modalHapusBuku .modal-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
       box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
     }
 
@@ -488,82 +562,86 @@
       <!-- ===== VIEW: BERANDA ===== -->
       <div class="view active" id="view-beranda">
         <div class="greeting">
-          <h1>Selamat datang, <em>Admin</em> 👋</h1>
+          <h1>Selamat datang, 👋</h1>
           <p>Berikut ringkasan aktivitas perpustakaan hari ini.</p>
         </div>
+
+        <div class="hero-banner">
+          <div class="hero-glow hg1"></div>
+          <div class="hero-glow hg2"></div>
+          <div class="hero-content">
+            <span class="hero-tag">✨ Sorotan Kurator Ini</span>
+            <h2 class="hero-title">Ronggeng Dukuh Paruk</h2>
+            <p class="hero-sub">Ahmad Tohari — Edisi Pertama, Cetakan 1982</p>
+            <p class="hero-desc">Salah satu karya terpenting sastra Indonesia kini kembali disorot. Naskah asli dengan catatan tangan pengarang tersimpan aman di Lemari Kaca A, tersedia khusus untuk anggota VIP Platinum.</p>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-book hb1">📗</div>
+            <div class="hero-book hb2">📕</div>
+            <div class="hero-book hb3">📘</div>
+          </div>
+        </div>
+
         <div class="stats-row">
           <div class="stat-card" style="--sc-color:#b5550a;">
             <div class="stat-card-icon">📚</div>
-            <div class="stat-card-num"></div>
+            <div class="stat-card-num">50.240</div>
             <div class="stat-card-label">Total Koleksi Buku</div>
-            <span class="stat-card-change change-up">↑ </span>
+
           </div>
           <div class="stat-card" style="--sc-color:#2d6a4f;">
             <div class="stat-card-icon">👥</div>
-            <div class="stat-card-num"></div>
+            <div class="stat-card-num">1.284</div>
             <div class="stat-card-label">Anggota Aktif</div>
-            <span class="stat-card-change change-up">↑ </span>
+
           </div>
           <div class="stat-card" style="--sc-color:#c9922a;">
             <div class="stat-card-icon">📤</div>
-            <div class="stat-card-num"></div>
+            <div class="stat-card-num">8</div>
             <div class="stat-card-label">Buku Dipinjam</div>
-            <span class="stat-card-change change-warn">⚠</span>
+
           </div>
           <div class="stat-card" style="--sc-color:#8a4e00;">
             <div class="stat-card-icon">⚠️</div>
-            <div class="stat-card-num"></div>
+            <div class="stat-card-num">7</div>
             <div class="stat-card-label">Buku Rusak</div>
-            <span class="stat-card-change change-down">↑ </span>
+
           </div>
         </div>
         <div class="content-grid">
-          <div class="card">
-            <div class="card-head">
-              <span class="card-icon">🕐</span>
-              <h3>Aktivitas Peminjaman Terbaru</h3>
-              <button class="card-head-action" onclick="openModalBeranda('pinjam')">Lihat Semua →</button>
-            </div>
-            <table class="data-table">
-              <thead>
-                <tr><th>Judul Buku</th><th>Peminjam</th><th>Tgl Pinjam</th><th>Tgl Kembali</th><th>Status</th></tr>
-              </thead>
-              <tbody>
-                <tr onclick="openDetailFromDashboard('laskar')"><td><strong>Laskar Pelangi</strong></td><td>Rizky Pratama</td><td>5 Mei 2026</td><td>18 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
-                <tr onclick="openDetailFromDashboard('filosofi')"><td><strong>Filosofi Teras</strong></td><td>Sari Dewi</td><td>1 Mei 2026</td><td>12 Mei 2026</td><td><span class="pill pill-late">Terlambat 3 hr</span></td></tr>
-              </tbody>
-            </table>
-          </div>
+  
           <div class="right-col">
-            <div class="card">
-              <div class="card-head"><span class="card-icon">🔥</span><h3>Paling Banyak Dipinjam</h3></div>
-              <div class="mini-book-list">
-                <div class="mini-book-item">
-                  <div class="mini-book-cover" style="background:linear-gradient(135deg,#b5550a,#7f3a07)"></div>
-                  <div class="mini-book-info"><strong>Laskar Pelangi</strong><small></small></div>
-                </div>
-                <div class="mini-book-item">
-                  <div class="mini-book-cover" style="background:linear-gradient(135deg,#2d6a4f,#1a4731)"></div>
-                  <div class="mini-book-info"><strong>Bumi Manusia</strong><small></small></div>
-                </div>
-                <div class="mini-book-item">
-                  <div class="mini-book-cover" style="background:linear-gradient(135deg,#c9922a,#7a500e)"></div>
-                  <div class="mini-book-info"><strong>Atomic Habits</strong><small></small></div>
-                </div>
-                <div class="mini-book-item">
-                  <div class="mini-book-cover" style="background:linear-gradient(135deg,#5a3d7a,#351f4a)"></div>
-                  <div class="mini-book-info"><strong>Filosofi Teras</strong><small></small></div>
+            <div class="two-col-row">
+              <div class="card">
+                <div class="card-head"><span class="card-icon">🔥</span><h3>Paling Banyak Dipinjam</h3></div>
+                <div class="mini-book-list">
+                  <div class="mini-book-item">
+                    <div class="mini-book-cover" style="background:linear-gradient(135deg,#b5550a,#7f3a07)"></div>
+                    <div class="mini-book-info"><strong>Laskar Pelangi</strong><small>128x dipinjam</small></div>
+                  </div>
+                  <div class="mini-book-item">
+                    <div class="mini-book-cover" style="background:linear-gradient(135deg,#2d6a4f,#1a4731)"></div>
+                    <div class="mini-book-info"><strong>Bumi Manusia</strong><small>112x dipinjam</small></div>
+                  </div>
+                  <div class="mini-book-item">
+                    <div class="mini-book-cover" style="background:linear-gradient(135deg,#c9922a,#7a500e)"></div>
+                    <div class="mini-book-info"><strong>Atomic Habits</strong><small>97x dipinjam</small></div>
+                  </div>
+                  <div class="mini-book-item">
+                    <div class="mini-book-cover" style="background:linear-gradient(135deg,#5a3d7a,#351f4a)"></div>
+                    <div class="mini-book-info"><strong>Filosofi Teras</strong><small>84x dipinjam</small></div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="card">
-              <div class="card-head"><span class="card-icon">📋</span><h3>Ringkasan Koleksi</h3></div>
-              <div class="quick-stat-list">
-                <div class="qs-item"><span class="qs-label">📖 Fiksi & Sastra</span><span class="qs-num">6</span></div>
-                <div class="qs-item"><span class="qs-label">🔬 Sains & Teknologi</span><span class="qs-num">3</span></div>
-                <div class="qs-item"><span class="qs-label">💼 Bisnis & Ekonomi</span><span class="qs-num">3</span></div>
-                <div class="qs-item"><span class="qs-label">🎓 Akademik</span><span class="qs-num">2</span></div>
-                <div class="qs-item"><span class="qs-label">👑 Koleksi Langka</span><span class="qs-num">2</span></div>
+              <div class="card">
+                <div class="card-head"><span class="card-icon">📋</span><h3>Ringkasan Koleksi</h3></div>
+                <div class="quick-stat-list">
+                  <div class="qs-item"><span class="qs-label">📖 Fiksi & Sastra</span><span class="qs-num">6</span></div>
+                  <div class="qs-item"><span class="qs-label">🔬 Sains & Teknologi</span><span class="qs-num">3</span></div>
+                  <div class="qs-item"><span class="qs-label">💼 Bisnis & Ekonomi</span><span class="qs-num">3</span></div>
+                  <div class="qs-item"><span class="qs-label">🎓 Akademik</span><span class="qs-num">2</span></div>
+                  <div class="qs-item"><span class="qs-label">👑 Koleksi Langka</span><span class="qs-num">2</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -669,15 +747,14 @@
           </div>
           <div class="modal-body">
             <div class="modal-stats">
-              <div class="modal-stat"><span class="modal-stat-num" style="color:#b5550a;">24</span><div class="modal-stat-lbl">Sedang Dipinjam</div></div>
-              <div class="modal-stat"><span class="modal-stat-num" style="color:#8a2020;">3</span><div class="modal-stat-lbl">Terlambat</div></div>
-              <div class="modal-stat"><span class="modal-stat-num" style="color:#2d6a4f;">21</span><div class="modal-stat-lbl">Tepat Waktu</div></div>
+              <div class="modal-stat"><span class="modal-stat-num" style="color:#b5550a;">0</span><div class="modal-stat-lbl">Sedang Dipinjam</div></div>
+              <div class="modal-stat"><span class="modal-stat-num" style="color:#8a2020;">0</span><div class="modal-stat-lbl">Terlambat</div></div>
+              <div class="modal-stat"><span class="modal-stat-num" style="color:#2d6a4f;">0</span><div class="modal-stat-lbl">Tepat Waktu</div></div>
             </div>
             <table class="modal-table">
               <thead><tr><th>Judul Buku</th><th>Peminjam</th><th>Tgl Kembali</th><th>Status</th></tr></thead>
               <tbody>
-                <tr onclick="showDetailBeranda('pinjam','laskar')"><td>Laskar Pelangi</td><td>Rizky Pratama</td><td>18 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
-                <tr onclick="showDetailBeranda('pinjam','filosofi')"><td>Filosofi Teras</td><td>Sari Dewi</td><td>12 Mei 2026</td><td><span class="pill pill-late">Terlambat 3 hr</span></td></tr>
+                <tr onclick="showDetailBeranda('pinjam','laskar')"><td>Laskar Pelangi</td><td> </td><td>18 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
               </tbody>
             </table>
             <p class="row-click-hint">💡 Klik baris untuk melihat detail peminjaman</p>
@@ -812,6 +889,24 @@
         <div class="modal-actions">
           <button class="btn-pinjam" id="mBtnPinjam">📤 Pinjamkan Buku</button>
           <button class="btn-secondary" onclick="closeModalKoleksi()">Tutup</button>
+        </div>
+        <button class="btn-hapus-buku" id="mBtnHapus" onclick="hapusBuku()">🗑️ Hapus Buku dari Koleksi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL KONFIRMASI HAPUS BUKU ===== -->
+  <div class="modal-overlay" id="modalHapusBuku" onclick="handleBgClickHapus(event)">
+    <div class="modal-box" style="max-width:400px;">
+      <div class="modal-body" style="text-align:center;padding:1.75rem 1.5rem;">
+        <div style="font-size:2.2rem;margin-bottom:.5rem;">⚠️</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:.4rem;">Hapus buku ini?</h3>
+        <p style="font-size:.83rem;color:var(--muted);margin-bottom:1.25rem;">
+          "<span id="mHapusJudul"></span>" akan dihapus permanen dari koleksi. Tindakan ini tidak dapat dibatalkan.
+        </p>
+        <div class="modal-actions" style="margin-top:0;">
+          <button class="btn-secondary" onclick="closeHapusBuku()">Batal</button>
+          <button class="btn-pinjam" style="background:#c02020;" onclick="konfirmasiHapusBuku()">🗑️ Ya, Hapus</button>
         </div>
       </div>
     </div>
@@ -1031,14 +1126,14 @@
 
   const DATA = {
     pinjam: {
-      laskar:   { judul:'Laskar Pelangi', penulis:'Andrea Hirata', peminjam:'Rizky Pratama', anggota:'A-1042', tglPinjam:'5 Mei 2026', tglKembali:'18 Mei 2026', durasi:'13 hari', status:'Tepat Waktu', statusPill:'pill-ok', catatan:'Buku dalam kondisi baik. Peminjam sudah 3x meminjam buku ini.' },
-      filosofi: { judul:'Filosofi Teras', penulis:'Henry Manampiring', peminjam:'Sari Dewi', anggota:'B-0831', tglPinjam:'1 Mei 2026', tglKembali:'12 Mei 2026', durasi:'11 hari', status:'Terlambat 3 hari', statusPill:'pill-late', catatan:'Sudah dikirim notifikasi pengingat. Denda Rp 3.000 akan dikenakan.' },
-      homo:     { judul:'Homo Deus', penulis:'Yuval Noah Harari', peminjam:'Agus Santoso', anggota:'C-2214', tglPinjam:'8 Mei 2026', tglKembali:'22 Mei 2026', durasi:'14 hari', status:'Tepat Waktu', statusPill:'pill-ok', catatan:'Edisi terjemahan Bahasa Indonesia. Buku masih dalam kondisi prima.' },
-      bumi:     { judul:'Bumi Manusia', penulis:'Pramoedya Ananta Toer', peminjam:'Dewi Rahayu', anggota:'A-0552', tglPinjam:'30 Apr 2026', tglKembali:'10 Mei 2026', durasi:'10 hari', status:'Terlambat 5 hari', statusPill:'pill-late', catatan:'Notifikasi pertama & kedua sudah dikirim. Denda Rp 5.000. Mohon segera dikembalikan.' },
-      atomic:   { judul:'Atomic Habits', penulis:'James Clear', peminjam:'Budi Santoso', anggota:'D-1188', tglPinjam:'10 Mei 2026', tglKembali:'20 Mei 2026', durasi:'10 hari', status:'Tepat Waktu', statusPill:'pill-ok', catatan:'Peminjaman pertama anggota baru. Buku sangat diminati bulan ini.' },
+      laskar:   { judul:'Laskar Pelangi', penulis:'Andrea Hirata', peminjam:' ', anggota:'A-1042', tglPinjam:'5 Mei 2026', tglKembali:'18 Mei 2026', durasi:'13 hari', status:'Tepat Waktu', statusPill:'pill-ok', catatan:'Buku dalam kondisi baik. Peminjam sudah 3x meminjam buku ini.' },
+      filosofi: { judul:'Filosofi Teras', penulis:'Henry Manampiring', peminjam:'', anggota:'B-0831', tglPinjam:'1 Mei 2026', tglKembali:'12 Mei 2026', durasi:'11 hari', status:'Terlambat 3 hari', statusPill:'pill-late', catatan:'Sudah dikirim notifikasi pengingat. Denda Rp 3.000 akan dikenakan.' },
+      homo:     { judul:'Homo Deus', penulis:'Yuval Noah Harari', peminjam:'', anggota:'C-2214', tglPinjam:'8 Mei 2026', tglKembali:'22 Mei 2026', durasi:'14 hari', status:'Tepat Waktu', statusPill:'pill-ok', catatan:'Edisi terjemahan Bahasa Indonesia. Buku masih dalam kondisi prima.' },
+      bumi:     { judul:'Bumi Manusia', penulis:'Pramoedya Ananta Toer', peminjam:'', anggota:'A-0552', tglPinjam:'30 Apr 2026', tglKembali:'10 Mei 2026', durasi:'10 hari', status:'Terlambat 5 hari', statusPill:'pill-late', catatan:'Notifikasi pertama & kedua sudah dikirim. Denda Rp 5.000. Mohon segera dikembalikan.' },
+      atomic:   { judul:'Atomic Habits', penulis:'James Clear', peminjam:'', anggota:'D-1188', tglPinjam:'10 Mei 2026', tglKembali:'20 Mei 2026', durasi:'10 hari', status:'Tepat Waktu', statusPill:'pill-ok', catatan:'Peminjaman pertama anggota baru. Buku sangat diminati bulan ini.' },
       dilan:    { judul:'Dilan 1990', penulis:'Pidi Baiq', peminjam:'Mega Putri', anggota:'B-0977', tglPinjam:'1 Mei 2026', tglKembali:'8 Mei 2026', durasi:'7 hari', status:'Terlambat 7 hari', statusPill:'pill-late', catatan:'⚠️ Perlu perhatian: buku dikembalikan dalam kondisi rusak (cover sobek). Laporan kerusakan sudah dibuat.' },
-      perahu:   { judul:'Perahu Kertas', penulis:'Dewi Lestari', peminjam:'Hendra Wijaya', anggota:'C-3301', tglPinjam:'11 Mei 2026', tglKembali:'25 Mei 2026', durasi:'14 hari', status:'Tepat Waktu', statusPill:'pill-ok', catatan:'Peminjam meminta perpanjangan 3 hari jika diperlukan.' },
-      negeri:   { judul:'Negeri 5 Menara', penulis:'Ahmad Fuadi', peminjam:'Lina Marlina', anggota:'A-0210', tglPinjam:'9 Mei 2026', tglKembali:'19 Mei 2026', durasi:'10 hari', status:'Jatuh Tempo', statusPill:'pill-warn', catatan:'Jatuh tempo besok. Notifikasi H-1 sudah dikirim via WhatsApp.' },
+      perahu:   { judul:'Perahu Kertas', penulis:'Dewi Lestari', peminjam:'', anggota:'C-3301', tglPinjam:'11 Mei 2026', tglKembali:'25 Mei 2026', durasi:'14 hari', status:'Tepat Waktu', statusPill:'pill-ok', catatan:'Peminjam meminta perpanjangan 3 hari jika diperlukan.' },
+      negeri:   { judul:'Negeri 5 Menara', penulis:'Ahmad Fuadi', peminjam:'', anggota:'A-0210', tglPinjam:'9 Mei 2026', tglKembali:'19 Mei 2026', durasi:'10 hari', status:'Jatuh Tempo', statusPill:'pill-warn', catatan:'Jatuh tempo besok. Notifikasi H-1 sudah dikirim via WhatsApp.' },
     },
     rusak: {
       dilan:    { judul:'Dilan 1990', penulis:'Pidi Baiq', kategori:'Fiksi Remaja', kerusakan:'Cover rusak parah, sobek di bagian depan & belakang', dilaporkan:'10 Mei 2026', dilaporkanOleh:'Mega Putri (peminjam)', tingkat:'Kritis', tingkatPill:'pill-crit', tindakan:'Perlu penggantian buku baru. Anggota dikenakan biaya pengganti Rp 85.000.', estimasi:'Minggu depan' },
@@ -1245,24 +1340,7 @@
   // ============================================================
   // DATA & LOGIC KOLEKSI
   // ============================================================
-  const BOOKS = [
-    { id:1,  title:'Laskar Pelangi',       author:'Andrea Hirata',            cat:'fiksi',    year:2005, isbn:'978-979-1234-01-1',   publisher:'Bentang Pustaka',   pages:529,  stok:1, borrow:0, color:'linear-gradient(135deg,#b5550a,#7f3a07)', emoji:'🌈', desc:'Kisah perjuangan 10 anak di Belitung dalam menggapai mimpi dengan segala keterbatasan.',          status:'ada',   rare:false },
-    { id:2,  title:'Bumi Manusia',          author:'Pramoedya Ananta Toer',    cat:'fiksi',    year:1980, isbn:'978-979-1234-02-8',   publisher:'Hasta Mitra',       pages:535,  stok:1, borrow:0,  color:'linear-gradient(135deg,#2d6a4f,#1a4731)', emoji:'🌍', desc:'Sebuah roman sejarah tentang Minke, pemuda Jawa di era kolonial Belanda.',                       status:'ada',   rare:false },
-    { id:3,  title:'Atomic Habits',         author:'James Clear',              cat:'bisnis',   year:2018, isbn:'978-0-7352-1129-2',   publisher:'Avery',             pages:320,  stok:1, borrow:0,  color:'linear-gradient(135deg,#c9922a,#7a500e)', emoji:'⚛️', desc:'Panduan ilmiah membangun kebiasaan baik dan menghilangkan kebiasaan buruk.',                       status:'ada',   rare:false },
-    { id:4,  title:'Filosofi Teras',        author:'Henry Manampiring',        cat:'bisnis',   year:2018, isbn:'978-602-0369-27-5',   publisher:'Kompas',            pages:296,  stok:1, borrow:0,  color:'linear-gradient(135deg,#5a3d7a,#351f4a)', emoji:'🏛️', desc:'Pengantar filsafat Stoa yang relevan untuk kehidupan modern masyarakat Indonesia.',               status:'ada', rare:false },
-    { id:5,  title:'Homo Deus',             author:'Yuval Noah Harari',        cat:'sains',    year:2015, isbn:'978-0-0624-8088-6',   publisher:'Harvill Secker',    pages:450,  stok:1, borrow:0,  color:'linear-gradient(135deg,#2c5f8a,#153659)', emoji:'🧬', desc:'Eksplorasi masa depan umat manusia di era teknologi dan kecerdasan buatan.',                      status:'ada',   rare:false },
-    { id:6,  title:'Negeri 5 Menara',       author:'A. Fuadi',                 cat:'fiksi',    year:2009, isbn:'978-979-9929-87-1',   publisher:'Gramedia',          pages:423,  stok:1, borrow:0,  color:'linear-gradient(135deg,#8a3a20,#4a1a0d)', emoji:'🕌', desc:'Kisah enam pemuda yang bersekolah di pesantren dan bermimpi melihat dunia.',                      status:'ada',   rare:false },
-    { id:7,  title:'Sapiens',               author:'Yuval Noah Harari',        cat:'sains',    year:2011, isbn:'978-0-0624-8088-5',   publisher:'Harvill Secker',    pages:498,  stok:1, borrow:0,  color:'linear-gradient(135deg,#3a5a8a,#1c2e4a)', emoji:'🦴', desc:'Sejarah singkat umat manusia dari zaman purba hingga era modern.',                                status:'ada',   rare:false },
-    { id:8,  title:'Rich Dad Poor Dad',     author:'Robert Kiyosaki',          cat:'bisnis',   year:1997, isbn:'978-1-5120-5158-3',   publisher:'Warner Books',      pages:207,  stok:1, borrow:0,  color:'linear-gradient(135deg,#7a5c00,#4a3600)', emoji:'💰', desc:'Pelajaran finansial dari dua sosok ayah berbeda tentang cara memandang uang.',                    status:'ada',   rare:false },
-    { id:9,  title:'Perahu Kertas',         author:'Dee Lestari',              cat:'fiksi',    year:2009, isbn:'978-979-4579-58-3',   publisher:'Bentang',           pages:444,  stok:1, borrow:0,  color:'linear-gradient(135deg,#0a7a7a,#044444)', emoji:'⛵', desc:'Kisah cinta dua jiwa yang bertemu, berpisah, dan kembali lewat karya seni.',                    status:'ada',   rare:false },
-    { id:10, title:'Pemrograman Python',    author:'Dr. Wawan Kurniawan',      cat:'sains',    year:2021, isbn:'978-602-0001-55-1',   publisher:'Informatika',       pages:380,  stok:1, borrow:0,  color:'linear-gradient(135deg,#1a6a2a,#0a3a14)', emoji:'🐍', desc:'Panduan lengkap pemrograman Python dari dasar hingga machine learning.',                          status:'ada',   rare:false },
-    { id:11, title:'Metodologi Penelitian', author:'Prof. Sugiyono',           cat:'akademik', year:2019, isbn:'978-602-4479-28-3',   publisher:'Alfabeta',          pages:334,  stok:1, borrow:0,  color:'linear-gradient(135deg,#5a4a8a,#2a204a)', emoji:'📐', desc:'Panduan metodologi penelitian kuantitatif, kualitatif dan kombinasi.',                            status:'ada',   rare:false },
-    { id:12, title:'Serat Centhini',        author:'Pakubuwana IV',            cat:'langka',   year:1814, isbn:'LANGKA-001',           publisher:'Kraton Surakarta',  pages:4200, stok:1, borrow:0,   color:'linear-gradient(135deg,#8a6a00,#4a3800)', emoji:'📜', desc:'Ensiklopedia budaya Jawa terlengkap, ditulis pada awal abad ke-19 di Keraton Surakarta.',        status:'ada',   rare:true  },
-    { id:13, title:'Azab dan Sengsara',     author:'Merari Siregar',           cat:'langka',   year:1920, isbn:'LANGKA-002',           publisher:'Balai Poestaka',    pages:176,  stok:1, borrow:0,   color:'linear-gradient(135deg,#4a2a00,#2a1500)', emoji:'📚', desc:'Novel Indonesia pertama yang diterbitkan oleh Balai Poestaka pada tahun 1920.',                  status:'ada',   rare:true  },
-    { id:14, title:'Statistik untuk Penelitian', author:'Prof. Sugiyono',     cat:'akademik', year:2020, isbn:'978-602-4479-30-6',   publisher:'Alfabeta',          pages:289,  stok:1, borrow:0,  color:'linear-gradient(135deg,#4a3a7a,#20184a)', emoji:'📊', desc:'Panduan lengkap penggunaan statistik untuk penelitian ilmu sosial dan pendidikan.',               status:'ada',   rare:false },
-    { id:15, title:'Supernova: Kesatria',   author:'Dee Lestari',              cat:'fiksi',    year:2001, isbn:'978-979-9929-00-0',   publisher:'Truedee Books',     pages:328,  stok:1, borrow:0,  color:'linear-gradient(135deg,#0a4a7a,#052840)', emoji:'✨', desc:'Novel pertama seri Supernova yang memperkenalkan dunia fiksi ilmiah berlatar Indonesia.',         status:'ada', rare:false },
-    { id:16, title:'Dilan 1990',            author:'Pidi Baiq',                cat:'fiksi',    year:2014, isbn:'978-979-0617-02-0',   publisher:'Pastel Books',      pages:231,  stok:1, borrow:0,  color:'linear-gradient(135deg,#7a1a2a,#3a0a14)', emoji:'💌', desc:'Kisah romansa remaja di Bandung tahun 1990 yang manis dan penuh nostalgia.',                      status:'ada', rare:false },
-  ];
+  let BOOKS = []; 
 
   let currentFilter = 'semua';
   let currentView   = 'grid';
@@ -1364,7 +1442,10 @@
     render();
   }
 
+  let currentOpenBookId = null;
+
   function openBook(id) {
+    currentOpenBookId = id;
     const b = BOOKS.find(x => x.id === id);
     document.getElementById('mCover').style.background = b.color;
     document.getElementById('mCover').textContent = b.emoji;
@@ -1393,6 +1474,35 @@
 
   function handleBgClickKoleksi(e) {
     if (e.target === document.getElementById('modalKoleksi')) closeModalKoleksi();
+  }
+
+  function hapusBuku() {
+    const b = BOOKS.find(x => x.id === currentOpenBookId);
+    if (!b) return;
+    document.getElementById('mHapusJudul').textContent = b.title;
+    closeModalKoleksi();
+    document.getElementById('modalHapusBuku').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeHapusBuku() {
+    document.getElementById('modalHapusBuku').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleBgClickHapus(e) {
+    if (e.target === document.getElementById('modalHapusBuku')) closeHapusBuku();
+  }
+
+  function konfirmasiHapusBuku() {
+    const idx = BOOKS.findIndex(x => x.id === currentOpenBookId);
+    if (idx === -1) return;
+    const judul = BOOKS[idx].title;
+    BOOKS.splice(idx, 1);
+    closeHapusBuku();
+    closeModalKoleksi();
+    render();
+    showToast(`"${judul}" berhasil dihapus dari koleksi.`);
   }
 
   // ============================================================
@@ -1505,6 +1615,42 @@
     return ok;
   }
 
+  // ============================================================
+  // LOAD BOOKS FROM BACKEND
+  // ============================================================
+  async function loadBooks() {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:3000/buku", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      BOOKS = data.map(book => ({
+        id: book.id,
+        title: book.judul_buku,
+        author: book.penulis,
+        cat: book.kategori,
+        year: book.tahun_terbit,
+        isbn: book.isbn,
+        publisher: book.penerbit,
+        pages: book.jumlah_halaman,
+        stok: book.stok,
+        borrow: 0,
+        color: 'linear-gradient(135deg,#b5550a,#7f3a07)',
+        emoji: '📖',
+        desc: book.sinopsis || '',
+        status: book.stok > 0 ? 'ada' : 'habis',
+        rare: false
+      }));
+      render();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal mengambil data buku.");
+    }
+  }
+
   async function simpanBuku() {
     if (!validateTambah()) return;
 
@@ -1520,7 +1666,7 @@
       isbn:          document.getElementById('tb-isbn').value.trim() || null,
       penerbit:      document.getElementById('tb-penerbit').value.trim() || null,
       jumlah_halaman: parseInt(document.getElementById('tb-halaman').value) || null,
-      stok_awal:     stokValue,
+      stok:          stokValue,
       sinopsis:      document.getElementById('tb-sinopsis').value.trim() || null,
     };
 
@@ -1538,41 +1684,16 @@
       const result = await response.json();
 
       if (response.ok) {
-        // Tambah juga ke array lokal supaya langsung keliatan di grid
-        const newId = BOOKS.length > 0 ? Math.max(...BOOKS.map(b => b.id)) + 1 : 1;
-        BOOKS.push({
-          id:        result.id || newId,
-          title:     payload.judul_buku,
-          author:    payload.penulis,
-          cat:       payload.kategori,
-          year:      parseInt(payload.tahun_terbit) || new Date().getFullYear(),
-          isbn:      payload.isbn || '-',
-          publisher: payload.penerbit || '-',
-          pages:     payload.jumlah_halaman || 0,
-          stok:      payload.stok_awal,
-          borrow:    0,
-          color:     selectedColor,
-          emoji:     selectedEmoji,
-          desc:      payload.sinopsis || 'Tidak ada sinopsis.',
-          status:    payload.stok_awal > 0 ? 'ada' : 'habis',
-          rare:      payload.kategori === 'langka',
-        });
-
+        await loadBooks();
         closeTambahBuku();
-        switchView('koleksi');
-        currentFilter = 'semua';
-        currentPage = 1;
-        document.querySelectorAll('.ftab').forEach((t, i) => t.classList.toggle('active', i === 0));
-        render(); 
         showToast(`"${payload.judul_buku}" berhasil ditambahkan ke koleksi!`);
       } else {
         alert(result.message || 'Gagal menyimpan buku.');
-        btn.disabled = false;
-        btn.textContent = '✅ Simpan ke Koleksi';
       }
     } catch (err) {
       console.error(err);
       alert('Tidak dapat terhubung ke server. Pastikan backend berjalan di localhost:3000.');
+    } finally {
       btn.disabled = false;
       btn.textContent = '✅ Simpan ke Koleksi';
     }
@@ -1751,8 +1872,12 @@
   }
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); closeTambahKoleksi(); }
+    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); closeTambahKoleksi(); closeHapusBuku(); }
   });
+
+  window.onload = function () {
+    loadBooks();
+  };
   </script>
 </body>
 </html>
