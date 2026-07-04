@@ -329,6 +329,13 @@
     .stok-btn:hover { border-color: var(--accent); color: var(--accent); }
     .stok-display { flex: 1; text-align: center; font-size: 1rem; font-weight: 700; color: var(--ink); padding: .45rem; border: 1.5px solid var(--border); border-radius: 9px; background: var(--bg2); }
 
+    /* ===== MODAL TAMBAH KOLEKSI (VIP) ===== */
+    #modalTambahKoleksi .modal-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
+    }
+
     /* ===== VIP LANGKA ===== */
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: .75rem; }
     .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--ink); }
@@ -638,7 +645,7 @@
             <span>👑</span>
             <h3>Koleksi Buku Langka VIP</h3>
             <div class="card-head-action" style="display:flex;gap:.5rem;">
-              <button class="export-btn">＋ Tambah Koleksi</button>
+              <button class="add-btn" onclick="openTambahKoleksi()">＋ Tambah Koleksi</button>
             </div>
           </div>
           <table class="data-table">
@@ -922,6 +929,74 @@
         <div class="modal-actions" style="margin-top:1.5rem;">
           <button class="btn-pinjam" onclick="simpanBuku()">✅ Simpan ke Koleksi</button>
           <button class="btn-secondary" onclick="closeTambahBuku()">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL TAMBAH KOLEKSI (VIP LANGKA) ===== -->
+  <div class="modal-overlay" id="modalTambahKoleksi" onclick="handleBgClickTambahKoleksi(event)">
+    <div class="modal-box">
+      <div class="modal-head" style="border-radius:18px 18px 0 0;">
+        <div class="modal-head-icon" style="background:rgba(45,106,79,.14);">👑</div>
+        <div class="modal-head-text">
+          <h3>Tambah Koleksi Langka</h3>
+          <p>Isi data buku langka baru untuk koleksi reward VIP</p>
+        </div>
+        <button class="modal-close" onclick="closeTambahKoleksi()">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-grid">
+
+          <!-- Judul -->
+          <div class="form-group full">
+            <label class="form-label">Judul Buku <span>*</span></label>
+            <input class="form-input" id="tk-judul" type="text" placeholder="Contoh: Serat Centhini" oninput="clearErrKoleksi('tk-judul')"/>
+            <span class="form-error-msg" id="err-tk-judul">Judul wajib diisi</span>
+          </div>
+
+          <!-- Penulis -->
+          <div class="form-group">
+            <label class="form-label">Penulis <span>*</span></label>
+            <input class="form-input" id="tk-penulis" type="text" placeholder="Nama penulis" oninput="clearErrKoleksi('tk-penulis')"/>
+            <span class="form-error-msg" id="err-tk-penulis">Penulis wajib diisi</span>
+          </div>
+
+          <!-- Tahun -->
+          <div class="form-group">
+            <label class="form-label">Tahun Terbit <span>*</span></label>
+            <input class="form-input" id="tk-tahun" type="number" placeholder="1900" min="1" max="2099" oninput="clearErrKoleksi('tk-tahun')"/>
+            <span class="form-error-msg" id="err-tk-tahun">Tahun tidak valid</span>
+          </div>
+
+          <!-- Akses VIP -->
+          <div class="form-group">
+            <label class="form-label">Tingkat Akses <span>*</span></label>
+            <select class="form-select" id="tk-akses" onchange="clearErrKoleksi('tk-akses')">
+              <option value="">— Pilih Akses —</option>
+              <option value="VIP Silver">🥈 VIP Silver</option>
+              <option value="VIP Gold">⭐ VIP Gold</option>
+              <option value="VIP Platinum">👑 VIP Platinum</option>
+            </select>
+            <span class="form-error-msg" id="err-tk-akses">Akses wajib dipilih</span>
+          </div>
+
+          <!-- Stok -->
+          <div class="form-group">
+            <label class="form-label">Stok Awal <span>*</span></label>
+            <div class="stok-control">
+              <button type="button" class="stok-btn" onclick="ubahStokKoleksi(-1)">−</button>
+              <div class="stok-display" id="tk-stok-display">1</div>
+              <button type="button" class="stok-btn" onclick="ubahStokKoleksi(1)">＋</button>
+            </div>
+          </div>
+
+        </div><!-- /form-grid -->
+
+        <div class="modal-actions" style="margin-top:1.5rem;">
+          <button class="btn-pinjam" onclick="simpanKoleksi()">✅ Simpan ke Koleksi VIP</button>
+          <button class="btn-secondary" onclick="closeTambahKoleksi()">Batal</button>
         </div>
       </div>
     </div>
@@ -1582,8 +1657,107 @@
       r.judul.toLowerCase().includes(q) || r.penulis.toLowerCase().includes(q)
     ));
   }
+
+  // ============================================================
+  // MODAL TAMBAH KOLEKSI (VIP LANGKA)
+  // ============================================================
+  let stokValueKoleksi = 1;
+
+  function initTambahKoleksi() {
+    ['tk-judul','tk-penulis','tk-tahun'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.getElementById('tk-akses').value = '';
+    stokValueKoleksi = 1;
+    document.getElementById('tk-stok-display').textContent = '1';
+    ['err-tk-judul','err-tk-penulis','err-tk-tahun','err-tk-akses'].forEach(id => {
+      document.getElementById(id).classList.remove('show');
+    });
+    ['tk-judul','tk-penulis','tk-tahun','tk-akses'].forEach(id => {
+      document.getElementById(id).classList.remove('error');
+    });
+  }
+
+  function ubahStokKoleksi(delta) {
+    stokValueKoleksi = Math.max(0, stokValueKoleksi + delta);
+    document.getElementById('tk-stok-display').textContent = stokValueKoleksi;
+  }
+
+  function clearErrKoleksi(id) {
+    document.getElementById(id).classList.remove('error');
+    const errEl = document.getElementById('err-' + id);
+    if (errEl) errEl.classList.remove('show');
+  }
+
+  function validateTambahKoleksi() {
+    let ok = true;
+    const checks = [
+      { id:'tk-judul',   errId:'err-tk-judul',   fn: v => v.trim() !== '' },
+      { id:'tk-penulis', errId:'err-tk-penulis', fn: v => v.trim() !== '' },
+      { id:'tk-tahun',   errId:'err-tk-tahun',   fn: v => v !== '' && +v >= 1 && +v <= 2099 },
+      { id:'tk-akses',   errId:'err-tk-akses',   fn: v => v !== '' },
+    ];
+    checks.forEach(c => {
+      const el = document.getElementById(c.id);
+      const valid = c.fn(el.value);
+      el.classList.toggle('error', !valid);
+      document.getElementById(c.errId).classList.toggle('show', !valid);
+      if (!valid) ok = false;
+    });
+    return ok;
+  }
+
+  function simpanKoleksi() {
+    if (!validateTambahKoleksi()) return;
+
+    const btn = document.querySelector('#modalTambahKoleksi .btn-pinjam');
+    btn.disabled = true;
+    btn.textContent = '⏳ Menyimpan…';
+
+    const judul   = document.getElementById('tk-judul').value.trim();
+    const penulis = document.getElementById('tk-penulis').value.trim();
+    const tahun   = parseInt(document.getElementById('tk-tahun').value) || new Date().getFullYear();
+    const akses   = document.getElementById('tk-akses').value;
+
+    const newId = DATA_LANGKA.length > 0 ? Math.max(...DATA_LANGKA.map(r => r.id)) + 1 : 1;
+    DATA_LANGKA.push({
+      id: newId,
+      judul: judul,
+      penulis: penulis,
+      tahun: tahun,
+      stok: stokValueKoleksi,
+      akses: akses,
+    });
+
+    setTimeout(() => {
+      closeTambahKoleksi();
+      document.getElementById('searchVip').value = '';
+      renderLangka(DATA_LANGKA);
+      showToast(`"${judul}" berhasil ditambahkan ke koleksi VIP!`);
+      btn.disabled = false;
+      btn.textContent = '✅ Simpan ke Koleksi VIP';
+    }, 300);
+  }
+
+  function openTambahKoleksi() {
+    initTambahKoleksi();
+    document.getElementById('modalTambahKoleksi').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('tk-judul').focus(), 100);
+  }
+
+  function closeTambahKoleksi() {
+    document.getElementById('modalTambahKoleksi').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleBgClickTambahKoleksi(e) {
+    if (e.target === document.getElementById('modalTambahKoleksi')) closeTambahKoleksi();
+  }
+
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); }
+    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); closeTambahKoleksi(); }
   });
   </script>
 </body>
