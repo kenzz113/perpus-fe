@@ -394,11 +394,7 @@
         <span class="sb-item-label">Koleksi Buku</span>
         <span class="sb-badge">10+</span>
       </button>
-      <button class="sb-item" id="nav-statistik" onclick="switchView('statistik')">
-        <div class="sb-item-icon">📊</div>
-        <span class="sb-item-label">Statistik</span>
-      </button>
-
+     
       <div class="sb-divider"></div>
       <div class="sb-section">Manajemen</div>
 
@@ -636,7 +632,7 @@
           </div>
           <div class="stat-card-vip">
             <div class="sc-label">Member VIP Aktif</div>
-            <div class="sc-val">0</div>
+            <div class="sc-val">0</div> 
             <div class="sc-sub">Member terdaftar</div>
           </div>
         </div>
@@ -706,9 +702,9 @@
           </div>
           <div class="modal-body">
             <div class="modal-stats">
-              <div class="modal-stat"><span class="modal-stat-num" style="color:#8a4e00;">5</span><div class="modal-stat-lbl">Total Rusak</div></div>
+              <div class="modal-stat"><span class="modal-stat-num" style="color:#8a4e00;">3</span><div class="modal-stat-lbl">Total Rusak</div></div>
               <div class="modal-stat"><span class="modal-stat-num" style="color:#8a2020;">2</span><div class="modal-stat-lbl">Kritis / Ganti</div></div>
-              <div class="modal-stat"><span class="modal-stat-num" style="color:#c9922a;">5</span><div class="modal-stat-lbl">Perlu Perbaikan</div></div>
+              <div class="modal-stat"><span class="modal-stat-num" style="color:#c9922a;">3</span><div class="modal-stat-lbl">Perlu Perbaikan</div></div>
             </div>
             <table class="modal-table">
               <thead><tr><th>Judul Buku</th><th>Jenis Kerusakan</th><th>Dilaporkan</th><th>Tingkat</th></tr></thead>
@@ -718,8 +714,6 @@
                 <tr onclick="showDetailBeranda('rusak','bumi')"><td>Bumi Manusia</td><td>Beberapa halaman robek</td><td>12 Mei 2026</td><td><span class="pill pill-warn">Sedang</span></td></tr>
                 <tr onclick="showDetailBeranda('rusak','negeri')"><td>Negeri 5 Menara</td><td>Noda air, tulisan kabur</td><td>11 Mei 2026</td><td><span class="pill pill-warn">Sedang</span></td></tr>
                 <tr onclick="showDetailBeranda('rusak','saman')"><td>Saman</td><td>Jilid longgar</td><td>13 Mei 2026</td><td><span class="pill pill-warn">Sedang</span></td></tr>
-                <tr onclick="showDetailBeranda('rusak','supernova')"><td>Supernova</td><td>Halaman 12 robek</td><td>9 Mei 2026</td><td><span class="pill pill-ok">Ringan</span></td></tr>
-                <tr onclick="showDetailBeranda('rusak','hujan')"><td>Hujan</td><td>Goresan pada cover</td><td>14 Mei 2026</td><td><span class="pill pill-ok">Ringan</span></td></tr>
               </tbody>
             </table>
             <p class="row-click-hint">💡 Klik baris untuk melihat detail laporan kerusakan</p>
@@ -1252,22 +1246,22 @@
   // DATA & LOGIC KOLEKSI
   // ============================================================
   const BOOKS = [
-    { id:1,  title:'Laskar Pelangi',       author:'Andrea Hirata',            cat:'fiksi',    year:2005, isbn:'978-979-1234-01-1',   publisher:'Bentang Pustaka',   pages:529,  stok:3, borrow:142, color:'linear-gradient(135deg,#b5550a,#7f3a07)', emoji:'🌈', desc:'Kisah perjuangan 10 anak di Belitung dalam menggapai mimpi dengan segala keterbatasan.',          status:'ada',   rare:false },
-    { id:2,  title:'Bumi Manusia',          author:'Pramoedya Ananta Toer',    cat:'fiksi',    year:1980, isbn:'978-979-1234-02-8',   publisher:'Hasta Mitra',       pages:535,  stok:2, borrow:98,  color:'linear-gradient(135deg,#2d6a4f,#1a4731)', emoji:'🌍', desc:'Sebuah roman sejarah tentang Minke, pemuda Jawa di era kolonial Belanda.',                       status:'ada',   rare:false },
-    { id:3,  title:'Atomic Habits',         author:'James Clear',              cat:'bisnis',   year:2018, isbn:'978-0-7352-1129-2',   publisher:'Avery',             pages:320,  stok:5, borrow:87,  color:'linear-gradient(135deg,#c9922a,#7a500e)', emoji:'⚛️', desc:'Panduan ilmiah membangun kebiasaan baik dan menghilangkan kebiasaan buruk.',                       status:'ada',   rare:false },
-    { id:4,  title:'Filosofi Teras',        author:'Henry Manampiring',        cat:'bisnis',   year:2018, isbn:'978-602-0369-27-5',   publisher:'Kompas',            pages:296,  stok:0, borrow:75,  color:'linear-gradient(135deg,#5a3d7a,#351f4a)', emoji:'🏛️', desc:'Pengantar filsafat Stoa yang relevan untuk kehidupan modern masyarakat Indonesia.',               status:'habis', rare:false },
-    { id:5,  title:'Homo Deus',             author:'Yuval Noah Harari',        cat:'sains',    year:2015, isbn:'978-0-0624-8088-6',   publisher:'Harvill Secker',    pages:450,  stok:4, borrow:62,  color:'linear-gradient(135deg,#2c5f8a,#153659)', emoji:'🧬', desc:'Eksplorasi masa depan umat manusia di era teknologi dan kecerdasan buatan.',                      status:'ada',   rare:false },
-    { id:6,  title:'Negeri 5 Menara',       author:'A. Fuadi',                 cat:'fiksi',    year:2009, isbn:'978-979-9929-87-1',   publisher:'Gramedia',          pages:423,  stok:1, borrow:58,  color:'linear-gradient(135deg,#8a3a20,#4a1a0d)', emoji:'🕌', desc:'Kisah enam pemuda yang bersekolah di pesantren dan bermimpi melihat dunia.',                      status:'ada',   rare:false },
-    { id:7,  title:'Sapiens',               author:'Yuval Noah Harari',        cat:'sains',    year:2011, isbn:'978-0-0624-8088-5',   publisher:'Harvill Secker',    pages:498,  stok:3, borrow:54,  color:'linear-gradient(135deg,#3a5a8a,#1c2e4a)', emoji:'🦴', desc:'Sejarah singkat umat manusia dari zaman purba hingga era modern.',                                status:'ada',   rare:false },
-    { id:8,  title:'Rich Dad Poor Dad',     author:'Robert Kiyosaki',          cat:'bisnis',   year:1997, isbn:'978-1-5120-5158-3',   publisher:'Warner Books',      pages:207,  stok:2, borrow:49,  color:'linear-gradient(135deg,#7a5c00,#4a3600)', emoji:'💰', desc:'Pelajaran finansial dari dua sosok ayah berbeda tentang cara memandang uang.',                    status:'ada',   rare:false },
-    { id:9,  title:'Perahu Kertas',         author:'Dee Lestari',              cat:'fiksi',    year:2009, isbn:'978-979-4579-58-3',   publisher:'Bentang',           pages:444,  stok:2, borrow:45,  color:'linear-gradient(135deg,#0a7a7a,#044444)', emoji:'⛵', desc:'Kisah cinta dua jiwa yang bertemu, berpisah, dan kembali lewat karya seni.',                    status:'ada',   rare:false },
-    { id:10, title:'Pemrograman Python',    author:'Dr. Wawan Kurniawan',      cat:'sains',    year:2021, isbn:'978-602-0001-55-1',   publisher:'Informatika',       pages:380,  stok:6, borrow:38,  color:'linear-gradient(135deg,#1a6a2a,#0a3a14)', emoji:'🐍', desc:'Panduan lengkap pemrograman Python dari dasar hingga machine learning.',                          status:'ada',   rare:false },
-    { id:11, title:'Metodologi Penelitian', author:'Prof. Sugiyono',           cat:'akademik', year:2019, isbn:'978-602-4479-28-3',   publisher:'Alfabeta',          pages:334,  stok:8, borrow:33,  color:'linear-gradient(135deg,#5a4a8a,#2a204a)', emoji:'📐', desc:'Panduan metodologi penelitian kuantitatif, kualitatif dan kombinasi.',                            status:'ada',   rare:false },
-    { id:12, title:'Serat Centhini',        author:'Pakubuwana IV',            cat:'langka',   year:1814, isbn:'LANGKA-001',           publisher:'Kraton Surakarta',  pages:4200, stok:1, borrow:5,   color:'linear-gradient(135deg,#8a6a00,#4a3800)', emoji:'📜', desc:'Ensiklopedia budaya Jawa terlengkap, ditulis pada awal abad ke-19 di Keraton Surakarta.',        status:'ada',   rare:true  },
-    { id:13, title:'Azab dan Sengsara',     author:'Merari Siregar',           cat:'langka',   year:1920, isbn:'LANGKA-002',           publisher:'Balai Poestaka',    pages:176,  stok:1, borrow:8,   color:'linear-gradient(135deg,#4a2a00,#2a1500)', emoji:'📚', desc:'Novel Indonesia pertama yang diterbitkan oleh Balai Poestaka pada tahun 1920.',                  status:'ada',   rare:true  },
-    { id:14, title:'Statistik untuk Penelitian', author:'Prof. Sugiyono',     cat:'akademik', year:2020, isbn:'978-602-4479-30-6',   publisher:'Alfabeta',          pages:289,  stok:5, borrow:28,  color:'linear-gradient(135deg,#4a3a7a,#20184a)', emoji:'📊', desc:'Panduan lengkap penggunaan statistik untuk penelitian ilmu sosial dan pendidikan.',               status:'ada',   rare:false },
-    { id:15, title:'Supernova: Kesatria',   author:'Dee Lestari',              cat:'fiksi',    year:2001, isbn:'978-979-9929-00-0',   publisher:'Truedee Books',     pages:328,  stok:0, borrow:41,  color:'linear-gradient(135deg,#0a4a7a,#052840)', emoji:'✨', desc:'Novel pertama seri Supernova yang memperkenalkan dunia fiksi ilmiah berlatar Indonesia.',         status:'habis', rare:false },
-    { id:16, title:'Dilan 1990',            author:'Pidi Baiq',                cat:'fiksi',    year:2014, isbn:'978-979-0617-02-0',   publisher:'Pastel Books',      pages:231,  stok:0, borrow:67,  color:'linear-gradient(135deg,#7a1a2a,#3a0a14)', emoji:'💌', desc:'Kisah romansa remaja di Bandung tahun 1990 yang manis dan penuh nostalgia.',                      status:'habis', rare:false },
+    { id:1,  title:'Laskar Pelangi',       author:'Andrea Hirata',            cat:'fiksi',    year:2005, isbn:'978-979-1234-01-1',   publisher:'Bentang Pustaka',   pages:529,  stok:1, borrow:0, color:'linear-gradient(135deg,#b5550a,#7f3a07)', emoji:'🌈', desc:'Kisah perjuangan 10 anak di Belitung dalam menggapai mimpi dengan segala keterbatasan.',          status:'ada',   rare:false },
+    { id:2,  title:'Bumi Manusia',          author:'Pramoedya Ananta Toer',    cat:'fiksi',    year:1980, isbn:'978-979-1234-02-8',   publisher:'Hasta Mitra',       pages:535,  stok:1, borrow:0,  color:'linear-gradient(135deg,#2d6a4f,#1a4731)', emoji:'🌍', desc:'Sebuah roman sejarah tentang Minke, pemuda Jawa di era kolonial Belanda.',                       status:'ada',   rare:false },
+    { id:3,  title:'Atomic Habits',         author:'James Clear',              cat:'bisnis',   year:2018, isbn:'978-0-7352-1129-2',   publisher:'Avery',             pages:320,  stok:1, borrow:0,  color:'linear-gradient(135deg,#c9922a,#7a500e)', emoji:'⚛️', desc:'Panduan ilmiah membangun kebiasaan baik dan menghilangkan kebiasaan buruk.',                       status:'ada',   rare:false },
+    { id:4,  title:'Filosofi Teras',        author:'Henry Manampiring',        cat:'bisnis',   year:2018, isbn:'978-602-0369-27-5',   publisher:'Kompas',            pages:296,  stok:1, borrow:0,  color:'linear-gradient(135deg,#5a3d7a,#351f4a)', emoji:'🏛️', desc:'Pengantar filsafat Stoa yang relevan untuk kehidupan modern masyarakat Indonesia.',               status:'ada', rare:false },
+    { id:5,  title:'Homo Deus',             author:'Yuval Noah Harari',        cat:'sains',    year:2015, isbn:'978-0-0624-8088-6',   publisher:'Harvill Secker',    pages:450,  stok:1, borrow:0,  color:'linear-gradient(135deg,#2c5f8a,#153659)', emoji:'🧬', desc:'Eksplorasi masa depan umat manusia di era teknologi dan kecerdasan buatan.',                      status:'ada',   rare:false },
+    { id:6,  title:'Negeri 5 Menara',       author:'A. Fuadi',                 cat:'fiksi',    year:2009, isbn:'978-979-9929-87-1',   publisher:'Gramedia',          pages:423,  stok:1, borrow:0,  color:'linear-gradient(135deg,#8a3a20,#4a1a0d)', emoji:'🕌', desc:'Kisah enam pemuda yang bersekolah di pesantren dan bermimpi melihat dunia.',                      status:'ada',   rare:false },
+    { id:7,  title:'Sapiens',               author:'Yuval Noah Harari',        cat:'sains',    year:2011, isbn:'978-0-0624-8088-5',   publisher:'Harvill Secker',    pages:498,  stok:1, borrow:0,  color:'linear-gradient(135deg,#3a5a8a,#1c2e4a)', emoji:'🦴', desc:'Sejarah singkat umat manusia dari zaman purba hingga era modern.',                                status:'ada',   rare:false },
+    { id:8,  title:'Rich Dad Poor Dad',     author:'Robert Kiyosaki',          cat:'bisnis',   year:1997, isbn:'978-1-5120-5158-3',   publisher:'Warner Books',      pages:207,  stok:1, borrow:0,  color:'linear-gradient(135deg,#7a5c00,#4a3600)', emoji:'💰', desc:'Pelajaran finansial dari dua sosok ayah berbeda tentang cara memandang uang.',                    status:'ada',   rare:false },
+    { id:9,  title:'Perahu Kertas',         author:'Dee Lestari',              cat:'fiksi',    year:2009, isbn:'978-979-4579-58-3',   publisher:'Bentang',           pages:444,  stok:1, borrow:0,  color:'linear-gradient(135deg,#0a7a7a,#044444)', emoji:'⛵', desc:'Kisah cinta dua jiwa yang bertemu, berpisah, dan kembali lewat karya seni.',                    status:'ada',   rare:false },
+    { id:10, title:'Pemrograman Python',    author:'Dr. Wawan Kurniawan',      cat:'sains',    year:2021, isbn:'978-602-0001-55-1',   publisher:'Informatika',       pages:380,  stok:1, borrow:0,  color:'linear-gradient(135deg,#1a6a2a,#0a3a14)', emoji:'🐍', desc:'Panduan lengkap pemrograman Python dari dasar hingga machine learning.',                          status:'ada',   rare:false },
+    { id:11, title:'Metodologi Penelitian', author:'Prof. Sugiyono',           cat:'akademik', year:2019, isbn:'978-602-4479-28-3',   publisher:'Alfabeta',          pages:334,  stok:1, borrow:0,  color:'linear-gradient(135deg,#5a4a8a,#2a204a)', emoji:'📐', desc:'Panduan metodologi penelitian kuantitatif, kualitatif dan kombinasi.',                            status:'ada',   rare:false },
+    { id:12, title:'Serat Centhini',        author:'Pakubuwana IV',            cat:'langka',   year:1814, isbn:'LANGKA-001',           publisher:'Kraton Surakarta',  pages:4200, stok:1, borrow:0,   color:'linear-gradient(135deg,#8a6a00,#4a3800)', emoji:'📜', desc:'Ensiklopedia budaya Jawa terlengkap, ditulis pada awal abad ke-19 di Keraton Surakarta.',        status:'ada',   rare:true  },
+    { id:13, title:'Azab dan Sengsara',     author:'Merari Siregar',           cat:'langka',   year:1920, isbn:'LANGKA-002',           publisher:'Balai Poestaka',    pages:176,  stok:1, borrow:0,   color:'linear-gradient(135deg,#4a2a00,#2a1500)', emoji:'📚', desc:'Novel Indonesia pertama yang diterbitkan oleh Balai Poestaka pada tahun 1920.',                  status:'ada',   rare:true  },
+    { id:14, title:'Statistik untuk Penelitian', author:'Prof. Sugiyono',     cat:'akademik', year:2020, isbn:'978-602-4479-30-6',   publisher:'Alfabeta',          pages:289,  stok:1, borrow:0,  color:'linear-gradient(135deg,#4a3a7a,#20184a)', emoji:'📊', desc:'Panduan lengkap penggunaan statistik untuk penelitian ilmu sosial dan pendidikan.',               status:'ada',   rare:false },
+    { id:15, title:'Supernova: Kesatria',   author:'Dee Lestari',              cat:'fiksi',    year:2001, isbn:'978-979-9929-00-0',   publisher:'Truedee Books',     pages:328,  stok:1, borrow:0,  color:'linear-gradient(135deg,#0a4a7a,#052840)', emoji:'✨', desc:'Novel pertama seri Supernova yang memperkenalkan dunia fiksi ilmiah berlatar Indonesia.',         status:'ada', rare:false },
+    { id:16, title:'Dilan 1990',            author:'Pidi Baiq',                cat:'fiksi',    year:2014, isbn:'978-979-0617-02-0',   publisher:'Pastel Books',      pages:231,  stok:1, borrow:0,  color:'linear-gradient(135deg,#7a1a2a,#3a0a14)', emoji:'💌', desc:'Kisah romansa remaja di Bandung tahun 1990 yang manis dan penuh nostalgia.',                      status:'ada', rare:false },
   ];
 
   let currentFilter = 'semua';
@@ -1613,18 +1607,18 @@
   const DATA_LANGKA = [
     { id:1,  judul:'Serat Centhini',                   penulis:'Pakubuwana IV',             tahun:1814, stok:1, akses:'VIP Platinum' },
     { id:2,  judul:'Azab dan Sengsara',                penulis:'Merari Siregar',             tahun:1920, stok:1, akses:'VIP Gold' },
-    { id:3,  judul:'Salah Asuhan',                     penulis:'Abdoel Moeis',               tahun:1928, stok:2, akses:'VIP Gold' },
+    { id:3,  judul:'Salah Asuhan',                     penulis:'Abdoel Moeis',               tahun:1928, stok:1, akses:'VIP Gold' },
     { id:4,  judul:'Siti Nurbaya',                     penulis:'Marah Rusli',                tahun:1922, stok:1, akses:'VIP Platinum' },
     { id:5,  judul:'Hikayat Hang Tuah',                penulis:'Anonim',                     tahun:1700, stok:1, akses:'VIP Platinum' },
-    { id:6,  judul:'Di Bawah Lindungan Ka\'bah',      penulis:'HAMKA',                      tahun:1938, stok:2, akses:'VIP Gold' },
+    { id:6,  judul:'Di Bawah Lindungan Ka\'bah',      penulis:'HAMKA',                      tahun:1938, stok:1, akses:'VIP Gold' },
     { id:7,  judul:'Layar Terkembang',                 penulis:'Sutan Takdir Alisjahbana',   tahun:1936, stok:1, akses:'VIP Gold' },
-    { id:8,  judul:'Tenggelamnya Kapal Van der Wijck', penulis:'HAMKA',                      tahun:1939, stok:2, akses:'VIP Silver' },
+    { id:8,  judul:'Tenggelamnya Kapal Van der Wijck', penulis:'HAMKA',                      tahun:1939, stok:1, akses:'VIP Silver' },
     { id:9,  judul:'Atheis',                           penulis:'Achdiat K. Mihardja',        tahun:1949, stok:1, akses:'VIP Gold' },
-    { id:10, judul:'Harimau! Harimau!',                penulis:'Mochtar Lubis',              tahun:1975, stok:2, akses:'VIP Silver' },
+    { id:10, judul:'Harimau! Harimau!',                penulis:'Mochtar Lubis',              tahun:1975, stok:1, akses:'VIP Silver' },
     { id:11, judul:'Ronggeng Dukuh Paruk',             penulis:'Ahmad Tohari',               tahun:1982, stok:1, akses:'VIP Gold' },
     { id:12, judul:'Keluarga Gerilya',                 penulis:'Pramoedya Ananta Toer',      tahun:1950, stok:1, akses:'VIP Platinum' },
   ];
-
+    
   function aksesPill(a) {
     if (a === 'VIP Platinum') return '<span class="pill pill-vip">👑 Platinum</span>';
     if (a === 'VIP Gold')     return '<span class="pill pill-warn">⭐ Gold</span>';
