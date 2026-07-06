@@ -705,25 +705,25 @@
         <div class="stats-row">
           <div class="stat-card" style="--sc-color:#b5550a;">
             <div class="stat-card-icon">📚</div>
-            <div class="stat-card-num">0</div>
+            <div class="stat-card-num" id="totalBuku">0</div>
             <div class="stat-card-label">Total Koleksi Buku</div>
 
           </div>
           <div class="stat-card" style="--sc-color:#2d6a4f;">
             <div class="stat-card-icon">👥</div>
-            <div class="stat-card-num">0</div>
+            <div class="stat-card-num" id="anggotaAktif">0</div>
             <div class="stat-card-label">Anggota Aktif</div>
 
           </div>
           <div class="stat-card" style="--sc-color:#c9922a;">
             <div class="stat-card-icon">📤</div>
-            <div class="stat-card-num">0</div>
+            <div class="stat-card-num" id="bukuDipinjam">0</div>
             <div class="stat-card-label">Buku Dipinjam</div>
 
           </div>
           <div class="stat-card" style="--sc-color:#8a4e00;">
             <div class="stat-card-icon">⚠️</div>
-            <div class="stat-card-num">0</div>
+            <div class="stat-card-num" id="bukuRusak">0</div>
             <div class="stat-card-label">Buku Rusak</div>
 
           </div>
@@ -2256,9 +2256,32 @@
     if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); closeTambahKoleksi(); closeHapusBuku(); closeModalBeliVip(); }
   });
 
+  async function loadDashboard() {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:3000/dashboard", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        console.log(data);
+
+        document.getElementById("totalBuku").textContent = data.totalBuku;
+        document.getElementById("anggotaAktif").textContent = data.anggotaAktif;
+        document.getElementById("bukuDipinjam").textContent = data.bukuDipinjam;
+        document.getElementById("bukuRusak").textContent = data.bukuRusak;
+    } catch (err) {
+        console.error(err);
+    }
+  }
+
   window.onload = function () {
     loadBooks();
     renderVipState();
+HEAD
+    loadDashboard();
+origin/main
   };
   </script>
 </body>
