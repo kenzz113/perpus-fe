@@ -289,6 +289,12 @@
       width: 100%; max-width: 720px; max-height: 88vh; overflow-y: auto;
       box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
     }
+    /* modal form pinjam (VIP) */
+    #modalFormPinjam .modal-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      width: 100%; max-height: 88vh; overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
+    }
 
     /* ===== TOMBOL VIP (MAHKOTA) DI TOPBAR ===== */
     .btn-vip-crown {
@@ -1087,8 +1093,20 @@
         <div class="detail-row"><span class="detail-label">Stok Tersedia</span><span class="detail-value" id="mStok"></span></div>
         <div class="detail-row"><span class="detail-label">Total Dipinjam</span><span class="detail-value" id="mBorrow"></span></div>
         <div class="modal-desc"><strong>Sinopsis</strong><span id="mDesc"></span></div>
+
+        <div id="mPinjamFields" style="display:flex;gap:.8rem;margin:.9rem 0;">
+          <div class="form-group" style="flex:1;">
+            <label>Jumlah Buku Dipinjam</label>
+            <input type="number" class="form-input" id="mJumlahPinjam" min="1" value="1">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Durasi Pinjam (hari)</label>
+            <input type="number" class="form-input" id="mDurasiPinjam" min="1" value="7">
+          </div>
+        </div>
+
         <div class="modal-actions">
-          <button class="btn-pinjam" id="mBtnPinjam" onclick="openFormPinjam()">📤 Pinjamkan Buku</button>
+          <button class="btn-pinjam" id="mBtnPinjam" onclick="konfirmasiPinjamKoleksi()">📤 Pinjamkan Buku</button>
           <button class="btn-secondary" onclick="closeModalKoleksi()">Tutup</button>
         </div>
         <button class="btn-hapus-buku" id="mBtnHapus" onclick="hapusBuku()">🗑️ Hapus Buku dari Koleksi</button>
@@ -1110,12 +1128,12 @@
       <div class="modal-body">
         <div class="form-group">
           <label>Jumlah Buku Dipinjam</label>
-          <input type="number" id="fp-jumlah" min="1" value="1" oninput="hitungTotalFormPinjam()">
+          <input type="number" class="form-input" id="fp-jumlah" min="1" value="1" oninput="hitungTotalFormPinjam()">
           <small id="fp-stok-info" style="color:var(--muted);font-size:.75rem;"></small>
         </div>
         <div class="form-group" style="margin-top:.9rem;">
           <label>Durasi Pinjam (hari)</label>
-          <input type="number" id="fp-durasi" min="1" value="7" oninput="hitungTotalFormPinjam()">
+          <input type="number" class="form-input" id="fp-durasi" min="1" value="7" oninput="hitungTotalFormPinjam()">
         </div>
 
         <div class="detail-row" style="margin-top:1rem;">
@@ -1123,49 +1141,13 @@
           <span class="detail-value" id="fp-total-hari">7 hari</span>
         </div>
 
-        <div id="fp-keranjang-info" style="display:none;margin-top:.6rem;padding:.55rem .7rem;border-radius:9px;background:rgba(181,85,10,.08);font-size:.78rem;color:var(--muted);">
-          🛒 <span id="fp-keranjang-count">0</span> buku lain sudah masuk keranjang peminjaman.
-        </div>
-
         <div class="modal-actions" style="margin-top:1.1rem;">
-          <button class="btn-secondary" onclick="tambahKeKeranjang(true)">➕ Tambah & Pinjam Buku Lain</button>
-          <button class="btn-pinjam" onclick="tambahKeKeranjang(false)">✅ Selesai & Lihat Ringkasan</button>
+          <button class="btn-secondary" onclick="closeFormPinjam()">Batal</button>
+          <button class="btn-pinjam" onclick="konfirmasiPinjam()">✅ Konfirmasi Pinjam</button>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- ===== MODAL KERANJANG PEMINJAMAN ===== -->
-  <div class="modal-overlay" id="modalKeranjangPinjam" onclick="handleBgClickKeranjang(event)">
-    <div class="modal-box" style="max-width:480px;">
-      <div class="modal-head">
-        <div class="modal-head-text"><h3>Ringkasan Peminjaman</h3><p>Cek kembali sebelum konfirmasi</p></div>
-        <button class="modal-close" onclick="closeKeranjangPinjam()">✕</button>
-      </div>
-      <div class="modal-body">
-        <div id="keranjang-list" style="display:flex;flex-direction:column;gap:.5rem;max-height:280px;overflow-y:auto;"></div>
-
-        <div class="detail-row" style="margin-top:1rem;">
-          <span class="detail-label">Total Buku Dipinjam</span>
-          <span class="detail-value" id="kr-total-buku">0 buku</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Total Hari Pinjaman</span>
-          <span class="detail-value" id="kr-total-hari">0 hari</span>
-        </div>
-
-        <div class="modal-actions" style="margin-top:1.1rem;">
-          <button class="btn-secondary" onclick="closeKeranjangPinjam()">➕ Pinjam Buku Lagi</button>
-          <button class="btn-pinjam" onclick="konfirmasiSemuaPinjam()">✅ Konfirmasi Peminjaman</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== BADGE KERANJANG PINJAM MENGAMBANG ===== -->
-  <button id="fabKeranjangPinjam" onclick="openKeranjangPinjam()" style="display:none;position:fixed;bottom:24px;right:24px;z-index:500;background:var(--accent);color:#fff;border:none;border-radius:999px;padding:.75rem 1.1rem;font-weight:700;font-size:.85rem;box-shadow:0 8px 20px rgba(0,0,0,.25);cursor:pointer;">
-    🛒 Keranjang Pinjam (<span id="fabKeranjangCount">0</span>)
-  </button>
 
   <!-- ===== MODAL KONFIRMASI HAPUS BUKU ===== -->
   <div class="modal-overlay" id="modalHapusBuku" onclick="handleBgClickHapus(event)">
@@ -1909,6 +1891,13 @@
     const btn = document.getElementById('mBtnPinjam');
     btn.disabled = b.stok === 0;
     btn.textContent = b.stok > 0 ? '📤 Pinjamkan Buku' : '⛔ Stok Habis';
+
+    const jumlahInput = document.getElementById('mJumlahPinjam');
+    jumlahInput.value = 1;
+    jumlahInput.max = b.stok;
+    document.getElementById('mDurasiPinjam').value = 7;
+    document.getElementById('mPinjamFields').style.display = b.stok > 0 ? 'flex' : 'none';
+
     document.getElementById('modalKoleksi').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -2204,7 +2193,7 @@
           <td>${aksesPill(r.akses)}</td>
           <td>
             <div class="action-btns">
-              
+              <button class="act-btn" title="Pinjamkan Buku" onclick="openFormPinjam(${r.id})" ${r.stok <= 0 ? 'disabled' : ''}>📤</button>
               <button class="act-btn danger">✕</button>
             </div>
           </td>
@@ -2318,55 +2307,60 @@
   }
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); closeTambahKoleksi(); closeHapusBuku(); closeModalBeliVip(); closeFormPinjam(); closeKeranjangPinjam(); }
+    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); closeTambahKoleksi(); closeHapusBuku(); closeModalBeliVip(); closeFormPinjam(); }
   });
 
-  // ===== FITUR PINJAM BUKU (JUMLAH + DURASI + KERANJANG MULTI BUKU) =====
-  let keranjangPinjam = [];
+  // ===== FITUR PINJAM BUKU (JUMLAH + DURASI) =====
 
-  function stokTersisaUntuk(bookId) {
-    const b = BOOKS.find(x => x.id === bookId);
-    if (!b) return 0;
-    const sudahDiKeranjang = keranjangPinjam
-      .filter(k => k.bookId === bookId)
-      .reduce((sum, k) => sum + k.jumlah, 0);
-    return b.stok - sudahDiKeranjang;
+  // -- Koleksi biasa: langsung di dalam modal detail buku (tanpa popup baru) --
+  function konfirmasiPinjamKoleksi() {
+    const bk = BOOKS.find(x => x.id === currentOpenBookId);
+    if (!bk) return;
+
+    const jumlah = parseInt(document.getElementById('mJumlahPinjam').value) || 0;
+    const durasi = parseInt(document.getElementById('mDurasiPinjam').value) || 0;
+
+    if (jumlah < 1) { alert('Jumlah buku minimal 1.'); return; }
+    if (jumlah > bk.stok) { alert(`Stok tidak cukup. Sisa stok tersedia: ${bk.stok}.`); return; }
+    if (durasi < 1) { alert('Durasi pinjam minimal 1 hari.'); return; }
+
+    bk.stok = Math.max(0, bk.stok - jumlah);
+    bk.borrow = (bk.borrow || 0) + jumlah;
+    bk.status = bk.stok > 0 ? 'ada' : 'habis';
+
+    closeModalKoleksi();
+    render();
+    alert(`Peminjaman berhasil dicatat!\nBuku: ${bk.title}\nJumlah: ${jumlah} buku\nDurasi: ${durasi} hari`);
   }
 
-  function openFormPinjam() {
-    const b = BOOKS.find(x => x.id === currentOpenBookId);
-    if (!b) return;
-    const sisa = stokTersisaUntuk(b.id);
-    if (sisa <= 0) { alert('Stok buku ini sudah habis / semua sudah masuk keranjang.'); return; }
+  // -- Koleksi VIP (Buku Langka): masih pakai popup ringkas karena tidak ada modal detail --
+  let fpCurrentId = null;
 
-    document.getElementById('fp-cover').style.background = b.color;
-    document.getElementById('fp-cover').textContent = b.emoji;
-    document.getElementById('fp-title').textContent = b.title;
-    document.getElementById('fp-author').textContent = b.author;
+  function openFormPinjam(id) {
+    const r = DATA_LANGKA.find(x => x.id === id);
+    if (!r) return;
+    if (r.stok <= 0) { alert('Stok buku ini sudah habis.'); return; }
+
+    fpCurrentId = id;
+
+    document.getElementById('fp-cover').style.background = 'linear-gradient(135deg,#8a68b8,#5a3f80)';
+    document.getElementById('fp-cover').textContent = '👑';
+    document.getElementById('fp-title').textContent = r.judul;
+    document.getElementById('fp-author').textContent = r.penulis;
 
     const jumlahInput = document.getElementById('fp-jumlah');
     jumlahInput.value = 1;
-    jumlahInput.max = sisa;
-    document.getElementById('fp-stok-info').textContent = `Stok tersedia: ${sisa}`;
+    jumlahInput.max = r.stok;
+    document.getElementById('fp-stok-info').textContent = `Stok tersedia: ${r.stok}`;
 
     document.getElementById('fp-durasi').value = 7;
     hitungTotalFormPinjam();
 
-    const infoKeranjang = document.getElementById('fp-keranjang-info');
-    if (keranjangPinjam.length > 0) {
-      infoKeranjang.style.display = 'block';
-      document.getElementById('fp-keranjang-count').textContent = keranjangPinjam.length;
-    } else {
-      infoKeranjang.style.display = 'none';
-    }
-
-    closeModalKoleksi();
     document.getElementById('modalFormPinjam').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
 
   function hitungTotalFormPinjam() {
-    const jumlah = parseInt(document.getElementById('fp-jumlah').value) || 0;
     const durasi = parseInt(document.getElementById('fp-durasi').value) || 0;
     document.getElementById('fp-total-hari').textContent = `${durasi} hari`;
   }
@@ -2381,108 +2375,24 @@
     if (e.target === document.getElementById('modalFormPinjam')) closeFormPinjam();
   }
 
-  function tambahKeKeranjang(lanjutPinjamLagi) {
-    const b = BOOKS.find(x => x.id === currentOpenBookId);
-    if (!b) return;
+  function konfirmasiPinjam() {
+    const r = DATA_LANGKA.find(x => x.id === fpCurrentId);
+    if (!r) return;
 
     const jumlah = parseInt(document.getElementById('fp-jumlah').value) || 0;
     const durasi = parseInt(document.getElementById('fp-durasi').value) || 0;
-    const sisa = stokTersisaUntuk(b.id);
 
     if (jumlah < 1) { alert('Jumlah buku minimal 1.'); return; }
-    if (jumlah > sisa) { alert(`Stok tidak cukup. Sisa stok tersedia: ${sisa}.`); return; }
+    if (jumlah > r.stok) { alert(`Stok tidak cukup. Sisa stok tersedia: ${r.stok}.`); return; }
     if (durasi < 1) { alert('Durasi pinjam minimal 1 hari.'); return; }
 
-    const existing = keranjangPinjam.find(k => k.bookId === b.id);
-    if (existing) {
-      existing.jumlah += jumlah;
-      existing.durasi = durasi;
-    } else {
-      keranjangPinjam.push({ bookId: b.id, title: b.title, author: b.author, jumlah, durasi });
-    }
+    r.stok = Math.max(0, r.stok - jumlah);
+    renderLangka(DATA_LANGKA);
 
-    renderFabKeranjang();
     closeFormPinjam();
-
-    if (lanjutPinjamLagi) {
-      // biarkan user kembali memilih buku lain dari daftar koleksi
-    } else {
-      openKeranjangPinjam();
-    }
+    alert(`Peminjaman berhasil dicatat!\nBuku: ${r.judul}\nJumlah: ${jumlah} buku\nDurasi: ${durasi} hari`);
   }
 
-  function renderFabKeranjang() {
-    const fab = document.getElementById('fabKeranjangPinjam');
-    if (keranjangPinjam.length > 0) {
-      fab.style.display = 'block';
-      document.getElementById('fabKeranjangCount').textContent = keranjangPinjam.length;
-    } else {
-      fab.style.display = 'none';
-    }
-  }
-
-  function openKeranjangPinjam() {
-    const list = document.getElementById('keranjang-list');
-    if (keranjangPinjam.length === 0) {
-      list.innerHTML = `<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:1rem 0;">Keranjang masih kosong.</p>`;
-    } else {
-      list.innerHTML = keranjangPinjam.map(k => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:.6rem .7rem;border:1px solid var(--border,#e5e0da);border-radius:9px;">
-          <div>
-            <strong style="font-size:.85rem;">${k.title}</strong>
-            <div style="font-size:.75rem;color:var(--muted);">${k.jumlah} buku · ${k.durasi} hari</div>
-          </div>
-          <button class="btn-secondary" style="padding:.3rem .6rem;font-size:.75rem;" onclick="hapusDariKeranjang(${k.bookId})">Hapus</button>
-        </div>`).join('');
-    }
-
-    const totalBuku = keranjangPinjam.reduce((sum, k) => sum + k.jumlah, 0);
-    const totalHari = keranjangPinjam.reduce((sum, k) => sum + k.durasi, 0);
-    document.getElementById('kr-total-buku').textContent = `${totalBuku} buku`;
-    document.getElementById('kr-total-hari').textContent = `${totalHari} hari`;
-
-    document.getElementById('modalKeranjangPinjam').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeKeranjangPinjam() {
-    const modal = document.getElementById('modalKeranjangPinjam');
-    if (modal) modal.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  function handleBgClickKeranjang(e) {
-    if (e.target === document.getElementById('modalKeranjangPinjam')) closeKeranjangPinjam();
-  }
-
-  function hapusDariKeranjang(bookId) {
-    keranjangPinjam = keranjangPinjam.filter(k => k.bookId !== bookId);
-    renderFabKeranjang();
-    openKeranjangPinjam();
-  }
-
-  function konfirmasiSemuaPinjam() {
-    if (keranjangPinjam.length === 0) { alert('Keranjang masih kosong.'); return; }
-
-    keranjangPinjam.forEach(k => {
-      const b = BOOKS.find(x => x.id === k.bookId);
-      if (b) {
-        b.stok = Math.max(0, b.stok - k.jumlah);
-        b.borrow = (b.borrow || 0) + k.jumlah;
-        b.status = b.stok > 0 ? 'ada' : 'habis';
-      }
-    });
-
-    const totalBuku = keranjangPinjam.reduce((sum, k) => sum + k.jumlah, 0);
-    const totalHari = keranjangPinjam.reduce((sum, k) => sum + k.durasi, 0);
-
-    keranjangPinjam = [];
-    renderFabKeranjang();
-    closeKeranjangPinjam();
-    render();
-
-    alert(`Peminjaman berhasil dicatat!\nTotal buku: ${totalBuku}\nTotal hari: ${totalHari} hari`);
-  }
 
   async function loadDashboard() {
     try {
