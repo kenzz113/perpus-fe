@@ -883,14 +883,14 @@
           </div>
           <div class="modal-body">
             <div class="modal-stats">
-              <div class="modal-stat"><span class="modal-stat-num" style="color:#b5550a;">0</span><div class="modal-stat-lbl">Sedang Dipinjam</div></div>
-              <div class="modal-stat"><span class="modal-stat-num" style="color:#8a2020;">0</span><div class="modal-stat-lbl">Terlambat</div></div>
-              <div class="modal-stat"><span class="modal-stat-num" style="color:#2d6a4f;">0</span><div class="modal-stat-lbl">Tepat Waktu</div></div>
+              <div class="modal-stat"><span class="modal-stat-num" id="pinjamStatSedang" style="color:#b5550a;">0</span><div class="modal-stat-lbl">Sedang Dipinjam</div></div>
+              <div class="modal-stat"><span class="modal-stat-num" id="pinjamStatTerlambat" style="color:#8a2020;">0</span><div class="modal-stat-lbl">Terlambat</div></div>
+              <div class="modal-stat"><span class="modal-stat-num" id="pinjamStatTepat" style="color:#2d6a4f;">0</span><div class="modal-stat-lbl">Tepat Waktu</div></div>
             </div>
             <table class="modal-table">
               <thead><tr><th>Judul Buku</th><th>Peminjam</th><th>Tgl Kembali</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr onclick="showDetailBeranda('pinjam','laskar')"><td>Laskar Pelangi</td><td> </td><td>18 Mei 2026</td><td><span class="pill pill-ok">Tepat Waktu</span></td></tr>
+              <tbody id="pinjamTableBody">
+                <tr><td colspan="4" style="text-align:center;color:var(--muted);">Memuat data peminjaman...</td></tr>
               </tbody>
             </table>
             <p class="row-click-hint">💡 Klik baris untuk melihat detail peminjaman</p>
@@ -2330,6 +2330,7 @@
 
     closeModalKoleksi();
     render();
+    simpanPeminjamanBaru(bk.title, durasi);
     alert(`Peminjaman berhasil dicatat!\nBuku: ${bk.title}\nJumlah: ${jumlah} buku\nDurasi: ${durasi} hari`);
   }
 
@@ -2390,6 +2391,7 @@
     renderLangka(DATA_LANGKA);
 
     closeFormPinjam();
+    simpanPeminjamanBaru(r.judul, durasi);
     alert(`Peminjaman berhasil dicatat!\nBuku: ${r.judul}\nJumlah: ${jumlah} buku\nDurasi: ${durasi} hari`);
   }
 
@@ -2490,10 +2492,98 @@
     }
 }
 
+  // ===== DATA PEMINJAMAN (dari backend) =====
+  async function loadPeminjaman() {
+    const tbody = document.getElementById('pinjamTableBody');
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:3000/peminjaman", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        console.log(data);
+
+        if (!tbody) return;
+
+        if (!Array.isArray(data) || data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);">Belum ada data peminjaman.</td></tr>';
+            document.getElementById('pinjamStatSedang').textContent = 0;
+            document.getElementById('pinjamStatTerlambat').textContent = 0;
+            document.getElementById('pinjamStatTepat').textContent = 0;
+            return;
+        }
+
+        let sedang = 0, terlambat = 0, tepat = 0;
+
+        tbody.innerHTML = data.map(item => {
+            const status = item.status || '';
+            let pillClass = 'pill-ok';
+            if (/terlambat/i.test(status)) { pillClass = 'pill-late'; terlambat++; }
+            else if (/jatuh tempo/i.test(status)) { pillClass = 'pill-warn'; sedang++; }
+            else { tepat++; }
+
+            return `
+                <tr>
+                    <td>${escapeHtml(item.judul_buku || '-')}</td>
+                    <td>${escapeHtml(item.username || item.peminjam || '-')}</td>
+                    <td>${formatTanggal(item.tanggal_kembali)}</td>
+                    <td><span class="pill ${pillClass}">${escapeHtml(status || '-')}</span></td>
+                </tr>`;
+        }).join('');
+
+        document.getElementById('pinjamStatSedang').textContent = sedang;
+        document.getElementById('pinjamStatTerlambat').textContent = terlambat;
+        document.getElementById('pinjamStatTepat').textContent = tepat;
+
+    } catch(err) {
+        console.error("Peminjaman Error :", err);
+        if (tbody) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#8a2020;">Gagal memuat data peminjaman.</td></tr>';
+        }
+    }
+  }
+
+  // ===== TAMBAH PEMINJAMAN BARU KE BACKEND =====
+  async function simpanPeminjamanBaru(judul_buku, durasiHari) {
+    const token = localStorage.getItem("token");
+    const user_id = localStorage.getItem("user_id"); // pastikan user_id disimpan saat login
+
+    const tglPinjam = new Date();
+    const tglKembali = new Date();
+    tglKembali.setDate(tglKembali.getDate() + (parseInt(durasiHari) || 7));
+
+    const payload = {
+        user_id: user_id,
+        judul_buku: judul_buku,
+        tanggal_pinjam: tglPinjam.toISOString().slice(0, 10),
+        tanggal_kembali: tglKembali.toISOString().slice(0, 10)
+    };
+
+    try {
+        const response = await fetch("http://localhost:3000/peminjaman", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+
+        loadPeminjaman();
+    } catch (err) {
+        console.error("Gagal menyimpan peminjaman :", err);
+    }
+  }
+
   window.onload = function () {
     loadBooks();
     renderVipState();
     loadDashboard();
+    loadPeminjaman();
 };
   </script>
 </body>
