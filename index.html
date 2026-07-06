@@ -74,6 +74,8 @@
     .sb-mgmt-badge.orange { background: rgba(181,85,10,.3); color: #ffbb85; }
     .sb-mgmt-badge.gold   { background: rgba(201,146,42,.25); color: #f5cc72; }
     .sb-mgmt-badge.green  { background: rgba(45,106,79,.35); color: #7dd9a8; }
+    .sb-mgmt-badge.gray   { background: rgba(255,255,255,.14); color: rgba(255,255,255,.75); }
+    .sb-mgmt-badge.purple { background: rgba(139,92,196,.3); color: #d9c4f5; }
 
     .sb-divider { height: 1px; background: rgba(255,255,255,.07); margin: .5rem 1.25rem; }
 
@@ -281,6 +283,123 @@
       width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto;
       box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
     }
+    /* modal beli vip (lebar 720) */
+    #modalBeliVip .modal-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      width: 100%; max-width: 720px; max-height: 88vh; overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(26,20,8,.3); animation: mIn .22s ease;
+    }
+
+    /* ===== TOMBOL VIP (MAHKOTA) DI TOPBAR ===== */
+    .btn-vip-crown {
+      display: flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0;
+      background: linear-gradient(135deg, #f5cc72, #c9922a);
+      border: 1px solid rgba(201,146,42,.5); cursor: pointer;
+      font-size: 1rem; box-shadow: 0 4px 10px rgba(201,146,42,.35);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-vip-crown:hover { transform: translateY(-1px) scale(1.05); box-shadow: 0 6px 14px rgba(201,146,42,.45); }
+
+    /* ===== CARD PAKET VIP ===== */
+    .vip-plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .vip-plan-card {
+      position: relative; border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 1.3rem 1.1rem; text-align: center; background: var(--cream);
+      transition: transform .18s, box-shadow .18s, border-color .18s; cursor: default;
+      display: flex; flex-direction: column;
+    }
+    .vip-plan-card:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(26,20,8,.12); }
+    .vip-plan-card.silver   { border-color: #c7c2b8; background: linear-gradient(160deg, #f4f3f0, #e7e4dd); }
+    .vip-plan-card.gold     { border-color: #dcb662; background: linear-gradient(160deg, #fdf6e6, #f5e4bc); }
+    .vip-plan-card.platinum { border-color: #b9a4d6; background: linear-gradient(160deg, #f7f3fb, #ece2f7); }
+    .vip-plan-card.popular::before {
+      content: 'PALING LARIS'; position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #fff; font-size: .6rem; font-weight: 700; letter-spacing: .05em;
+      padding: .25rem .6rem; border-radius: 20px; box-shadow: 0 4px 10px rgba(181,85,10,.3);
+    }
+    .vip-plan-icon { font-size: 2rem; margin-bottom: .5rem; }
+    .vip-plan-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: .2rem; }
+    .vip-plan-price { font-size: 1.35rem; font-weight: 700; color: var(--ink); margin-bottom: .05rem; }
+    .vip-plan-price small { font-size: .68rem; font-weight: 500; color: var(--muted); }
+    .vip-plan-period { font-size: .68rem; color: var(--muted); margin-bottom: .9rem; }
+    .vip-plan-features { list-style: none; text-align: left; font-size: .74rem; color: var(--ink2); flex: 1; margin-bottom: 1rem; display: flex; flex-direction: column; gap: .45rem; }
+    .vip-plan-features li { display: flex; align-items: flex-start; gap: .4rem; line-height: 1.35; }
+    .vip-plan-features li::before { content: '✓'; color: var(--accent2); font-weight: 700; flex-shrink: 0; }
+    .btn-pilih-vip {
+      width: 100%; padding: .6rem; border-radius: 9px; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 600; color: #fff;
+      transition: filter .15s;
+    }
+    .btn-pilih-vip:hover { filter: brightness(1.08); }
+    .btn-pilih-vip.silver   { background: #8c8272; }
+    .btn-pilih-vip.gold     { background: linear-gradient(135deg, #dcb662, #b5850f); }
+    .btn-pilih-vip.platinum { background: linear-gradient(135deg, #9d7fc2, #6f4fa3); }
+    .vip-plan-card.active-plan { border-width: 2.5px; box-shadow: 0 0 0 3px rgba(45,106,79,.18), 0 14px 28px rgba(26,20,8,.12); }
+    .vip-plan-active-tag {
+      display: inline-flex; align-items: center; gap: .25rem; font-size: .62rem; font-weight: 700;
+      color: #1a5c38; background: rgba(45,106,79,.14); padding: .2rem .55rem; border-radius: 20px;
+      margin-bottom: .5rem; align-self: center;
+    }
+    .btn-pilih-vip:disabled { opacity: .65; cursor: default; filter: none; }
+
+    /* ===== LOCK OVERLAY UNTUK FITUR VIP ===== */
+    #view-langkavip { position: relative; }
+    .vip-lock-overlay {
+      position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center;
+      background: rgba(249,247,242,.72); backdrop-filter: blur(3px); border-radius: 14px;
+      padding: 1.5rem;
+    }
+    .vip-lock-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 2.2rem 2.4rem; text-align: center; max-width: 380px;
+      box-shadow: 0 24px 60px rgba(26,20,8,.18);
+    }
+    .vip-lock-icon {
+      width: 64px; height: 64px; border-radius: 50%; margin: 0 auto .9rem;
+      background: linear-gradient(135deg, #f5cc72, #c9922a); display: grid; place-items: center; font-size: 1.7rem;
+      box-shadow: 0 8px 20px rgba(201,146,42,.35);
+    }
+    .vip-lock-box h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+    .vip-lock-box p { font-size: .8rem; color: var(--muted); line-height: 1.55; margin-bottom: 1.3rem; }
+    .btn-buka-vip {
+      background: var(--accent); color: #fff; border: none; padding: .7rem 1.4rem; border-radius: 9px;
+      font-family: 'DM Sans', sans-serif; font-size: .82rem; font-weight: 600; cursor: pointer; transition: background .18s;
+    }
+    .btn-buka-vip:hover { background: #8f4308; }
+    .langka-vip-body.is-locked { filter: blur(7px); pointer-events: none; user-select: none; }
+
+    /* ===== BANNER KEUNGGULAN VIP AKTIF ===== */
+    .vip-benefit-banner {
+      border-radius: 16px; padding: 1.3rem 1.5rem; margin-bottom: 1.5rem; position: relative; overflow: hidden;
+      display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+      box-shadow: 0 14px 34px rgba(26,20,8,.14);
+    }
+    .vip-benefit-banner.tier-silver   { background: linear-gradient(120deg, #6b6559, #8c8272); }
+    .vip-benefit-banner.tier-gold     { background: linear-gradient(120deg, #8a6412, #c9922a); }
+    .vip-benefit-banner.tier-platinum { background: linear-gradient(120deg, #5a3f80, #8a68b8); }
+    .vip-benefit-icon { font-size: 2.1rem; flex-shrink: 0; }
+    .vip-benefit-info { flex: 1; min-width: 220px; }
+    .vip-benefit-info .vbi-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: .15rem; }
+    .vip-benefit-info .vbi-sub { font-size: .75rem; color: rgba(255,255,255,.78); }
+    .vip-benefit-list { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem .7rem; margin-top: .6rem; }
+    .vip-benefit-list li {
+      font-size: .68rem; font-weight: 600; color: #fff; background: rgba(255,255,255,.16);
+      padding: .3rem .65rem; border-radius: 20px; display: flex; align-items: center; gap: .3rem;
+    }
+    .vip-benefit-actions { display: flex; flex-direction: column; gap: .4rem; flex-shrink: 0; }
+    .btn-kelola-vip, .btn-batal-vip {
+      font-family: 'DM Sans', sans-serif; font-size: .72rem; font-weight: 600; padding: .45rem .8rem;
+      border-radius: 8px; cursor: pointer; border: none; transition: filter .15s;
+    }
+    .btn-kelola-vip { background: #fff; color: var(--ink); }
+    .btn-kelola-vip:hover { filter: brightness(.95); }
+    .btn-batal-vip { background: rgba(0,0,0,.18); color: #fff; }
+    .btn-batal-vip:hover { background: rgba(0,0,0,.28); }
+
+    /* ===== BADGE STATUS VIP DI SIDEBAR & TOPBAR ===== */
+    .sb-mgmt-badge.locked { background: rgba(255,255,255,.1); color: rgba(255,255,255,.4); }
+    .btn-vip-crown.is-active { box-shadow: 0 0 0 3px rgba(45,106,79,.25), 0 4px 10px rgba(201,146,42,.35); }
     .modal-box::-webkit-scrollbar { width: 4px; }
     .modal-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
@@ -485,7 +604,7 @@
       <button class="sb-mgmt-item" id="nav-langkavip" onclick="switchView('langkavip')">
         <div class="mgmt-icon-wrap ic-green">👑</div>
         <div class="sb-mgmt-body"><strong>Buku Langka — VIP</strong><small>Reward member premium</small></div>
-        <span class="sb-mgmt-badge green">Baru</span>
+        <span class="sb-mgmt-badge locked" id="badge-langkavip">🔒 Terkunci</span>
       </button>
 
       <div class="sb-user">
@@ -514,6 +633,7 @@
           <input type="text" id="search-anggota" placeholder="Cari nama anggota/peminjam…" autocomplete="off" style="width:180px;"/>
           <button type="button" id="btn-search-anggota" class="search-btn">Cari</button>
         </div>
+        <button type="button" class="btn-vip-crown" id="btn-beli-vip" title="Beli Membership VIP" onclick="openModalBeliVip()">👑</button>
       </div>
     </div>
 
@@ -546,7 +666,7 @@
     <div class="topbar" id="topbar-langkavip" style="display:none;">
       <div>
         <div class="topbar-title">Buku Langka — VIP</div>
-        <div class="topbar-sub">Koleksi eksklusif untuk member premium</div>
+        <div class="topbar-sub" id="langkavip-sub">Koleksi eksklusif untuk member premium</div>
       </div>
       <div class="topbar-right">
         <div class="topbar-search">
@@ -585,25 +705,25 @@
         <div class="stats-row">
           <div class="stat-card" style="--sc-color:#b5550a;">
             <div class="stat-card-icon">📚</div>
-            <div class="stat-card-num">0</div>
+            <div class="stat-card-num" id="totalBuku">0</div>
             <div class="stat-card-label">Total Koleksi Buku</div>
 
           </div>
           <div class="stat-card" style="--sc-color:#2d6a4f;">
             <div class="stat-card-icon">👥</div>
-            <div class="stat-card-num">0</div>
+            <div class="stat-card-num" id="anggotaAktif">0</div>
             <div class="stat-card-label">Anggota Aktif</div>
 
           </div>
           <div class="stat-card" style="--sc-color:#c9922a;">
             <div class="stat-card-icon">📤</div>
-            <div class="stat-card-num">0</div>
+            <div class="stat-card-num" id="bukuDipinjam">0</div>
             <div class="stat-card-label">Buku Dipinjam</div>
 
           </div>
           <div class="stat-card" style="--sc-color:#8a4e00;">
             <div class="stat-card-icon">⚠️</div>
-            <div class="stat-card-num">0</div>
+            <div class="stat-card-num" id="bukuRusak">0</div>
             <div class="stat-card-label">Buku Rusak</div>
 
           </div>
@@ -692,42 +812,58 @@
           </div>
           <button class="export-btn"></button>
         </div>
-        <div class="stat-row-vip">
-          <div class="stat-card-vip">
-            <div class="sc-label">Total Koleksi</div>
-            <div class="sc-val">12</div>
-            <div class="sc-sub">Buku langka tersimpan</div>
-          </div>
-          <div class="stat-card-vip">
-            <div class="sc-label">Tersedia</div>
-            <div class="sc-val">9</div>
-            <div class="sc-sub">Bisa dipinjam VIP</div>
-          </div>
-          <div class="stat-card-vip">
-            <div class="sc-label">Sedang Dipinjam</div>
-            <div class="sc-val">0</div>
-            <div class="sc-sub">Oleh member premium</div>
-          </div>
-          <div class="stat-card-vip">
-            <div class="sc-label">Member VIP Aktif</div>
-            <div class="sc-val">0</div> 
-            <div class="sc-sub">Member terdaftar</div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <span>👑</span>
-            <h3>Koleksi Buku Langka VIP</h3>
-            <div class="card-head-action" style="display:flex;gap:.5rem;">
-              <button class="add-btn" onclick="openTambahKoleksi()">＋ Tambah Koleksi</button>
+
+        <!-- BANNER KEUNGGULAN VIP AKTIF (muncul setelah membeli salah satu paket) -->
+        <div class="vip-benefit-banner" id="vipBenefitBanner" style="display:none;"></div>
+
+        <div class="langka-vip-body is-locked" id="langkaVipBody">
+          <div class="stat-row-vip">
+            <div class="stat-card-vip">
+              <div class="sc-label">Total Koleksi</div>
+              <div class="sc-val">12</div>
+              <div class="sc-sub">Buku langka tersimpan</div>
+            </div>
+            <div class="stat-card-vip">
+              <div class="sc-label">Tersedia</div>
+              <div class="sc-val">9</div>
+              <div class="sc-sub">Bisa dipinjam VIP</div>
+            </div>
+            <div class="stat-card-vip">
+              <div class="sc-label">Sedang Dipinjam</div>
+              <div class="sc-val">0</div>
+              <div class="sc-sub">Oleh member premium</div>
+            </div>
+            <div class="stat-card-vip">
+              <div class="sc-label">Member VIP Aktif</div>
+              <div class="sc-val">0</div> 
+              <div class="sc-sub">Member terdaftar</div>
             </div>
           </div>
-          <table class="data-table">
-            <thead>
-              <tr><th>#</th><th>Judul Buku</th><th>Penulis</th><th>Tahun</th><th>Stok</th><th>Akses</th><th>Aksi</th></tr>
-            </thead>
-            <tbody id="tbody-langka"></tbody>
-          </table>
+          <div class="card">
+            <div class="card-head">
+              <span>👑</span>
+              <h3>Koleksi Buku Langka VIP</h3>
+              <div class="card-head-action" style="display:flex;gap:.5rem;">
+                <button class="add-btn" onclick="openTambahKoleksi()">＋ Tambah Koleksi</button>
+              </div>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr><th>#</th><th>Judul Buku</th><th>Penulis</th><th>Tahun</th><th>Stok</th><th>Akses</th><th>Aksi</th></tr>
+              </thead>
+              <tbody id="tbody-langka"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- OVERLAY TERKUNCI: tampil jika belum ada membership VIP aktif -->
+        <div class="vip-lock-overlay" id="vipLockOverlay">
+          <div class="vip-lock-box">
+            <div class="vip-lock-icon">🔒</div>
+            <h3>Fitur Ini Terkunci</h3>
+            <p>Beli salah satu paket membership VIP (Silver, Gold, atau Platinum) terlebih dahulu untuk membuka akses koleksi buku langka & fitur eksklusif lainnya.</p>
+            <button type="button" class="btn-buka-vip" onclick="openModalBeliVip()">👑 Beli Membership VIP</button>
+          </div>
         </div>
       </div>
 
@@ -861,6 +997,77 @@
             </thead>
             <tbody id="search-result-body"></tbody>
           </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL BELI VIP ===== -->
+  <div class="modal-overlay" id="modalBeliVip" onclick="handleBgClickBeliVip(event)">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div class="modal-head-icon" style="background:rgba(201,146,42,.16);">👑</div>
+        <div class="modal-head-text">
+          <h3>Beli Membership VIP</h3>
+          <p>Pilih paket VIP untuk akses koleksi buku langka & eksklusif</p>
+        </div>
+        <button class="modal-close" onclick="closeModalBeliVip()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="vip-plans">
+          <!-- SILVER -->
+          <div class="vip-plan-card silver" id="planCard-silver">
+            <div class="vip-plan-icon">🥈</div>
+            <div class="vip-plan-name">Silver</div>
+            <div class="vip-plan-price">Rp 25.000<small>/bulan</small></div>
+            <div class="vip-plan-period">Ditagih bulanan</div>
+            <ul class="vip-plan-features">
+              <li>Akses koleksi buku langka Tier 1</li>
+              <li>Maks. 3 buku pinjam bersamaan</li>
+              <li>Perpanjangan pinjam +7 hari</li>
+              <li>Diskon denda keterlambatan 10%</li>
+              <li>Akses baca e-book dasar</li>
+              <li>Badge Silver di profil</li>
+            </ul>
+            <button type="button" class="btn-pilih-vip silver" id="planBtn-silver" onclick="pilihPaketVip('Silver', 25000)">Pilih Silver</button>
+          </div>
+          <!-- GOLD -->
+          <div class="vip-plan-card gold popular" id="planCard-gold">
+            <div class="vip-plan-icon">⭐</div>
+            <div class="vip-plan-name">Gold</div>
+            <div class="vip-plan-price">Rp 60.000<small>/bulan</small></div>
+            <div class="vip-plan-period">Ditagih bulanan</div>
+            <ul class="vip-plan-features">
+              <li>Semua benefit paket Silver</li>
+              <li>Akses koleksi buku langka Tier 1 & 2</li>
+              <li>Maks. 6 buku pinjam bersamaan</li>
+              <li>Prioritas antrian buku langka</li>
+              <li>Diskon denda keterlambatan 25%</li>
+              <li>Gratis reservasi buku baru</li>
+              <li>Notifikasi rilis koleksi terbaru</li>
+              <li>Badge Gold di profil</li>
+            </ul>
+            <button type="button" class="btn-pilih-vip gold" id="planBtn-gold" onclick="pilihPaketVip('Gold', 60000)">Pilih Gold</button>
+          </div>
+          <!-- PLATINUM -->
+          <div class="vip-plan-card platinum" id="planCard-platinum">
+            <div class="vip-plan-icon">💎</div>
+            <div class="vip-plan-name">Platinum</div>
+            <div class="vip-plan-price">Rp 120.000<small>/bulan</small></div>
+            <div class="vip-plan-period">Ditagih bulanan</div>
+            <ul class="vip-plan-features">
+              <li>Semua benefit paket Gold</li>
+              <li>Akses penuh seluruh koleksi langka</li>
+              <li>Pinjam buku tanpa batas</li>
+              <li>Akses pertama koleksi baru</li>
+              <li>Diskon denda keterlambatan 50%</li>
+              <li>Layanan antar-jemput buku gratis</li>
+              <li>Concierge pustakawan pribadi</li>
+              <li>Undangan event & launching buku eksklusif</li>
+              <li>Badge Platinum eksklusif di profil</li>
+            </ul>
+            <button type="button" class="btn-pilih-vip platinum" id="planBtn-platinum" onclick="pilihPaketVip('Platinum', 120000)">Pilih Platinum</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1106,7 +1313,7 @@
       if (nav) nav.classList.toggle('active', v === view);
     });
     if (view === 'koleksi') render();
-    if (view === 'langkavip') renderLangka(DATA_LANGKA);
+    if (view === 'langkavip') { renderLangka(DATA_LANGKA); renderVipState(); }
   }
 
   // ============================================================
@@ -1265,6 +1472,180 @@
 
   function handleBgClickBeranda(e) {
     if (e.target === document.getElementById('modalBeranda')) closeModalBeranda();
+  }
+
+  // ============================================================
+  // SISTEM MEMBERSHIP VIP (LOCK / UNLOCK FITUR + KEUNGGULAN)
+  // ============================================================
+  const VIP_STORAGE_KEY = 'libratech_vip_status';
+
+  const VIP_TIERS = {
+    Silver: {
+      key: 'silver', icon: '🥈', harga: 25000, bannerClass: 'tier-silver',
+      benefits: [
+        '📚 Maks. 3 buku pinjam bersamaan',
+        '🕒 Perpanjangan pinjam +7 hari',
+        '💸 Diskon denda keterlambatan 10%',
+        '📖 Akses baca e-book dasar',
+        '🎖️ Badge Silver di profil',
+      ],
+    },
+    Gold: {
+      key: 'gold', icon: '⭐', harga: 60000, bannerClass: 'tier-gold',
+      benefits: [
+        '📚 Maks. 6 buku pinjam bersamaan',
+        '🚀 Prioritas antrian buku langka',
+        '💸 Diskon denda keterlambatan 25%',
+        '📌 Gratis reservasi buku baru',
+        '🔔 Notifikasi rilis koleksi terbaru',
+        '🎖️ Badge Gold di profil',
+      ],
+    },
+    Platinum: {
+      key: 'platinum', icon: '💎', harga: 120000, bannerClass: 'tier-platinum',
+      benefits: [
+        '📚 Pinjam buku tanpa batas',
+        '🆕 Akses pertama koleksi baru',
+        '💸 Diskon denda keterlambatan 50%',
+        '🚚 Layanan antar-jemput buku gratis',
+        '🤝 Concierge pustakawan pribadi',
+        '🎟️ Undangan event & launching buku',
+        '🎖️ Badge Platinum eksklusif',
+      ],
+    },
+  };
+
+  function getVipStatus() {
+    try {
+      const raw = localStorage.getItem(VIP_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
+  function setVipStatus(tier) {
+    try {
+      localStorage.setItem(VIP_STORAGE_KEY, JSON.stringify({ tier, sejak: new Date().toISOString() }));
+    } catch (e) { /* abaikan jika storage tidak tersedia */ }
+  }
+
+  function clearVipStatus() {
+    try { localStorage.removeItem(VIP_STORAGE_KEY); } catch (e) {}
+  }
+
+  function isVipActive() { return !!getVipStatus(); }
+
+  // Perbarui seluruh tampilan (overlay kunci, banner keunggulan, badge sidebar, tombol mahkota, kartu paket)
+  function renderVipState() {
+    const status = getVipStatus();
+    const active = !!status;
+    const tierData = active ? VIP_TIERS[status.tier] : null;
+
+    // 1) Overlay kunci pada halaman Buku Langka VIP
+    const overlay = document.getElementById('vipLockOverlay');
+    const body = document.getElementById('langkaVipBody');
+    if (overlay) overlay.style.display = active ? 'none' : 'flex';
+    if (body) body.classList.toggle('is-locked', !active);
+
+    // 2) Banner keunggulan VIP aktif
+    const banner = document.getElementById('vipBenefitBanner');
+    if (banner) {
+      if (active) {
+        banner.className = 'vip-benefit-banner ' + tierData.bannerClass;
+        banner.style.display = 'flex';
+        banner.innerHTML = `
+          <div class="vip-benefit-icon">${tierData.icon}</div>
+          <div class="vip-benefit-info">
+            <div class="vbi-title">Member VIP ${status.tier} Aktif</div>
+            <div class="vbi-sub">Nikmati fitur keunggulan berikut selama membership aktif</div>
+            <ul class="vip-benefit-list">${tierData.benefits.map(b => `<li>${b}</li>`).join('')}</ul>
+          </div>
+          <div class="vip-benefit-actions">
+            <button type="button" class="btn-kelola-vip" onclick="openModalBeliVip()">🔁 Ganti Paket</button>
+            <button type="button" class="btn-batal-vip" onclick="batalkanVip()">Batalkan Membership</button>
+          </div>`;
+      } else {
+        banner.style.display = 'none';
+        banner.innerHTML = '';
+      }
+    }
+
+    // 3) Badge status di sidebar
+    const sbBadge = document.getElementById('badge-langkavip');
+    if (sbBadge) {
+      if (active) {
+        sbBadge.textContent = tierData.icon + ' ' + status.tier + ' Aktif';
+        const colorClass = status.tier === 'Silver' ? 'gray' : status.tier === 'Gold' ? 'gold' : 'purple';
+        sbBadge.className = 'sb-mgmt-badge ' + colorClass;
+      } else {
+        sbBadge.textContent = '🔒 Terkunci';
+        sbBadge.className = 'sb-mgmt-badge locked';
+      }
+    }
+
+    // 4) Tombol mahkota di topbar Beranda
+    const crownBtn = document.getElementById('btn-beli-vip');
+    if (crownBtn) {
+      crownBtn.classList.toggle('is-active', active);
+      crownBtn.title = active ? `Membership VIP ${status.tier} aktif — klik untuk kelola` : 'Beli Membership VIP';
+    }
+
+    // 5) Sub judul topbar halaman Buku Langka VIP
+    const sub = document.getElementById('langkavip-sub');
+    if (sub) sub.textContent = active
+      ? `Membership ${status.tier} aktif — koleksi eksklusif telah terbuka`
+      : 'Koleksi eksklusif untuk member premium (fitur terkunci)';
+
+    // 6) Highlight kartu paket yang sedang aktif di dalam modal
+    ['Silver','Gold','Platinum'].forEach(t => {
+      const card = document.getElementById('planCard-' + t.toLowerCase());
+      const btn = document.getElementById('planBtn-' + t.toLowerCase());
+      if (!card || !btn) return;
+      const isThisActive = active && status.tier === t;
+      card.classList.toggle('active-plan', isThisActive);
+      const existingTag = card.querySelector('.vip-plan-active-tag');
+      if (isThisActive && !existingTag) {
+        card.insertBefore(Object.assign(document.createElement('div'), {
+          className: 'vip-plan-active-tag', textContent: '✓ Paket Sedang Aktif',
+        }), card.firstChild);
+      } else if (!isThisActive && existingTag) {
+        existingTag.remove();
+      }
+      btn.disabled = isThisActive;
+      btn.textContent = isThisActive ? '✓ Sedang Aktif' : 'Pilih ' + t;
+    });
+  }
+
+  // ============================================================
+  // MODAL BELI VIP
+  // ============================================================
+  function openModalBeliVip() {
+    renderVipState();
+    document.getElementById('modalBeliVip').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModalBeliVip() {
+    document.getElementById('modalBeliVip').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleBgClickBeliVip(e) {
+    if (e.target === document.getElementById('modalBeliVip')) closeModalBeliVip();
+  }
+
+  function pilihPaketVip(nama, harga) {
+    const current = getVipStatus();
+    if (current && current.tier === nama) { closeModalBeliVip(); return; }
+    setVipStatus(nama);
+    renderVipState();
+    closeModalBeliVip();
+    showToast(`🎉 Membership VIP ${nama} (Rp ${harga.toLocaleString('id-ID')}/bulan) aktif! Fitur eksklusif telah terbuka.`);
+  }
+
+  function batalkanVip() {
+    clearVipStatus();
+    renderVipState();
+    showToast('Membership VIP telah dibatalkan. Fitur eksklusif kembali terkunci.');
   }
 
   // ============================================================
@@ -1872,11 +2253,33 @@
   }
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); closeTambahKoleksi(); closeHapusBuku(); }
+    if (e.key === 'Escape') { closeModalBeranda(); closeModalKoleksi(); closeTambahBuku(); closeTambahKoleksi(); closeHapusBuku(); closeModalBeliVip(); }
   });
+
+  async function loadDashboard() {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:3000/dashboard", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        console.log(data);
+
+        document.getElementById("totalBuku").textContent = data.totalBuku;
+        document.getElementById("anggotaAktif").textContent = data.anggotaAktif;
+        document.getElementById("bukuDipinjam").textContent = data.bukuDipinjam;
+        document.getElementById("bukuRusak").textContent = data.bukuRusak;
+    } catch (err) {
+        console.error(err);
+    }
+  }
 
   window.onload = function () {
     loadBooks();
+    renderVipState();
+    loadDashboard();
   };
   </script>
 </body>
