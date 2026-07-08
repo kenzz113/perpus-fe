@@ -1562,12 +1562,24 @@
     },
   };
 
-  function getVipStatus() {
-    try {
-      const raw = localStorage.getItem(VIP_STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) { return null; }
-  }
+function getVipStatus() {
+
+    const vip = localStorage.getItem("vip_level");
+
+    if (!vip || vip === "public") {
+        return null;
+    }
+
+    return {
+        tier:
+            vip === "silver"
+                ? "Silver"
+                : vip === "gold"
+                ? "Gold"
+                : "Platinum"
+    };
+
+}
 
   function setVipStatus(tier) {
     try {
