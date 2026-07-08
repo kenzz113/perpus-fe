@@ -2347,7 +2347,7 @@ function getVipStatus() {
     return ok;
   }
 
-  function simpanKoleksi() {
+  async function simpanKoleksi() {
     if (!validateTambahKoleksi()) return;
 
     const btn = document.querySelector('#modalTambahKoleksi .btn-pinjam');
@@ -2358,25 +2358,44 @@ function getVipStatus() {
     const penulis = document.getElementById('tk-penulis').value.trim();
     const tahun   = parseInt(document.getElementById('tk-tahun').value) || new Date().getFullYear();
     const akses   = document.getElementById('tk-akses').value;
+    const stok    = stokValueKoleksi;
 
-    const newId = DATA_LANGKA.length > 0 ? Math.max(...DATA_LANGKA.map(r => r.id)) + 1 : 1;
-    DATA_LANGKA.push({
-      id: newId,
+    const token = localStorage.getItem("token");
+    const payload = {
       judul: judul,
       penulis: penulis,
       tahun: tahun,
-      stok: stokValueKoleksi,
-      akses: akses,
-    });
+      stok: stok,
+      akses: akses
+    };
 
-    setTimeout(() => {
+    try {
+      const response = await fetch("http://localhost:3000/buku-langka", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const hasil = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(hasil.message || 'HTTP ' + response.status);
+      }
+
       closeTambahKoleksi();
       document.getElementById('searchVip').value = '';
-      renderLangka(DATA_LANGKA);
-      showToast(`"${judul}" berhasil ditambahkan ke koleksi VIP!`);
+      await loadBukuLangka();
+      showToast(hasil.message || `"${judul}" berhasil ditambahkan ke koleksi VIP!`);
+    } catch (err) {
+      console.error("Gagal menambah buku langka :", err);
+      alert("Gagal menyimpan koleksi: " + err.message);
+    } finally {
       btn.disabled = false;
       btn.textContent = '✅ Simpan ke Koleksi VIP';
-    }, 300);
+    }
   }
 
   function openTambahKoleksi() {
