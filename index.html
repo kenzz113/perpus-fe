@@ -1360,7 +1360,7 @@
       if (nav) nav.classList.toggle('active', v === view);
     });
     if (view === 'koleksi') render();
-    if (view === 'langkavip') { loadBukuLangka(); renderVipState(); }
+    if (view === 'langkavip') { loadBukuLangka(); }
   }
 
   // ============================================================
@@ -2176,8 +2176,15 @@
         const data = await response.json();
         console.log(data);
 
-        DATA_LANGKA = Array.isArray(data) ? data : [];
-        renderLangka(DATA_LANGKA);
+        // Simpan level membership yang dikirim backend.
+        // ASUMSI bentuk response: { vip_level: "gold", buku: [...] }
+        // Sesuaikan "data.buku" jika nama field di response kamu berbeda.
+        if (data.vip_level) {
+            localStorage.setItem("vip_level", data.vip_level);
+        }
+        DATA_LANGKA = Array.isArray(data) ? data : (Array.isArray(data.buku) ? data.buku : []);
+
+        renderAksesLangka();
     } catch (err) {
         console.error("Gagal memuat buku langka :", err);
         if (tbodyEl) {
@@ -2212,11 +2219,70 @@
       : '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);">Tidak ada data ditemukan</td></tr>';
   }
 
+  // ============================================================
+  // AKSES BUKU LANGKA BERDASARKAN vip_level (dari backend)
+  // ============================================================
+  // Urutan level: public < silver < gold < platinum (kumulatif —
+  // gold otomatis bisa lihat buku silver juga, dst).
+  const VIP_LEVEL_RANK = { public: 0, silver: 1, gold: 2, platinum: 3 };
+
+  function getVipLevel() {
+    return (localStorage.getItem("vip_level") || "public").toLowerCase();
+  }
+
+  // Menyamakan format field "akses" dari backend (mis. "VIP Gold") jadi "gold"
+  function normalizeAksesBuku(akses) {
+    return (akses || '').toLowerCase().replace('vip', '').trim();
+  }
+
+  function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // PENTING: filter ini hanya untuk TAMPILAN (UX) di frontend.
+  // Pengaman sesungguhnya harus tetap di backend — endpoint /buku-langka
+  // wajib memfilter data sesuai vip_level user yang sedang login (dari token),
+  // supaya user tidak bisa lihat data yang bukan haknya hanya dengan
+  // mengubah localStorage lewat DevTools.
+  function renderAksesLangka() {
+    const vip = getVipLevel();
+    const overlay = document.getElementById('vipLockOverlay');
+    const body = document.getElementById('langkaVipBody');
+    const sub = document.getElementById('langkavip-sub');
+    const sbBadge = document.getElementById('badge-langkavip');
+
+    if (vip === 'public') {
+      if (overlay) overlay.style.display = 'flex';
+      if (body) body.classList.add('is-locked');
+      if (sub) sub.textContent = 'Koleksi eksklusif untuk member premium (fitur terkunci)';
+      if (sbBadge) { sbBadge.textContent = '🔒 Terkunci'; sbBadge.className = 'sb-mgmt-badge locked'; }
+      renderLangka([]);
+      return;
+    }
+
+    const rank = VIP_LEVEL_RANK[vip] ?? 0;
+    const bukuBolehTampil = DATA_LANGKA.filter(r => (VIP_LEVEL_RANK[normalizeAksesBuku(r.akses)] ?? 0) <= rank);
+
+    if (overlay) overlay.style.display = 'none';
+    if (body) body.classList.remove('is-locked');
+    if (sub) sub.textContent = `Membership ${capitalize(vip)} aktif — koleksi sesuai level kamu telah terbuka`;
+    if (sbBadge) {
+      const colorClass = vip === 'silver' ? 'gray' : vip === 'gold' ? 'gold' : 'purple';
+      const icon = vip === 'silver' ? '🥈' : vip === 'gold' ? '⭐' : '👑';
+      sbBadge.textContent = icon + ' ' + capitalize(vip) + ' Aktif';
+      sbBadge.className = 'sb-mgmt-badge ' + colorClass;
+    }
+
+    renderLangka(bukuBolehTampil);
+  }
+
   function filterVip() {
     const q = document.getElementById('searchVip').value.toLowerCase();
-    renderLangka(DATA_LANGKA.filter(r =>
-      r.judul.toLowerCase().includes(q) || r.penulis.toLowerCase().includes(q)
-    ));
+    const vip = getVipLevel();
+    const rank = VIP_LEVEL_RANK[vip] ?? 0;
+    const hasil = DATA_LANGKA.filter(r =>
+      (VIP_LEVEL_RANK[normalizeAksesBuku(r.akses)] ?? 0) <= rank &&
+      (r.judul.toLowerCase().includes(q) || r.penulis.toLowerCase().includes(q))
+    );
+    renderLangka(hasil);
   }
 
   // ============================================================
