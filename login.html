@@ -533,14 +533,15 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const data = await response.json()
 
     if (response.ok) {
-      localStorage.setItem('token', data.token)
 
-      alert('Login berhasil')
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("username", data.username);
+  localStorage.setItem("role", data.role);
+  localStorage.setItem("vip_level", data.vip_level);
 
-      window.location.href = 'index.html'
-    } else {
-      alert(data.message)
-    }
+  window.location.href = "index.html";
+
+}
   } catch (err) {
     console.error(err)
     alert('Gagal terhubung ke server')
