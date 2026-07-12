@@ -613,13 +613,20 @@
         <span class="sb-mgmt-badge locked" id="badge-langkavip">🔒 Terkunci</span>
       </button>
 
-      <div class="sb-user">
-        <div class="sb-avatar">A</div>
-        <div class="sb-user-info">
-          <strong>Admin Pustaka</strong>
-          <small>admin@pustaka.id</small>
-        </div>
-        <button class="sb-logout" title="Keluar">↩</button>
+<div class="sb-user">
+    <div class="sb-avatar" id="userAvatar">A</div>
+
+    <div class="sb-user-info">
+        <strong id="usernameSidebar">Loading...</strong>
+        <small id="roleSidebar">Loading...</small>
+    </div>
+
+      <button
+    class="sb-logout"
+    onclick="logout()"
+    title="Keluar">
+    ↩️
+</button>
       </div>
     </div>
   </aside>
@@ -1349,6 +1356,11 @@
   <div class="toast" id="toast">✅ <span id="toast-msg">Buku berhasil ditambahkan!</span></div>
 
   <script>
+
+    if (!localStorage.getItem("token")) {
+    window.location.href = "login.html";
+}
+
   // ============================================================
   // NAVIGATION
   // ============================================================
@@ -2687,11 +2699,70 @@ function getVipStatus() {
     }
   }
 
+async function logout() {
+
+    try {
+
+        const token = localStorage.getItem("token");
+
+        await fetch("http://localhost:3000/auth/logout", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
+
+    // Hapus data login
+    localStorage.removeItem("token");
+    localStorage.removeItem("vip_level");
+
+    // Kalau masih ada data lain yang berhubungan dengan login
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
+
+    // Kembali ke halaman login
+    window.location.href = "login.html";
+}
+
+async function loadProfile() {
+
+    try {
+
+        const token = localStorage.getItem("token");
+
+        const response = await fetch("http://localhost:3000/auth/profile", {
+            headers: {
+                Authorization: 'Bearer ${token}'
+            }
+        });
+
+        const user = await response.json();
+
+        document.getElementById("usernameSidebar").textContent = user.username;
+        document.getElementById("roleSidebar").textContent = user.role;
+
+        document.getElementById("userAvatar").textContent =
+            user.username.charAt(0).toUpperCase();
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
+
+}
+
+
   window.onload = function () {
     loadBooks();
     renderVipState();
     loadDashboard();
     loadPeminjaman();
+    loadProfile();
 };
   </script>
 </body>
